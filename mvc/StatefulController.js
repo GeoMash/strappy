@@ -28,10 +28,11 @@ $JSKK.Class.create
 		},
 		_onStateChange: function(signal)
 		{
-			if (this.stateModel.isReady())
-			{
-				this.onStateChange(signal.getBody());
-			}
+//			if (this.stateModel.isReady())
+//			{
+//				this.onStateChange(signal.getBody());
+//			}
+			this.onStateChange(signal.getBody());
 		},
 		onStateChange:	$JSKK.emptyFunction,
 		updateState: function(key,value)

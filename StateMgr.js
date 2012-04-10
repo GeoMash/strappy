@@ -15,15 +15,56 @@ $JSKK.Class.create
 		state:			{},
 		stateString:	'',
 		radioTower:		null,
+		eventSupported:	false,
 		init: function()
 		{
 			this.radioTower		=framework.$radioTower;
 			
-			//Bind the hash change even.
-			//TODO: IE7 & 8 support.
-			$(window).bind('hashchange',this.onHashChange.bind(this));
+			$(window).bind('hashchange',this.onHashChangeTest.bind(this));
 			
-			this.onHashChange.delay(1,this);
+			var OLD_HASH=window.location.hash;
+			window.location.hash='welcome';
+			
+			(function()
+			{
+				//Restore hash.
+				window.location.hash=OLD_HASH;
+				//Bind the hash change event.
+				this.bindHashEvent.defer(200,this);
+			}.bind(this)).defer(100);
+		},
+		onHashChangeTest: function()
+		{
+			this.eventSupported=true;
+		},
+		bindHashEvent: function()
+		{
+			if (this.eventSupported)
+			{
+				$(window).bind('hashchange',this.onHashChange.bind(this));
+			}
+			else
+			{
+				this.monitorHashChange();
+			}
+//			this.onHashChange.delay(1,this);
+		},
+		monitorHashChange: function()
+		{
+			$JSKK.when
+			(
+				function()
+				{
+					return (window.location.hash.replace('#','')!=this.stateString);
+				}.bind(this)
+			).isTrue
+			(
+				function()
+				{
+					this.onHashChange();
+					this.monitorHashChange();
+				}.bind(this)
+			);
 		},
 		onHashChange: function()
 		{

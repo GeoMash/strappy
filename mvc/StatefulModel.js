@@ -13,7 +13,7 @@ $JSKK.Class.create
 (
 	{},
 	{
-		ready:	false,
+//		ready:	false,
 		state:{},
 		set: function(key,value)
 		{
@@ -25,10 +25,10 @@ $JSKK.Class.create
 		{
 			this.ready=ready;
 		},
-		isReady: function()
-		{
-			return this.ready;
-		},
+//		isReady: function()
+//		{
+//			return this.ready;
+//		},
 		get: function(key)
 		{
 			return this.state[key];
