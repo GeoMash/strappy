@@ -32,11 +32,13 @@ $JSKK.Class.create
 			(
 				[framework.Signal.CMP_DO_RECONFIGURE,		'onReconfigure'],
 				[framework.Signal.VIEW_IS_READY,			'onViewReady'],
-				[framework.Signal.VIEW_DONE_GOTBASEHTML,	'onGotBaseHTML']
+				[framework.Signal.VIEW_DONE_GOTBASEHTML,	'onGotBaseHTML'],
+				[framework.Signal.STATEFULMODEL_IS_READY,	'onReadyState']
 			);
 		},
 		onViewReady:	$JSKK.emptyFunction,
 		onGotBaseHTML: 	$JSKK.emptyFunction,
+		onReadyState:	$JSKK.emptyFunction,
 //		onBeforeRender:	$JSKK.emptyFunction,
 		onReconfigure:	$JSKK.emptyFunction
 	}

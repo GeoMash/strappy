@@ -19,6 +19,7 @@ $JSKK.Class.create
         */
         _iid:			null,
 		_ready:			false,
+		_stateBindings:	{},
         contentURL:		null,
 		baseHTML:		null,
 		element:		null,
@@ -99,9 +100,9 @@ $JSKK.Class.create
 		insertBaseHTML: function(signal)
 		{
 			console.debug('insertBaseHTML');
-			var body=signal.getBody();
-			console.debug(body);
-			var view=$(this.getBaseHTML());
+			var	body=signal.getBody(),
+				view=$(this.getBaseHTML());
+			
 			view.attr('id',this.getIID());
 			$(body.where)[body.how](view);
 			this._ready=true;
@@ -115,7 +116,7 @@ $JSKK.Class.create
 		onReady:		$JSKK.emptyFunction,
 		onViewInit: 	$JSKK.emptyFunction,
 		onModelChange:	$JSKK.emptyFunction,
-		onStateChange:	$JSKK.emptyFunction,
+//		onStateChange:	$JSKK.emptyFunction,
 		generateInstanceID: function()
 		{
 			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
@@ -172,8 +173,35 @@ $JSKK.Class.create
 					}
 				}.bind(this)
 			);
+		},
+		bindStateEvents: function()
+		{
+			var bindings=$JSKK.toArray(arguments);
+			for (var i=0,j=bindings.length; i<j; i++)
+			{
+				if (Object.isFunction(this[bindings[i][1]]))
+				{
+					this._stateBindings[bindings[i][0]]=this[bindings[i][1]].bind(this);
+				}
+				else
+				{
+					throw new Error('Unable to bind state change event for stateful property "'+bindings[i][0]+'" because the method "'+bindings[i][1]+'" '
+									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
+				}
+			}
+		},
+		onStateChange: function(signal)
+		{
+			console.debug('onStateChange');
+			var changeSet=signal.getBody().change;
+			for (var item in changeSet)
+			{
+				if (Object.isFunction(this._stateBindings[item]))
+				{
+					this._stateBindings[item](changeSet[item]);
+				}
+			}
 		}
-		
 		
 		
 		

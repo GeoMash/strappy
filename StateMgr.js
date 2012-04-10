@@ -22,6 +22,8 @@ $JSKK.Class.create
 			
 			$(window).bind('hashchange',this.onHashChangeTest.bind(this));
 			
+			this.onHashChange(null,true);
+			
 			var OLD_HASH=window.location.hash;
 			window.location.hash='welcome';
 			
@@ -66,9 +68,9 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
-		onHashChange: function()
+		onHashChange: function(event,supressSignal)
 		{
-			console.debug('onHashChange');
+			console.debug('onHashChange',(supressSignal)?'(supressed)':'');
 			this.stateString=window.location.hash.replace('#','');
 			if (!Object.isEmpty(this.stateString))
 			{
@@ -78,7 +80,10 @@ $JSKK.Class.create
 			{
 				this.state={};
 			}
-			this.sendSignal(framework.Signal.STATE_CHANGE,this.state);
+			if (!supressSignal)
+			{
+				this.sendSignal(framework.Signal.STATE_CHANGE,this.state);
+			}
 		},
 		registerStateChanger: function(el,state)
 		{
@@ -92,6 +97,10 @@ $JSKK.Class.create
 				this.state[node]=state[node];
 			}
 			window.location.hash=this.parseStateObject(this.state);
+		},
+		getState: function()
+		{
+			return this.state;
 		},
 		parseStateString: function(state)
 		{

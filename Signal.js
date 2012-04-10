@@ -12,14 +12,15 @@ $JSKK.Class.create
 (
 	{
 		//Scope
-		LOCAL:					'local',
-		GLOBAL:					'global',
+		LOCAL:						'local',
+		GLOBAL:						'global',
 		
 		//State
-		STATE_CHANGE:			'state.change',
+		STATE_CHANGE:				'state.change',
 		
 		//Component
-		CMP_DO_RECONFIGURE:		'component.do.reconfigure',
+		CMP_DO_RECONFIGURE:			'component.do.reconfigure',
+//		CMP_IS_READY:				'component.is.ready',
 		
 		//Views
 		VIEW_IS_READY:				'view.is.ready',
@@ -42,6 +43,7 @@ $JSKK.Class.create
 		//Models
 		MODEL_DONE_CHANGE:			'model.done.change',
 		STATEFULMODEL_DONE_CHANGE:	'stateful.model.done.change',
+		STATEFULMODEL_IS_READY:		'stateful.model.is.ready',
 		COMMAND_COMPLETE:			'command.complete'
 		
 	},

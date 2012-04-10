@@ -19,7 +19,8 @@ $JSKK.Class.create
 		{
 			this.registerSignals
 			(
-				[framework.Signal.STATE_CHANGE,'_onStateChange',framework.Signal.GLOBAL]
+				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL],
+				[framework.Signal.VIEW_IS_READY,			'onViewReady']
 			);
 			if (!(this.stateModel=this.getModel('State')))
 			{
@@ -28,17 +29,31 @@ $JSKK.Class.create
 		},
 		_onStateChange: function(signal)
 		{
-//			if (this.stateModel.isReady())
-//			{
-//				this.onStateChange(signal.getBody());
-//			}
-			this.onStateChange(signal.getBody());
+			//Ignore all state changes if the state model is not flagged as ready.
+			if (this.stateModel.isReady())
+			{
+				this.onStateChange(signal.getBody());
+			}
 		},
 		onStateChange:	$JSKK.emptyFunction,
-		updateState: function(key,value)
+		onViewReady:	$JSKK.emptyFunction,
+		setReady:		function()
+		{
+			this.stateModel.setReady(true);
+		},
+		updateState:	function(key,value)
 		{
 			this.stateModel.set(key,value);
 			return this;
+		},
+		setViewReadyState: function(view)
+		{
+			this.stateModel.setViewReady(view);
+			return this;
+		},
+		getReadyViews: function()
+		{
+			return this.stateModel.getReadyViews();
 		}
 	}
 );
