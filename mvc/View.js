@@ -33,12 +33,6 @@ $JSKK.Class.create
 		{
 			this.generateInstanceID();
 			
-//			this.registerSignals
-//			(
-//				[framework.SIGNAL.VIEW_DONE_INIT,			'onViewInit'],
-//				[framework.SIGNAL.VIEW_DO_INSERTBASEHTML,	'insertBaseHTML']
-//			);
-			
 			this.registerSignals
 			(
 				[framework.Signal.MODEL_DONE_CHANGE,			'onModelChange',	framework.Signal.GLOBAL],
@@ -49,13 +43,10 @@ $JSKK.Class.create
 			);
 			
 			this.fetchContent();
-//			this.sendSignal(framework.SIGNAL.VIEW_DONE_INIT,{id:this.getID()});
 		},
 		
 		fetchContent: function()
 		{
-//			if (this.remoteView)
-//			{
 				$.get
 				(
 					(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.$reflect('name').toLowerCase()+'.html',
@@ -65,38 +56,7 @@ $JSKK.Class.create
 						this.sendSignal(framework.Signal.VIEW_DONE_GOTBASEHTML,{component:this.getCmpName(),id:this.getID()});
 					}.bind(this)
 				);
-//			}
 		},
-		
-//		insertBaseHTML: function(signal)
-//		{
-//			var body=signal.getBody();
-//			if (body.id==this.getID())
-//			{
-//				if (this.sendSignal(framework.SIGNAL.VIEW_BEFORE_RENDER,{id:this.getID()})!==false)
-//				{
-//					var where	=body.where,
-//						how		=body.how,
-//						element	=$(where);
-//					if (element.length)
-//					{
-//						if (Object.isFunction(element[how]))
-//						{
-//							element[how](this.baseHTML);
-//							this.sendSignal(framework.SIGNAL.VIEW_DONE_RENDER,{id:this.getID()});
-//						}
-//						else
-//						{
-//							throw new Error('"'+how+'" is an invalid method and cannot be called on element "'+where+'".');
-//						}
-//					}
-//					else
-//					{
-//						throw new Error('Unable to insert base html into "'+where+'". Element not found.');
-//					}
-//				}
-//			}
-//		},
 		insertBaseHTML: function(signal)
 		{
 			console.debug('insertBaseHTML');
@@ -116,7 +76,6 @@ $JSKK.Class.create
 		onReady:		$JSKK.emptyFunction,
 		onViewInit: 	$JSKK.emptyFunction,
 		onModelChange:	$JSKK.emptyFunction,
-//		onStateChange:	$JSKK.emptyFunction,
 		generateInstanceID: function()
 		{
 			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
@@ -131,10 +90,10 @@ $JSKK.Class.create
 		{
 			return this._iid;
 		},
-        bindEventToSignal: function()
-		{
-			// empty function
-		},
+//		bindEventToSignal: function()
+//		{
+//			// empty function
+//		},
 		getContainerClass: function()
 		{
 			return '.'+this.getSafeID();

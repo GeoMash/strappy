@@ -28,7 +28,7 @@ $JSKK.Class.create
 		_models:		{},
 		_views:			{},
 		_controllers:	{},
-		_ready:			false,
+		_configured:	false,
 		my:
 		{
 			name:		null,
@@ -162,9 +162,9 @@ $JSKK.Class.create
 		{
 			for (var i=0,j=this.controllers.length; i<j; i++)
 			{
-				if (Object.isDefined(this.my.NSObject[this.my.name.toLowerCase()].controller[this.controllers[i]]))
+				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
 				{
-					this._controllers[this.controllers[i]]=new this.my.NSObject[this.my.name.toLowerCase()].controller[this.controllers[i]](this);
+					this._controllers[this.controllers[i]]=new this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]](this);
 				}
 				else
 				{
@@ -177,10 +177,10 @@ $JSKK.Class.create
 		{
 			for (var i=0,j=this.views.length; i<j; i++)
 			{
-				if (Object.isDefined(this.my.NSObject[this.my.name.toLowerCase()])
-				&& Object.isDefined(this.my.NSObject[this.my.name.toLowerCase()].view[this.views[i]]))
+				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
+				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]]))
 				{
-					this._views[this.views[i]]=new this.my.NSObject[this.my.name.toLowerCase()].view[this.views[i]](this);
+					this._views[this.views[i]]=new this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]](this);
 				}
 				else
 				{
@@ -204,10 +204,10 @@ $JSKK.Class.create
 		{
 			for (var i=0,j=this.models.length; i<j; i++)
 			{
-				if (Object.isDefined(this.my.NSObject[this.my.name.toLowerCase()])
-				&& Object.isDefined(this.my.NSObject[this.my.name.toLowerCase()].model[this.models[i]]))
+				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
+				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]]))
 				{
-					this._models[this.models[i]]=new this.my.NSObject[this.my.name.toLowerCase()].model[this.models[i]](this);
+					this._models[this.models[i]]=new this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]](this);
 				}
 				else
 				{
@@ -241,6 +241,7 @@ $JSKK.Class.create
 					{
 						this.config=newConfig;
 					}
+					this._configured=true;
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
@@ -254,6 +255,10 @@ $JSKK.Class.create
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
+		},
+		isConfigured: function()
+		{
+			return this._configured;
 		},
 		getConfig:		function(key)
 		{
