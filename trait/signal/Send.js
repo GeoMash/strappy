@@ -30,6 +30,14 @@ $JSKK.Trait.create
 			{
 				throw new Error('Class '+this.$reflect('name')+' attempted to fire an empty signal.');
 			}
+		},
+		sendLocalSignal: function()
+		{
+			
+		},
+		sendGlobalSignal: function()
+		{
+			
 		}
 	}
 );
