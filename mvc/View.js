@@ -174,20 +174,23 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
-		bindStateEvents: function()
+		bindStateEvents: function(bindings)
 		{
-			var bindings=$JSKK.toArray(arguments);
-			for (var i=0,j=bindings.length; i<j; i++)
+			for (var item in bindings)
 			{
-				if (Object.isFunction(this[bindings[i][1]]))
+				if (Object.isFunction(this[bindings[item]]))
 				{
-					this._stateBindings[bindings[i][0]]=this[bindings[i][1]].bind(this);
+					this._stateBindings[item]=this[bindings[item]].bind(this);
 				}
 				else
 				{
-					throw new Error('Unable to bind state change event for stateful property "'+bindings[i][0]+'" because the method "'+bindings[i][1]+'" '
+					throw new Error('Unable to bind state change event for stateful property "'+item+'" because the method "'+bindings[item]+'" '
 									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
 				}
+			}
+			for (var i=0,j=bindings.length; i<j; i++)
+			{
+				
 			}
 		},
 		onStateChange: function(signal)
