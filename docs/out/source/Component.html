@@ -1,5 +1,22 @@
-/**
- * @class framework.Component
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='framework-Component'>/**
+</span> * @class framework.Component
  * The core class which all components extend from.
  * 
  * @mixins $JSKK.trait.Configurable
@@ -22,16 +39,16 @@ $JSKK.Class.create
 (
 	{},
 	{
-		/**
-		 * @cfg config Configuration properties.
+<span id='framework-Component-cfg-config'>		/**
+</span>		 * @cfg config Configuration properties.
 		 * @cfg config.attachTo The DOM element that this component will attach itself to. (required)
 		 */
 		config:
 		{
 			attachTo:	null
 		},
-		/**
-		 * @property browser Contains browser information.
+<span id='framework-Component-property-browser'>		/**
+</span>		 * @property browser Contains browser information.
 		 * @property browser.name The name of the browser.
 		 * @property browser.version The version of the browser.
 		 * @readonly
@@ -41,8 +58,8 @@ $JSKK.Class.create
 			name:		null,
 			version:	null
 		},
-		/**
-		 * @property components Specifiy a list of child components.
+<span id='framework-Component-property-components'>		/**
+</span>		 * @property components Specifiy a list of child components.
 		 * 
 	$JSKK.Class.create
 	(
@@ -66,8 +83,8 @@ $JSKK.Class.create
 		 * 
 		 */
 		components:		{},
-		/**
-		 * @property models Specify a list of models to pre-load.
+<span id='framework-Component-property-models'>		/**
+</span>		 * @property models Specify a list of models to pre-load.
 		 * 
 	$JSKK.Class.create
 	(
@@ -89,8 +106,8 @@ $JSKK.Class.create
 	);
 		 */
 		models:			[],
-		/**
-		 * @property views Specify a list of views to pre-load.
+<span id='framework-Component-property-views'>		/**
+</span>		 * @property views Specify a list of views to pre-load.
 		 * 
 	$JSKK.Class.create
 	(
@@ -111,8 +128,8 @@ $JSKK.Class.create
 	);
 		 */
 		views:			[],
-		/**
-		 * @property controllers Specify a list of controllers to pre-load.
+<span id='framework-Component-property-controllers'>		/**
+</span>		 * @property controllers Specify a list of controllers to pre-load.
 		 * 
 	$JSKK.Class.create
 	(
@@ -134,28 +151,28 @@ $JSKK.Class.create
 	);
 		 */
 		controllers:	[],
-		/**
-		 * @property _models A container for all the initialized models.
+<span id='framework-Component-property-_models'>		/**
+</span>		 * @property _models A container for all the initialized models.
 		 * @private
 		 */
 		_models:		{},
-		/**
-		 * @property _views A container for all the initialized views.
+<span id='framework-Component-property-_views'>		/**
+</span>		 * @property _views A container for all the initialized views.
 		 * @private
 		 */
 		_views:			{},
-		/**
-		 * @property _controllers A container for all the initialized controllers.
+<span id='framework-Component-property-_controllers'>		/**
+</span>		 * @property _controllers A container for all the initialized controllers.
 		 * @private
 		 */
 		_controllers:	{},
-		/**
-		 * @property _configured A flag to indicate weather or not this component has been configured.
+<span id='framework-Component-property-_configured'>		/**
+</span>		 * @property _configured A flag to indicate weather or not this component has been configured.
 		 * @private
 		 */
 		_configured:	false,
-		/**
-		 * @property my A special object containing information relevant to this class.
+<span id='framework-Component-property-my'>		/**
+</span>		 * @property my A special object containing information relevant to this class.
 		 * @property my.name The name of this class.
 		 * @property my.index The position this component lives in within the stack of 
 		 * components registered against the framework.
@@ -168,14 +185,14 @@ $JSKK.Class.create
 			NSObject:	null
 		},
 		
-		/**
-		 * @property radioTower A reference to the {@link framework.RadioTower Radio Tower}. 
+<span id='framework-Component-property-radioTower'>		/**
+</span>		 * @property radioTower A reference to the {@link framework.RadioTower Radio Tower}. 
 		 * @private
 		 */
 		radioTower: null,
 		stateMgr:	null,
-		/**
-		 * @constructor
+<span id='framework-Component-method-constructor'>		/**
+</span>		 * @constructor
 		 * Sets up the component by initalizing all it's child components,
 		 * views, models and controllers.
 		 * 
@@ -205,7 +222,7 @@ $JSKK.Class.create
 			this.my.index		=window.framework.$components[this.my.name].push(this);
 			this.my.NSObject	=window;
 			
-			for (var i=0,j=this.my.namespace.length; i<j; i++)
+			for (var i=0,j=this.my.namespace.length; i&lt;j; i++)
 			{
 				this.my.NSObject=this.my.NSObject[this.my.namespace[i]];
 			}
@@ -223,8 +240,8 @@ $JSKK.Class.create
 			this.ready=true;
 			this.reconfigure();
 		},
-		/**
-		 * Initalizes the component's conneciton to the Radio Tower.
+<span id='framework-Component-method-initRadioTower'>		/**
+</span>		 * Initalizes the component's conneciton to the Radio Tower.
 		 * 
 		 * The Radio Tower enables signals to flow through this component.
 		 * 
@@ -238,8 +255,8 @@ $JSKK.Class.create
 			}
 			this.radioTower=window.framework.$radioTower;
 		},
-		/**
-		 * Initalizes the component's connection to the State Manager.
+<span id='framework-Component-method-initStateMgr'>		/**
+</span>		 * Initalizes the component's connection to the State Manager.
 		 * 
 		 * The State Manager
 		 */
@@ -251,8 +268,8 @@ $JSKK.Class.create
 			}
 			this.stateMgr=window.framework.$stateMgr;
 		},
-		/**
-		 * Gets the browser info. Note that this is currently tied to jQuery.
+<span id='framework-Component-method-getBrowser'>		/**
+</span>		 * Gets the browser info. Note that this is currently tied to jQuery.
 		 * @private
 		 */
 		getBrowser: function()
@@ -279,8 +296,8 @@ $JSKK.Class.create
 				this.browser.version=jQuery.browser.version.split('.')[0];
 			}
 		},
-		/**
-		 * @private
+<span id='framework-Component-method-initChildComponents'>		/**
+</span>		 * @private
 		 */
 		initChildComponents: function()
 		{
@@ -293,7 +310,7 @@ $JSKK.Class.create
 				object		=window[parts[0]];
 				if (Object.isDefined(object))
 				{
-					for (var i=1,j=parts.length; i<j; i++)
+					for (var i=1,j=parts.length; i&lt;j; i++)
 					{
 						if (Object.isDefined(object[parts[i]]))
 						{
@@ -301,21 +318,21 @@ $JSKK.Class.create
 						}
 						else
 						{
-							throw new Error('Error! component "'+this.components[component]+'" not loaded.');
+							throw new Error('Error! component &quot;'+this.components[component]+'&quot; not loaded.');
 							break;
 						}
 					}
 				}
 				else
 				{
-					throw new Error('Error! component "'+this.components[component]+'" not loaded.');
+					throw new Error('Error! component &quot;'+this.components[component]+'&quot; not loaded.');
 					break;
 				}
 				this.components[component]=new object();
 			}
 		},
-		/**
-		 * 
+<span id='framework-Component-method-getCmp'>		/**
+</span>		 * 
 		 */
 		getCmp: function(cmpName)
 		{
@@ -325,16 +342,16 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Error('Unable to get component "'+cmpName+'". This component has not been registered.');
+				throw new Error('Unable to get component &quot;'+cmpName+'&quot;. This component has not been registered.');
 			}
 		},
-		/**
-		 * 
+<span id='framework-Component-method-initControllers'>		/**
+</span>		 * 
 		 * @private
 		 */
 		initControllers: function()
 		{
-			for (var i=0,j=this.controllers.length; i<j; i++)
+			for (var i=0,j=this.controllers.length; i&lt;j; i++)
 			{
 				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
 				{
@@ -342,33 +359,33 @@ $JSKK.Class.create
 				}
 				else
 				{
-					throw new Error('Error controller "'+this.controllers[i]+'" not loaded.');
+					throw new Error('Error controller &quot;'+this.controllers[i]+'&quot; not loaded.');
 					break;
 				}
 			}
 		},
-		/**
-		 * 
+<span id='framework-Component-method-initViews'>		/**
+</span>		 * 
 		 * @private
 		 */
 		initViews: function()
 		{
-			for (var i=0,j=this.views.length; i<j; i++)
+			for (var i=0,j=this.views.length; i&lt;j; i++)
 			{
 				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
-				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]]))
+				&amp;&amp; Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]]))
 				{
 					this._views[this.views[i]]=new this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]](this);
 				}
 				else
 				{
-					throw new Error('Error - view "'+this.views[i]+'" not loaded.');
+					throw new Error('Error - view &quot;'+this.views[i]+'&quot; not loaded.');
 					break;
 				}
 			}
 		},
-		/**
-		 * 
+<span id='framework-Component-method-getView'>		/**
+</span>		 * 
 		 */
 		getView: function(view)
 		{
@@ -378,31 +395,31 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Error('Error - view "'+view+'" has not been initilized.');
+				throw new Error('Error - view &quot;'+view+'&quot; has not been initilized.');
 			}
 		},
-		/**
-		 * 
+<span id='framework-Component-method-initModels'>		/**
+</span>		 * 
 		 * @private
 		 */
 		initModels: function()
 		{
-			for (var i=0,j=this.models.length; i<j; i++)
+			for (var i=0,j=this.models.length; i&lt;j; i++)
 			{
 				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
-				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]]))
+				&amp;&amp; Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]]))
 				{
 					this._models[this.models[i]]=new this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]](this);
 				}
 				else
 				{
-					throw new Error('Error - model "'+this.models[i]+'" not loaded for component "'+this.my.name+'".');
+					throw new Error('Error - model &quot;'+this.models[i]+'&quot; not loaded for component &quot;'+this.my.name+'&quot;.');
 					break;
 				}
 			}
 		},
-		/**
-		 * 
+<span id='framework-Component-method-getModel'>		/**
+</span>		 * 
 		 */
 		getModel: function(model)
 		{
@@ -412,11 +429,11 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Error('Error - model "'+model+'" has not been initilized.');
+				throw new Error('Error - model &quot;'+model+'&quot; has not been initilized.');
 			}
 		},
-		/**
-		 * 
+<span id='framework-Component-method-configure'>		/**
+</span>		 * 
 		 */
 		configure: function(newConfig)
 		{
@@ -437,8 +454,8 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
-		/**
-		 * Call this method to force the component to reconfigure itself.
+<span id='framework-Component-method-reconfigure'>		/**
+</span>		 * Call this method to force the component to reconfigure itself.
 		 * 
 		 * This essentially calls the {@link }
 		 * 
@@ -454,16 +471,16 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
-		/**
-		 * 
+<span id='framework-Component-method-isConfigured'>		/**
+</span>		 * 
 		 * @return {Boolean} true if this component has been configured.
 		 */
 		isConfigured: function()
 		{
 			return this._configured;
 		},
-		/**
-		 * Fetches a config item associated with this component.
+<span id='framework-Component-method-getConfig'>		/**
+</span>		 * Fetches a config item associated with this component.
 		 * 
 		 * @return {Mixed} The config item's value. 
 		 */
@@ -471,7 +488,7 @@ $JSKK.Class.create
 		{
 			var	parts	=key.split('.'),
 				object	=this.config;
-			for (var i=0,j=parts.length; i<j; i++)
+			for (var i=0,j=parts.length; i&lt;j; i++)
 			{
 				if (Object.isDefined(object[parts[i]]))
 				{
@@ -484,8 +501,8 @@ $JSKK.Class.create
 			}
 			return object;
 		},
-		/**
-		 * Calculates the ID of this component based off of
+<span id='framework-Component-method-getID'>		/**
+</span>		 * Calculates the ID of this component based off of
 		 * its namespace and name.
 		 * 
 		 * @return {String} The ID of this component or the M/V/C class
@@ -498,8 +515,8 @@ $JSKK.Class.create
 			id.push(this.className);
 			return id.join('.');
 		},
-		/**
-		 * See {@link framework.trait.signal.Send#sendSignal}
+<span id='framework-Component-method-sendSignal'>		/**
+</span>		 * See {@link framework.trait.signal.Send#sendSignal}
 		 * @private
 		 */
 		sendSignal: function(name,body,type,filter)
@@ -533,4 +550,6 @@ $JSKK.Class.create
 			}
 		}
 	}
-);
+);</pre>
+</body>
+</html>

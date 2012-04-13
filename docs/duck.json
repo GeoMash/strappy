@@ -1,0 +1,13 @@
+{
+	"--output":				"./out/",
+    "--title":				"Framework Docs",
+    "--welcome":			"index.html",
+    "--warnings":			["-link", "-no_doc"],
+    "--examples-base-url":	"../examples/",
+    "--examples":			"./examples.json",
+    "--":
+    [
+        "../Component.js",
+        "../RadioTower.js"
+    ]
+}
