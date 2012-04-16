@@ -1,5 +1,22 @@
-/**
- * @class framework.StateMgr
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='framework-StateMgr'>/**
+</span> * @class framework.StateMgr
  * 
  * This is the frameworks state management handler. It helps to manage
  * the state of all components.
@@ -9,7 +26,7 @@
  * 
  * This class will capture, monitor and update state properties which are
  * recorded in the URL of the current page. This URL is a hashed url and
- * consists of key-value properties, separated by ampersands (&amp;).
+ * consists of key-value properties, separated by ampersands (&amp;amp;).
  * 
  * Note that this class is a singleton and should never be instantiated directly.
  * 
@@ -31,32 +48,32 @@ $JSKK.Class.create
 (
 	{},
 	{
-		/**
-		 * @private state This object contains the current stored state,
+<span id='framework-StateMgr-property-state'>		/**
+</span>		 * @private state This object contains the current stored state,
 		 * as visualized by the hash URL.
 		 */
 		state:			{},
-		/**
-		 * @private state A string representation of the state object.
+<span id='framework-StateMgr-property-stateString'>		/**
+</span>		 * @private state A string representation of the state object.
 		 */
 		stateString:	'',
-		/**
-		 * @property radioTower A reference to the {@link framework.RadioTower Radio Tower}. 
+<span id='framework-StateMgr-property-radioTower'>		/**
+</span>		 * @property radioTower A reference to the {@link framework.RadioTower Radio Tower}. 
 		 * @private
 		 */
 		radioTower:		null,
-		/**
-		 * A flag which is set to true or false depending on weather
-		 * or not the browser supports the "hashchange" event.
+<span id='framework-StateMgr-property-eventSupported'>		/**
+</span>		 * A flag which is set to true or false depending on weather
+		 * or not the browser supports the &quot;hashchange&quot; event.
 		 * 
 		 * See {@link framework.RadioTower Radio Tower}.
 		 * @private
 		 */
 		eventSupported:	false,
-		/**
-		 * @constructor
+<span id='framework-StateMgr-method-constructor'>		/**
+</span>		 * @constructor
 		 * Sets up the state manager by linking it to the {@link framework.RadioTower Radio Tower},
-		 * testing for "hashchange" event support, and creating bindings
+		 * testing for &quot;hashchange&quot; event support, and creating bindings
 		 * for the hash changes to be captured.
 		 * 
 		 * @return {framework.StateMgr}
@@ -80,8 +97,8 @@ $JSKK.Class.create
 				this.bindHashEvent.defer(200,this);
 			}.bind(this)).defer(100);
 		},
-		/**
-		 * This is an internal callback method for testing if the hash
+<span id='framework-StateMgr-method-onHashChangeTest'>		/**
+</span>		 * This is an internal callback method for testing if the hash
 		 * event is supported in the current browser.
 		 * @private
 		 * @return {void}
@@ -90,8 +107,8 @@ $JSKK.Class.create
 		{
 			this.eventSupported=true;
 		},
-		/**
-		 * This method will bind to the hash change event natively,
+<span id='framework-StateMgr-method-bindHashEvent'>		/**
+</span>		 * This method will bind to the hash change event natively,
 		 * or if the browser does not support it, then it will bind to
 		 * hand over the control of monitoring the hash changes to
 		 * {@link framework.StateMgr#monitorHashChange}.
@@ -109,9 +126,9 @@ $JSKK.Class.create
 				this.monitorHashChange();
 			}
 		},
-		/**
-		 * This method is invoked into a loop whenever the browser fails the
-		 * "hashchange" event.
+<span id='framework-StateMgr-method-monitorHashChange'>		/**
+</span>		 * This method is invoked into a loop whenever the browser fails the
+		 * &quot;hashchange&quot; event.
 		 * 
 		 * It is designed to poll the hash address for changes and call
 		 * {@link framework.StateMgr#onHashChange} if a change is detected.
@@ -136,15 +153,15 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
-		/**
-		 * This method will be invoked automatically whenever a change in the
+<span id='framework-StateMgr-method-onHashChange'>		/**
+</span>		 * This method will be invoked automatically whenever a change in the
 		 * hash address is detected. It will fire the {@link framework.Signal#STATE_CHANGE State Change}
 		 * signal and provide the new state in the body of the signal.
 		 * 
 		 * Note that the signal can be supressed by passing true to the supressSignal param.
 		 * 
 		 * @param {Object} event The event object. Is null if the browser
-		 * does not support the "hashchange" event.
+		 * does not support the &quot;hashchange&quot; event.
 		 * @param {Boolean} supressSignal Blocks the {@link framework.Signal#STATE_CHANGE State Change}
 		 * signal from being issued.
 		 * 
@@ -168,9 +185,9 @@ $JSKK.Class.create
 				this.sendSignal(framework.Signal.STATE_CHANGE,this.state);
 			}
 		},
-		/**
-		 * This is a method which {@link framework.View views} can use
-		 * to register a dom element's "click" event with a state URL.
+<span id='framework-StateMgr-method-registerStateChanger'>		/**
+</span>		 * This is a method which {@link framework.View views} can use
+		 * to register a dom element's &quot;click&quot; event with a state URL.
 		 * 
 		 * This means whenever the bound element is clicked, the state will
 		 * be updated with the values that were bound to the event.
@@ -178,18 +195,18 @@ $JSKK.Class.create
 		 * Here is an example:
 		 * 
 		 * The HTML:
-	<div class="navContainer">
-		<ul>
-			<li class="active"><a id="container-home" href="javascript:{};">Home</a></li>
-			<li><a id="container-news" href="javascript:{};">News</a></li>
-			<li><a id="container-about" href="javascript:{};">About</a></li>
-		</ul>
-	</div>
-	<div id="outerContainer">
-		<div id="section-home" class="active">Home Section</div>
-		<div id="section-news">News Section</div>
-		<div id="section-about">About Section</div>
-	</div>
+	&lt;div class=&quot;navContainer&quot;&gt;
+		&lt;ul&gt;
+			&lt;li class=&quot;active&quot;&gt;&lt;a id=&quot;container-home&quot; href=&quot;javascript:{};&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a id=&quot;container-news&quot; href=&quot;javascript:{};&quot;&gt;News&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a id=&quot;container-about&quot; href=&quot;javascript:{};&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/div&gt;
+	&lt;div id=&quot;outerContainer&quot;&gt;
+		&lt;div id=&quot;section-home&quot; class=&quot;active&quot;&gt;Home Section&lt;/div&gt;
+		&lt;div id=&quot;section-news&quot;&gt;News Section&lt;/div&gt;
+		&lt;div id=&quot;section-about&quot;&gt;About Section&lt;/div&gt;
+	&lt;/div&gt;
 		 * 
 		 * The Javascript:
 	$JSKK.Class.create
@@ -207,15 +224,15 @@ $JSKK.Class.create
 			{
 				this.bindStatefulLinks
 				(
-					['[href="#container-home"]',	'section=home'],
-					['[href="#container-news"]',	'section=news'],
-					['[href="#container-about"]',	'section=about']
+					['[href=&quot;#container-home&quot;]',	'section=home'],
+					['[href=&quot;#container-news&quot;]',	'section=news'],
+					['[href=&quot;#container-about&quot;]',	'section=about']
 				);
 			}
 		}
 	);
-		 * In the above example, the "a" tags would be bound so that the
-		 * "section" state property changed whenever they were clicked.
+		 * In the above example, the &quot;a&quot; tags would be bound so that the
+		 * &quot;section&quot; state property changed whenever they were clicked.
 		 * 
 		 * The state manager would then send the {@link framework.Signal#STATE_CHANGE State Change}
 		 * signal and a {@link framework.StatefulController state controller}
@@ -223,11 +240,11 @@ $JSKK.Class.create
 		 * {@link framework.StatefulModel state model}. This would then
 		 * invoke a method bound by the views {@link framework.View#bindStateEvents}
 		 * method which could switch the visible section within the outerContainer div
-		 * and update which li was "active".
+		 * and update which li was &quot;active&quot;.
 		 * 
 		 * @param {jQuery}
 		 * @param {String} A string representing the state as key-value properties,
-		 * separated by ampersands (&amp;).
+		 * separated by ampersands (&amp;amp;).
 		 * @return {void}
 		 */
 		registerStateChanger: function(el,state)
@@ -235,8 +252,8 @@ $JSKK.Class.create
 			state=this.parseStateString(state);
 			el.click(this.updateState.bind(this,state));
 		},
-		/**
-		 * This is a private method which wraps state change events bound with
+<span id='framework-StateMgr-method-updateState'>		/**
+</span>		 * This is a private method which wraps state change events bound with
 		 * {@link framework.StateMgr#registerStateChanger}. It parses the
 		 * new state and applies it to the hash address.
 		 * @private
@@ -251,8 +268,8 @@ $JSKK.Class.create
 			}
 			window.location.hash=this.parseStateObject(this.state);
 		},
-		/**
-		 * Fetches the current state.
+<span id='framework-StateMgr-method-getState'>		/**
+</span>		 * Fetches the current state.
 		 * 
 		 * @return {Object} The current state object.
 		 */
@@ -260,18 +277,18 @@ $JSKK.Class.create
 		{
 			return this.state;
 		},
-		/**
-		 * Parses a hash address string and converts it to an object.
+<span id='framework-StateMgr-method-parseStateString'>		/**
+</span>		 * Parses a hash address string and converts it to an object.
 		 * @private
 		 * @param {String} A string representing the state as key-value properties,
 		 * @return {Object} The new state object.
 		 */
 		parseStateString: function(state)
 		{
-			var	states		=state.split('&'),
+			var	states		=state.split('&amp;'),
 				stateParts	=null,
 				stateObj	={};
-			for (var i=0,j=states.length; i<j; i++)
+			for (var i=0,j=states.length; i&lt;j; i++)
 			{
 				stateParts=states[i].split('=');
 				if (['true','false'].inArray(stateParts[1]))
@@ -286,8 +303,8 @@ $JSKK.Class.create
 			}
 			return stateObj;
 		},
-		/**
-		 * Parses a state object and coverts it to a hash address string.
+<span id='framework-StateMgr-method-parseStateObject'>		/**
+</span>		 * Parses a state object and coverts it to a hash address string.
 		 * @private
 		 * @param {Object} A key valued state object.
 		 * @return {String} The new state string.
@@ -299,10 +316,10 @@ $JSKK.Class.create
 			{
 				stateString.push(node+'='+this.state[node]);
 			}
-			return stateString.join('&');
+			return stateString.join('&amp;');
 		},
-		/**
-		 * Fetches the Radio Tower singleton.
+<span id='framework-StateMgr-method-getRadioTower'>		/**
+</span>		 * Fetches the Radio Tower singleton.
 		 * @return {framework.RadioTower} The Radio Tower.
 		 */
 		getRadioTower: function()
@@ -310,4 +327,6 @@ $JSKK.Class.create
 			return this.radioTower;
 		}
 	}
-);
+);</pre>
+</body>
+</html>

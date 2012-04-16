@@ -1,5 +1,22 @@
-/**
- * @class framework.mvc.View
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='framework-mvc-View'>/**
+</span> * @class framework.mvc.View
  * 
  * 
  * 
@@ -35,11 +52,11 @@ $JSKK.Class.create
         contentURL:		null,
 		baseHTML:		null,
 		element:		null,
-        // TODO: COMPOSITE PATTERN -> See bottom off this Class
+        // TODO: COMPOSITE PATTERN -&gt; See bottom off this Class
         // children: [],
 
-        /**
-        * @constructor
+<span id='framework-mvc-View-method-constructor'>        /**
+</span>        * @constructor
         * 
         * 
         */
@@ -94,7 +111,7 @@ $JSKK.Class.create
 		{
 			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
 				iid		=[];
-			for (var i=0; i<8; i++)
+			for (var i=0; i&lt;8; i++)
 			{
 				iid.push(chars[Math.floor(Math.random()*25)]);
 			}
@@ -136,7 +153,7 @@ $JSKK.Class.create
 				function()
 				{
 					var item=null;
-					for (var i=0,j=links.length; i<j; i++)
+					for (var i=0,j=links.length; i&lt;j; i++)
 					{
 						item=$(links[i][0],this.getContainer());
 						if (item.length)
@@ -157,11 +174,11 @@ $JSKK.Class.create
 				}
 				else
 				{
-					throw new Error('Unable to bind state change event for stateful property "'+item+'" because the method "'+bindings[item]+'" '
-									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
+					throw new Error('Unable to bind state change event for stateful property &quot;'+item+'&quot; because the method &quot;'+bindings[item]+'&quot; '
+									+'has not been defined on view class &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
 				}
 			}
-			for (var i=0,j=bindings.length; i<j; i++)
+			for (var i=0,j=bindings.length; i&lt;j; i++)
 			{
 				
 			}
@@ -206,7 +223,9 @@ $JSKK.Class.create
         //          child.update(msg);
         //      }
         // }
-        // TODO: IF COMPOSITE PATTERN then -> Bring in convenience methods
+        // TODO: IF COMPOSITE PATTERN then -&gt; Bring in convenience methods
         //  getChild(x), addChild(x), removeChild(x)
     }
-);
+);</pre>
+</body>
+</html>

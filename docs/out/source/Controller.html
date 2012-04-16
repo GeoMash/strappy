@@ -1,9 +1,26 @@
-/**
- * @class framework.mvc.Controller
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='framework-mvc-Controller'>/**
+</span> * @class framework.mvc.Controller
  * 
  * TODO:
  * 
- * Explanation & Examples.
+ * Explanation &amp; Examples.
  * 
  * Bound Signals:
  * 
@@ -48,33 +65,35 @@ $JSKK.Class.create
 				[framework.Signal.STATEFULMODEL_IS_READY,	'onReadyState']
 			);
 		},
-		/**
-		 * This method will be called when a component fires a {@link framework.Signal.CMP_DO_RECONFIGURE Do Reconfigure}
+<span id='framework-mvc-Controller-method-onReconfigure'>		/**
+</span>		 * This method will be called when a component fires a {@link framework.Signal.CMP_DO_RECONFIGURE Do Reconfigure}
 		 * signal.
 		 * @abstract
 		 * @param {framework.Signal} The signal object.
 		 */
 		onReconfigure:	$JSKK.emptyFunction,
-		/**
-		 * This method will be called when a view fires a {@link framework.Signal.VIEW_IS_READY ready}
+<span id='framework-mvc-Controller-method-onViewReady'>		/**
+</span>		 * This method will be called when a view fires a {@link framework.Signal.VIEW_IS_READY ready}
 		 * signal.
 		 * @abstract
 		 * @param {framework.Signal} The signal object.
 		 */
 		onViewReady:	$JSKK.emptyFunction,
-		/**
-		 * This method will be called when a view fires a {@link framework.Signal.VIEW_DONE_GOTBASEHTML Got Base HTML}
+<span id='framework-mvc-Controller-method-onGotBaseHTML'>		/**
+</span>		 * This method will be called when a view fires a {@link framework.Signal.VIEW_DONE_GOTBASEHTML Got Base HTML}
 		 * signal.
 		 * @abstract
 		 * @param {framework.Signal} The signal object.
 		 */
 		onGotBaseHTML: 	$JSKK.emptyFunction,
-		/**
-		 * This method will be called when a state model fires a {@link framework.Signal.STATEFULMODEL_IS_READY Stateful Model is Ready}
+<span id='framework-mvc-Controller-method-onReadyState'>		/**
+</span>		 * This method will be called when a state model fires a {@link framework.Signal.STATEFULMODEL_IS_READY Stateful Model is Ready}
 		 * signal.
 		 * @abstract
 		 * @param {framework.Signal} The signal object.
 		 */
 		onReadyState:	$JSKK.emptyFunction
 	}
-);
+);</pre>
+</body>
+</html>

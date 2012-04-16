@@ -1,8 +1,20 @@
+/**
+ * @class framework.mvc.stateful.Model
+ * 
+ * 
+ * 
+ * @mixins framework.trait.ComponentConnector
+ * @mixins framework.trait.signal.Send
+ * @abstract
+ * 
+ * @uses framework.trait.ComponentConnector
+ * @uses framework.trait.signal.Send
+ */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.mvc',
-		$name:		'StatefulModel',
+		$namespace:	'framework.mvc.stateful',
+		$name:		'Model',
 		$uses:
 		[
 			framework.trait.ComponentConnector,

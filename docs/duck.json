@@ -5,9 +5,24 @@
     "--warnings":			["-link", "-no_doc"],
     "--examples-base-url":	"../examples/",
     "--examples":			"./examples.json",
+    "--external":
+    [
+    	"$JSKK.trait.Configurable",
+    	"$JSKK.trait.Observable"
+    ],
     "--":
     [
         "../Component.js",
-        "../RadioTower.js"
+        "../RadioTower.js",
+        "../StateMgr.js",
+        "../Signal.js",
+        "../trait/ComponentConnector.js",
+        "../trait/signal/Send.js",
+        "../trait/signal/Receive.js",
+        "../mvc/Model.js",
+        "../mvc/View.js",
+        "../mvc/Controller.js",
+        "../mvc/stateful/Model.js",
+        "../mvc/stateful/Controller.js"
     ]
 }

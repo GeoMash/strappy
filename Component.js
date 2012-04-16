@@ -2,11 +2,70 @@
  * @class framework.Component
  * The core class which all components extend from.
  * 
+ * Components are the heart of the framework. Each component is in itself a core,
+ * which means that each component is stand-alone and not dependant on any other
+ * component to operate.
+ * 
+ * This is the core goal of the framework. If a component is not able to conform
+ * to this pattern, then something is wrong with how the component has been built.
+ * 
+ * This class is designed to be extended from. You should never need to add any
+ * additional logic in the extended class. That logic should be placed within
+ * controllers and associated with this component.
+ * 
+ * When you extend this class, you should only need to define configuration for
+ * child components, models, views and controllers.
+ * 
+ * More often than not, your component will require custom signals. These signals
+ * should be pre-defined for consistancy and maintainability within your 
+ * 
+ * An example of a component, with custom signals.
+ * 
+	$JSKK.Class.create
+	(
+		{
+			$namespace:	'Application.component',
+			$name:		'MyComponent',
+			$extends:	framework.Component
+		}
+	)
+	(
+		{
+			SIGNAL:
+			{
+				LOGIN_SUCCESS:		'myComponent.login.success',
+				LOGIN_FAILURE:		'myComponent.login.fail'
+			}
+		},
+		{
+			components:
+			{
+				loginForm:		'Application.component.LoginForm',
+				errorWindow:	'Application.component.DialogWindow',
+				successWindow:	'Application.component.DialogWindow'
+			},
+			models:
+			[
+				'State',
+				'User'
+			],
+			views:
+			[
+				'Default'
+			],
+			controllers:
+			[
+				'State',
+				'Default'
+			]
+		}
+	);
+ * 
  * @mixins $JSKK.trait.Configurable
  * @abstract
  * 
  * @uses framework.RadioTower
- * @uses frmaework.StateMgr
+ * @uses framework.StateMgr
  */
 $JSKK.Class.create
 (
@@ -23,8 +82,7 @@ $JSKK.Class.create
 	{},
 	{
 		/**
-		 * @cfg config Configuration properties.
-		 * @cfg config.attachTo The DOM element that this component will attach itself to. (required)
+		 * @cfg attachTo The DOM element that this component will attach itself to. (required)
 		 */
 		config:
 		{
@@ -160,6 +218,7 @@ $JSKK.Class.create
 		 * @property my.index The position this component lives in within the stack of 
 		 * components registered against the framework.
 		 * @property my.NSObject The namespace in an object format of this class.
+		 * @readonly
 		 */
 		my:
 		{
@@ -167,12 +226,15 @@ $JSKK.Class.create
 			index:		null,
 			NSObject:	null
 		},
-		
 		/**
 		 * @property radioTower A reference to the {@link framework.RadioTower Radio Tower}. 
 		 * @private
 		 */
 		radioTower: null,
+		/**
+		 * @property stateMgr A reference to the {@link framework.StateMgr State Manager}. 
+		 * @private
+		 */
 		stateMgr:	null,
 		/**
 		 * @constructor
@@ -228,7 +290,7 @@ $JSKK.Class.create
 		 * 
 		 * The Radio Tower enables signals to flow through this component.
 		 * 
-		 * @return void
+		 * @return {void}
 		 */
 		initRadioTower: function()
 		{
@@ -280,6 +342,8 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Initializes all the child components associated with this component.
+		 * 
 		 * @private
 		 */
 		initChildComponents: function()
@@ -315,7 +379,13 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Returns a child component which is pre-defined in this
+		 * components "components" property.
 		 * 
+		 * @param {String} cmpName The reference name of the component to get as
+		 * defined by this component.
+		 * @throws Error If the component is not registered.
+		 * @return {framework.Component} the requested component.
 		 */
 		getCmp: function(cmpName)
 		{
@@ -329,6 +399,7 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Initializes all the controllers associated with this component.
 		 * 
 		 * @private
 		 */
@@ -348,6 +419,7 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Initializes all the views associated with this component.
 		 * 
 		 * @private
 		 */
@@ -368,7 +440,12 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Returns an associated view which is pre-defined in this
+		 * components "views" property.
 		 * 
+		 * @param {String} view The name of the view to get.
+		 * @throws Error if the view has not been initilized.
+		 * @return {framework.mvc.View} The requested view if it has been defined.
 		 */
 		getView: function(view)
 		{
@@ -382,6 +459,7 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Initializes all the models associated with this component.
 		 * 
 		 * @private
 		 */
@@ -402,7 +480,12 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Returns an associated model which is pre-defined in this
+		 * components "models" property.
 		 * 
+		 * @param {String} model The name of the model to get.
+		 * @throws 
+		 * @return {framework.mvc.Model} The requested model if it has been defined.
 		 */
 		getModel: function(model)
 		{
@@ -416,7 +499,10 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Configures this component with new configuration properties.
 		 * 
+		 * @param {Object} newConfig The new configuration object.
+		 * @return {void}
 		 */
 		configure: function(newConfig)
 		{
@@ -442,7 +528,7 @@ $JSKK.Class.create
 		 * 
 		 * This essentially calls the {@link }
 		 * 
-		 * @return void
+		 * @return {void}
 		 */
 		reconfigure: function()
 		{
@@ -455,6 +541,7 @@ $JSKK.Class.create
 			);
 		},
 		/**
+		 * A helper method to determine if this component has been configured.
 		 * 
 		 * @return {Boolean} true if this component has been configured.
 		 */

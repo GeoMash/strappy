@@ -7,7 +7,13 @@ $JSKK.Class.create
 	}
 )
 (
-	{},
+	{
+		SIGNAL:
+		{
+			LOGIN_SUCCESS:		'myComponent.login.success',
+			LOGIN_FAILURE:		'myComponent.login.fail'
+		}
+	},
 	{
 		components:
 		{

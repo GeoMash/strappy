@@ -1,5 +1,22 @@
-/**
- * @class framework.trait.ComponentConnector
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='framework-trait-ComponentConnector'>/**
+</span> * @class framework.trait.ComponentConnector
  * 
  * This trait is designed to be used with {@link framework.mvc.Model models},
  * {@link framework.mvc.View views} and {@link framework.mvc.Controller controllers}.
@@ -18,8 +35,8 @@ $JSKK.Trait.create
 )
 (
 	{
-		/**
-		 * @constructor
+<span id='framework-trait-ComponentConnector-method-constructor'>		/**
+</span>		 * @constructor
 		 * This method binds the component to whatever uses this trait.
 		 * 
 		 * @param {framework.Component} component The component to connect.
@@ -28,8 +45,8 @@ $JSKK.Trait.create
 		{
 			this._component=component;
 		},
-		/**
-		 * Returns the parent component associated with the class using this trait.
+<span id='framework-trait-ComponentConnector-method-getParentComponent'>		/**
+</span>		 * Returns the parent component associated with the class using this trait.
 		 * 
 		 * @return {framework.Component} the parent component.
 		 */
@@ -37,8 +54,8 @@ $JSKK.Trait.create
 		{
 			return this._component;
 		},
-		/**
-		 * Returns the name of the parent component associated with the class using
+<span id='framework-trait-ComponentConnector-method-getCmpName'>		/**
+</span>		 * Returns the name of the parent component associated with the class using
 		 * this trait.
 		 * 
 		 * @return {String} The name of the parent component.
@@ -47,8 +64,8 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().my.name;
 		},
-		/**
-		 * Returns the Radio Tower singleton.
+<span id='framework-trait-ComponentConnector-method-getRadioTower'>		/**
+</span>		 * Returns the Radio Tower singleton.
 		 * 
 		 * @return {framework.RadioTower}
 		 */
@@ -56,8 +73,8 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().radioTower;
 		},
-		/**
-		 * Returns the State Manager singleton.
+<span id='framework-trait-ComponentConnector-method-getStateMgr'>		/**
+</span>		 * Returns the State Manager singleton.
 		 * 
 		 * @return {framework.StateMgr}
 		 */
@@ -65,8 +82,8 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().stateMgr;
 		},
-		/**
-		 * Gets the ID of the class which implemented this trait.
+<span id='framework-trait-ComponentConnector-method-getID'>		/**
+</span>		 * Gets the ID of the class which implemented this trait.
 		 * 
 		 * @return {String} The ID.
 		 */
@@ -74,8 +91,8 @@ $JSKK.Trait.create
 		{
 			return this.$reflect('namespace')+'.'+this.$reflect('name');
 		},
-		/**
-		 * Gets the ID of the class which implemented it and makes it safe
+<span id='framework-trait-ComponentConnector-method-getSafeID'>		/**
+</span>		 * Gets the ID of the class which implemented it and makes it safe
 		 * for using as a HTML-based ID.
 		 * 
 		 * @return {String} The ID.
@@ -84,8 +101,8 @@ $JSKK.Trait.create
 		{
 			return (this.$reflect('namespace')+'.'+this.$reflect('name')).replace(/\./g,'-');
 		},
-		/**
-		 * Get's a child component of the associated parent component.
+<span id='framework-trait-ComponentConnector-method-getCmp'>		/**
+</span>		 * Get's a child component of the associated parent component.
 		 * 
 		 * NOTE: As a convention, you should only ever call this if you want
 		 * to {@link framework.Component#configure configure/reconfigure} the
@@ -98,8 +115,8 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getCmp(cmp);
 		},
-		/**
-		 * Fetches a model from the parent component.
+<span id='framework-trait-ComponentConnector-method-getModel'>		/**
+</span>		 * Fetches a model from the parent component.
 		 * 
 		 * @param {String} model The name of the model.
 		 * @return {framework.mvc.Model} The Model instance.
@@ -108,8 +125,8 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getModel(model);
 		},
-		/**
-		 * Fetches a view from the parent component.
+<span id='framework-trait-ComponentConnector-method-getView'>		/**
+</span>		 * Fetches a view from the parent component.
 		 * 
 		 * @param {String} view The name of the view.
 		 * @return {framework.mvc.View} The View instance.
@@ -118,8 +135,8 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getView(view);
 		},
-		/**
-		 * Gets the value of a config property.
+<span id='framework-trait-ComponentConnector-method-getConfig'>		/**
+</span>		 * Gets the value of a config property.
 		 * @param {String} key The config property to get.
 		 * @return 
 		 */
@@ -128,4 +145,6 @@ $JSKK.Trait.create
 			return this.getParentComponent().getConfig(key);
 		}
 	}
-);
+);</pre>
+</body>
+</html>
