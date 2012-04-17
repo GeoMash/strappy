@@ -1,7 +1,17 @@
 /**
  * @class framework.mvc.View
  * 
+ * TODO:
  * 
+ * Explanation & Examples.
+ * 
+ * Bound Signals:
+ * 
+ * * {@link framework.Signal.MODEL_DONE_CHANGE}: {@link framework.mvc.View#onModelChange} (global)
+ * * {@link framework.Signal.STATEFULMODEL_DONE_CHANGE}: {@link framework.mvc.View#onStateChange} (global)
+ * * {@link framework.Signal.VIEW_DO_INSERTBASEHTML}: {@link framework.mvc.View#insertBaseHTML}
+ * * {@link framework.Signal.VIEW_DO_SHOW}: {@link framework.mvc.View#onShow}
+ * * {@link framework.Signal.VIEW_DO_HIDE}: {@link framework.mvc.View#onHide}
  * 
  * @mixins framework.trait.ComponentConnector
  * @mixins framework.trait.signal.Receive
@@ -58,7 +68,9 @@ $JSKK.Class.create
 			
 			this.fetchContent();
 		},
-		
+		/**
+		 * 
+		 */
 		fetchContent: function()
 		{
 				$.get
@@ -71,6 +83,9 @@ $JSKK.Class.create
 					}.bind(this)
 				);
 		},
+		/**
+		 * 
+		 */
 		insertBaseHTML: function(signal)
 		{
 			console.debug('insertBaseHTML');
@@ -83,13 +98,28 @@ $JSKK.Class.create
 			this.onReady();
 			this.sendSignal(framework.Signal.VIEW_IS_READY,{component:this.getCmpName(),id:this.getID()});
 		},
+		/**
+		 * 
+		 */
 		getBaseHTML: function()
 		{
 			return this.baseHTML;
 		},
+		/**
+		 * 
+		 */
 		onReady:		$JSKK.emptyFunction,
+		/**
+		 * 
+		 */
 		onViewInit: 	$JSKK.emptyFunction,
+		/**
+		 * 
+		 */
 		onModelChange:	$JSKK.emptyFunction,
+		/**
+		 * 
+		 */
 		generateInstanceID: function()
 		{
 			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
@@ -100,6 +130,9 @@ $JSKK.Class.create
 			}
 			this._iid=this.getSafeID()+'-'+iid.join('');
 		},
+		/**
+		 * 
+		 */
 		getIID: function()
 		{
 			return this._iid;
@@ -108,26 +141,41 @@ $JSKK.Class.create
 //		{
 //			// empty function
 //		},
+		/**
+		 * 
+		 */
 		getContainerClass: function()
 		{
 			return '.'+this.getSafeID();
 		},
+		/**
+		 * 
+		 */
 		getContainer: function()
 		{
 			return $('#'+this.getIID());
 		},
+		/**
+		 * 
+		 */
 		onShow: function()
 		{
 			console.debug('onShow');
 			this.getContainer().fadeIn(500);
 			this.sendSignal(framework.Signal.VIEW_DONE_SHOW,{component:this.getCmpName(),id:this.getID()});
 		},
+		/**
+		 * 
+		 */
 		onHide: function()
 		{
 			console.debug('onHide');
 			this.getContainer().fadeOut(500);
 			this.sendSignal(framework.Signal.VIEW_DONE_HIDE,{component:this.getCmpName(),id:this.getID()});
 		},
+		/**
+		 * 
+		 */
 		bindStatefulLinks: function()
 		{
 			var links=$JSKK.toArray(arguments);
@@ -147,6 +195,9 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
+		/**
+		 * 
+		 */
 		bindStateEvents: function(bindings)
 		{
 			for (var item in bindings)
@@ -166,6 +217,9 @@ $JSKK.Class.create
 				
 			}
 		},
+		/**
+		 * 
+		 */
 		onStateChange: function(signal)
 		{
 			console.debug('onStateChange');

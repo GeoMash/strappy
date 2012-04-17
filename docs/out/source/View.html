@@ -18,7 +18,17 @@
   <pre class="prettyprint lang-js"><span id='framework-mvc-View'>/**
 </span> * @class framework.mvc.View
  * 
+ * TODO:
  * 
+ * Explanation &amp; Examples.
+ * 
+ * Bound Signals:
+ * 
+ * * {@link framework.Signal.MODEL_DONE_CHANGE}: {@link framework.mvc.View#onModelChange} (global)
+ * * {@link framework.Signal.STATEFULMODEL_DONE_CHANGE}: {@link framework.mvc.View#onStateChange} (global)
+ * * {@link framework.Signal.VIEW_DO_INSERTBASEHTML}: {@link framework.mvc.View#insertBaseHTML}
+ * * {@link framework.Signal.VIEW_DO_SHOW}: {@link framework.mvc.View#onShow}
+ * * {@link framework.Signal.VIEW_DO_HIDE}: {@link framework.mvc.View#onHide}
  * 
  * @mixins framework.trait.ComponentConnector
  * @mixins framework.trait.signal.Receive
@@ -75,7 +85,9 @@ $JSKK.Class.create
 			
 			this.fetchContent();
 		},
-		
+<span id='framework-mvc-View-method-fetchContent'>		/**
+</span>		 * 
+		 */
 		fetchContent: function()
 		{
 				$.get
@@ -88,6 +100,9 @@ $JSKK.Class.create
 					}.bind(this)
 				);
 		},
+<span id='framework-mvc-View-method-insertBaseHTML'>		/**
+</span>		 * 
+		 */
 		insertBaseHTML: function(signal)
 		{
 			console.debug('insertBaseHTML');
@@ -100,13 +115,28 @@ $JSKK.Class.create
 			this.onReady();
 			this.sendSignal(framework.Signal.VIEW_IS_READY,{component:this.getCmpName(),id:this.getID()});
 		},
+<span id='framework-mvc-View-method-getBaseHTML'>		/**
+</span>		 * 
+		 */
 		getBaseHTML: function()
 		{
 			return this.baseHTML;
 		},
+<span id='framework-mvc-View-property-onReady'>		/**
+</span>		 * 
+		 */
 		onReady:		$JSKK.emptyFunction,
+<span id='framework-mvc-View-property-onViewInit'>		/**
+</span>		 * 
+		 */
 		onViewInit: 	$JSKK.emptyFunction,
+<span id='framework-mvc-View-property-onModelChange'>		/**
+</span>		 * 
+		 */
 		onModelChange:	$JSKK.emptyFunction,
+<span id='framework-mvc-View-method-generateInstanceID'>		/**
+</span>		 * 
+		 */
 		generateInstanceID: function()
 		{
 			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
@@ -117,6 +147,9 @@ $JSKK.Class.create
 			}
 			this._iid=this.getSafeID()+'-'+iid.join('');
 		},
+<span id='framework-mvc-View-method-getIID'>		/**
+</span>		 * 
+		 */
 		getIID: function()
 		{
 			return this._iid;
@@ -125,26 +158,41 @@ $JSKK.Class.create
 //		{
 //			// empty function
 //		},
+<span id='framework-mvc-View-method-getContainerClass'>		/**
+</span>		 * 
+		 */
 		getContainerClass: function()
 		{
 			return '.'+this.getSafeID();
 		},
+<span id='framework-mvc-View-method-getContainer'>		/**
+</span>		 * 
+		 */
 		getContainer: function()
 		{
 			return $('#'+this.getIID());
 		},
+<span id='framework-mvc-View-method-onShow'>		/**
+</span>		 * 
+		 */
 		onShow: function()
 		{
 			console.debug('onShow');
 			this.getContainer().fadeIn(500);
 			this.sendSignal(framework.Signal.VIEW_DONE_SHOW,{component:this.getCmpName(),id:this.getID()});
 		},
+<span id='framework-mvc-View-method-onHide'>		/**
+</span>		 * 
+		 */
 		onHide: function()
 		{
 			console.debug('onHide');
 			this.getContainer().fadeOut(500);
 			this.sendSignal(framework.Signal.VIEW_DONE_HIDE,{component:this.getCmpName(),id:this.getID()});
 		},
+<span id='framework-mvc-View-method-bindStatefulLinks'>		/**
+</span>		 * 
+		 */
 		bindStatefulLinks: function()
 		{
 			var links=$JSKK.toArray(arguments);
@@ -164,6 +212,9 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
+<span id='framework-mvc-View-method-bindStateEvents'>		/**
+</span>		 * 
+		 */
 		bindStateEvents: function(bindings)
 		{
 			for (var item in bindings)
@@ -183,6 +234,9 @@ $JSKK.Class.create
 				
 			}
 		},
+<span id='framework-mvc-View-method-onStateChange'>		/**
+</span>		 * 
+		 */
 		onStateChange: function(signal)
 		{
 			console.debug('onStateChange');

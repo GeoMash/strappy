@@ -1,0 +1,18 @@
+[
+	{
+		"title": "Framework Guides",
+		"items":
+		[
+			{
+				"name": "GettingStarted",
+				"title": "Getting Started with Framework",
+				"description": "This introduction to Framework explains how you can get started."
+			},
+			{
+				"name": "HelloWorld",
+				"title": "Hello World Component",
+				"description": "A simple Hello World example."
+			}
+		]
+	}
+]

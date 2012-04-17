@@ -5,8 +5,10 @@
     "--warnings":			["-link", "-no_doc"],
     "--examples-base-url":	"../examples/",
     "--examples":			"./examples.json",
+    "--guides":				"./guides.json",
     "--external":
     [
+    	"jQuery",
     	"$JSKK.trait.Configurable",
     	"$JSKK.trait.Observable"
     ],

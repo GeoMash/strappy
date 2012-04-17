@@ -37,7 +37,11 @@ $JSKK.Class.create
 (
 	{},
 	{
-		
+		/**
+		 * @constructor
+		 * 
+		 * Sets up the controller by binding to the above mentioned signals.
+		 */
 		init: function()
 		{
 			this.registerSignals
