@@ -1,4 +1,4 @@
-Hello World
+Getting Started
 ===============
 
 **Level:** Beginner
