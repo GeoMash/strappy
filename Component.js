@@ -536,7 +536,8 @@ $JSKK.Class.create
 			(
 				function()
 				{
-					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
+					this.configure(this.config);
+//					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
 		},
