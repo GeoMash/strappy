@@ -61,7 +61,7 @@
 		}
 	);
  * 
- * @mixins $JSKK.trait.Configurable
+ * @mi!xins $JSKK.trait.Configurable
  * @abstract
  * 
  * @uses framework.RadioTower
@@ -71,11 +71,11 @@ $JSKK.Class.create
 (
 	{
 		$namespace:	'framework',
-		$name:		'Component',
-		$uses:
-		[
-			$JSKK.trait.Configurable
-		]
+		$name:		'Component'//,
+//		$uses:
+//		[
+//			$JSKK.trait.Configurable
+//		]
 	}
 )
 (
@@ -250,7 +250,7 @@ $JSKK.Class.create
 		 * 
 		 * @return {framework.Component}
 		 */
-        init: function()
+        init: function(config)
 		{
 			this.my.name		=this.$reflect('name');
 			this.my.namespace	=this.$reflect('namespace').split('.');
@@ -283,7 +283,7 @@ $JSKK.Class.create
 				this.initCmp();
 			}
 			this.ready=true;
-			this.reconfigure();
+			this.configure(config);
 		},
 		/**
 		 * Initalizes the component's conneciton to the Radio Tower.
