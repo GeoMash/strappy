@@ -5,7 +5,7 @@
  * {@link framework.mvc.View views} and {@link framework.mvc.Controller controllers}.
  * 
  * This trait will expose a set of useful functionality to the class that
- * is using it.
+ * is using it, including all the hooks required to access parts of the component.
  * 
  * @abstract
  */
