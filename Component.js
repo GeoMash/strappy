@@ -250,7 +250,7 @@ $JSKK.Class.create
 		 * 
 		 * @return {framework.Component}
 		 */
-        init: function(config)
+        init: function()
 		{
 			this.my.name		=this.$reflect('name');
 			this.my.namespace	=this.$reflect('namespace').split('.');
@@ -283,7 +283,6 @@ $JSKK.Class.create
 				this.initCmp();
 			}
 			this.ready=true;
-			this.configure(config);
 		},
 		/**
 		 * Initalizes the component's conneciton to the Radio Tower.
