@@ -149,7 +149,7 @@ $JSKK.Class.create
 		add: function(record)
 		{
 			this.data.push(record);
-			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{name:this.getID()});
+			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{id:this.getID()});
 			return this;
 		},
 		/**
@@ -168,7 +168,7 @@ $JSKK.Class.create
 				}
 			}
 			this.data=newData;
-			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{name:this.getID()});
+			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{id:this.getID()});
 			return this;
 		}
 	}
