@@ -28,6 +28,7 @@ $JSKK.Class.create
 		dirty:	false,
 		fields:	[],
 		record:	{},
+		store:	null,
 		init: function(record)
 		{
 			if (Object.isDefined(record))
@@ -45,6 +46,20 @@ $JSKK.Class.create
 					this.record[field]=this.fields[field];
 				}
 			}
+		},
+		bindStore: function(store)
+		{
+			this.store=store;
+			return this;
+		},
+		unbindStore: function()
+		{
+			this.store=null;
+			return this;
+		},
+		getStore: function()
+		{
+			return this.store;
 		},
 		/**
 		 * Fetches a record based on its index in the store.
