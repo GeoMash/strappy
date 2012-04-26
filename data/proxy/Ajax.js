@@ -26,20 +26,21 @@ $JSKK.Class.create
 		{
 			url:	''
 		},
-		get: function(url)
+		get: function(config)
 		{
-			
-		},
-		sync: function(config)
-		{
-			$.ajax
+			if (Object.isUndefined(config.method))
+			{
+				method='POST';
+			}
+			$.get
 			(
 				{
-//					dataType:	'json',
-					method:		'GET',
-					url:		this.config.url
+					method:		'POST',
+					url:		this.config.url,
+					data:		config.filter || {}
 				}
-			).done
+			)
+			.done
 			(
 				function(response)
 				{
@@ -53,7 +54,26 @@ $JSKK.Class.create
 					}
 				}
 			)
-			.fail(config.onFailure || $JSKK.emptyFunction)
+			.fail(config.onFailure || $JSKK.emptyFunction);
+		},
+		sync: function(config)
+		{
+			$.get(this.config.url)
+			.done
+			(
+				function(response)
+				{
+					if (response.success)
+					{
+						(config.onSuccess || $JSKK.emptyFunction)(response.data,response.message);
+					}
+					else
+					{
+						(config.onFailure || $JSKK.emptyFunction)(response.message);
+					}
+				}
+			)
+			.fail(config.onFailure || $JSKK.emptyFunction);
 		}
 	}
 )
