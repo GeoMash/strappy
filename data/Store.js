@@ -43,10 +43,12 @@ $JSKK.Class.create
 			{
 				records=[records];
 			}
-			var newRecords=[];
+			var	newRecords	=[],
+				index=		0;
 			for (var i=0,j=records.length; i<j; i++)
 			{
-				newRecords.push(new this.model(records[i]));
+				index=newRecords.push(new this.model(records[i]));
+				newRecords[index].bindStore(this);
 			}
 			return newRecords;
 		},
@@ -119,6 +121,10 @@ $JSKK.Class.create
 			this.records=newRecords;
 			this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID()});
 			return this;
+		},
+		getAll: function()
+		{
+			return this.records;
 		},
 		/**
 		 * Fetches a record based on its index in the store.
