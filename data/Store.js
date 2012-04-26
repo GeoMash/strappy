@@ -129,6 +129,44 @@ $JSKK.Class.create
 		{
 			return this.records[index];
 		},
+		first: function()
+		{
+			return this.getAt(0);
+		},
+		last: function()
+		{
+			return this.getAt(this.records.length-1);
+		},
+		find: function(key,value)
+		{
+			var records=[];
+			this.each
+			(
+				function(record)
+				{
+					if (record.get(key)==value)
+					{
+						records.push(record);
+					}
+				}.bind(this)
+			);
+			return records;
+		},
+		findBy: function(callback)
+		{
+			var records=[];
+			this.each
+			(
+				function(record)
+				{
+					if (callback(record))
+					{
+						records.push(record);
+					}
+				}
+			);
+			return records;
+		},
 		/**
 		 * Sets a record at a given index in the store.
 		 * @param {Number} index The index.
