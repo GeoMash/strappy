@@ -9,7 +9,7 @@ $JSKK.Class.create
 (
 	{},
 	{
-		models:
+		stores:
 		[
 			'State',
 			'User'

@@ -7,8 +7,8 @@
  * 
  * Bound Signals:
  * 
- * * {@link framework.Signal.MODEL_DONE_CHANGE}: {@link framework.mvc.View#onModelChange} (global)
- * * {@link framework.Signal.STATEFULMODEL_DONE_CHANGE}: {@link framework.mvc.View#onStateChange} (global)
+ * * {@link framework.Signal.STORE_DONE_CHANGE}: {@link framework.mvc.View#onStoreChange} (global)
+ * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}: {@link framework.mvc.View#onStateChange} (global)
  * * {@link framework.Signal.VIEW_DO_INSERTBASEHTML}: {@link framework.mvc.View#insertBaseHTML}
  * * {@link framework.Signal.VIEW_DO_SHOW}: {@link framework.mvc.View#onShow}
  * * {@link framework.Signal.VIEW_DO_HIDE}: {@link framework.mvc.View#onHide}
@@ -59,8 +59,8 @@ $JSKK.Class.create
 			
 			this.registerSignals
 			(
-				[framework.Signal.MODEL_DONE_CHANGE,			'onModelChange',	framework.Signal.GLOBAL],
-				[framework.Signal.STATEFULMODEL_DONE_CHANGE,	'onStateChange',	framework.Signal.GLOBAL],
+				[framework.Signal.STORE_DONE_CHANGE,			'onStoreChange',	framework.Signal.GLOBAL],
+				[framework.Signal.STATEFULSTORE_DONE_CHANGE,	'onStateChange',	framework.Signal.GLOBAL],
 				[framework.Signal.VIEW_DO_INSERTBASEHTML,		'insertBaseHTML'],
 				[framework.Signal.VIEW_DO_SHOW,					'onShow'],
 				[framework.Signal.VIEW_DO_HIDE,					'onHide']
@@ -107,16 +107,19 @@ $JSKK.Class.create
 		},
 		/**
 		 * 
+		 * @abstract
 		 */
 		onReady:		$JSKK.emptyFunction,
 		/**
 		 * 
+		 * @abstract
 		 */
 		onViewInit: 	$JSKK.emptyFunction,
 		/**
 		 * 
+		 * @abstract
 		 */
-		onModelChange:	$JSKK.emptyFunction,
+		onStoreChange:	$JSKK.emptyFunction,
 		/**
 		 * 
 		 */

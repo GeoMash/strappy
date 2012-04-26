@@ -125,7 +125,7 @@ $JSKK.Class.create
 		 */
 		components:		{},
 		/**
-		 * @property models Specify a list of models to pre-load.
+		 * @property stores Specify a list of stores to pre-load.
 		 * 
 	$JSKK.Class.create
 	(
@@ -138,7 +138,7 @@ $JSKK.Class.create
 	(
 		{},
 		{
-			models:
+			stores:
 			[
 				'State',
 				'User'
@@ -146,7 +146,7 @@ $JSKK.Class.create
 		}
 	);
 		 */
-		models:			[],
+		stores:			[],
 		/**
 		 * @property views Specify a list of views to pre-load.
 		 * 
@@ -193,10 +193,10 @@ $JSKK.Class.create
 		 */
 		controllers:	[],
 		/**
-		 * @property _models A container for all the initialized models.
+		 * @property _stores A container for all the initialized stores.
 		 * @private
 		 */
-		_models:		{},
+		_stores:		{},
 		/**
 		 * @property _views A container for all the initialized views.
 		 * @private
@@ -275,7 +275,7 @@ $JSKK.Class.create
 			this.initStateMgr();
 			this.initChildComponents();
 			this.initViews();
-			this.initModels();
+			this.initStores();
 			this.initControllers();
 			
 			if (Object.isFunction(this.initCmp))
@@ -458,43 +458,43 @@ $JSKK.Class.create
 			}
 		},
 		/**
-		 * Initializes all the models associated with this component.
+		 * Initializes all the stores associated with this component.
 		 * 
 		 * @private
 		 */
-		initModels: function()
+		initStores: function()
 		{
-			for (var i=0,j=this.models.length; i<j; i++)
+			for (var i=0,j=this.stores.length; i<j; i++)
 			{
 				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
-				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]]))
+				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]]))
 				{
-					this._models[this.models[i]]=new this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]](this);
+					this._stores[this.stores[i]]=new this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]](this);
 				}
 				else
 				{
-					throw new Error('Error - model "'+this.models[i]+'" not loaded for component "'+this.my.name+'".');
+					throw new Error('Error - store "'+this.stores[i]+'" not loaded for component "'+this.my.name+'".');
 					break;
 				}
 			}
 		},
 		/**
-		 * Returns an associated model which is pre-defined in this
+		 * Returns an associated store which is pre-defined in this
 		 * components "models" property.
 		 * 
-		 * @param {String} model The name of the model to get.
+		 * @param {String} store The name of the store to get.
 		 * @throws 
-		 * @return {framework.mvc.Model} The requested model if it has been defined.
+		 * @return {framework.mvc.Model} The requested store if it has been defined.
 		 */
-		getModel: function(model)
+		getStore: function(store)
 		{
-			if (Object.isDefined(this._models[model]))
+			if (Object.isDefined(this._stores[store]))
 			{
-				return this._models[model];
+				return this._stores[store];
 			}
 			else
 			{
-				throw new Error('Error - model "'+model+'" has not been initilized.');
+				throw new Error('Error - store "'+store+'" has not been initilized.');
 			}
 		},
 		/**

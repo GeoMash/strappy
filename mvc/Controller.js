@@ -49,7 +49,7 @@ $JSKK.Class.create
 				[framework.Signal.CMP_DO_RECONFIGURE,		'onReconfigure'],
 				[framework.Signal.VIEW_IS_READY,			'onViewReady'],
 				[framework.Signal.VIEW_DONE_GOTBASEHTML,	'onGotBaseHTML'],
-				[framework.Signal.STATEFULMODEL_IS_READY,	'onReadyState']
+				[framework.Signal.STATEFULSTORE_IS_READY,	'onReadyState']
 			);
 		},
 		/**

@@ -17,7 +17,7 @@ $JSKK.Class.create
 		$name:		'Model',
 		$uses:
 		[
-			framework.trait.ComponentConnector,
+//			framework.trait.ComponentConnector,
 			framework.trait.signal.Send
 		]
 	}
@@ -25,151 +25,64 @@ $JSKK.Class.create
 (
 	{},
 	{
-		/**
-		 * @property {Array} data Holds the data for this model (store).
-		 * @private 
-		 */
-		data:		[],
-		/**
-		 * @property {framework.Proxy} proxy
-		 * @private
-		 * @ignore
-		 */
-		proxy:		null,
+		dirty:	false,
+		fields:	[],
+		record:	{},
+		init: function(record)
+		{
+			if (Object.isDefined(record))
+			{
+				for (var field in this.fields)
+				{
+					this.record[field]=this.fields[field];
+				}
+				this.record=record;
+			}
+			else
+			{
+				for (var field in this.fields)
+				{
+					this.record[field]=this.fields[field];
+				}
+			}
+		},
 		/**
 		 * Fetches a record based on its index in the store.
 		 * @param {Number} index The index.
 		 * @return {Mixed} The record.
 		 */
-        getRecord: function(index)
+        get: function(key)
 		{
-			return this.data[index];
+			return this.record[key];
 		},
 		/**
 		 * Sets a record at a given index in the store.
 		 * @param {Number} index The index.
 		 * @param {Mixed} data The new data to set.
 		 */
-        setRecord: function(index,data)
+        set: function(key,value)
 		{
-			data.id=this.data[0].id;
-			this.data[index]=data;
-			this.sendSignal('view.change',data);
+			this.record[key]=value;
+			this.flagDirty();
+//			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{id:this.getID()});
+//			this.sendSignal('view.change',data);
 		},
-//		get: function(key)
-//		{
-//			var	parts	=key.split('.'),
-//				object	=this.data;
-//			for (var i=0,j=parts.length; i<j; i++)
-//			{
-//				if (Object.isDefined(object[parts[i]]))
-//				{
-//					object=object[parts[i]];
-//				}
-//				else
-//				{
-//					return null;
-//				}
-//			}
-//			return object;
-//		},
-//		set: function(key,value)
-//		{
-//			var	parts	=key.split('.'),
-//				object	=this.data;
-//			for (var i=0,j=parts.length; i<j; i++)
-//			{
-//				if (i+1==j)
-//				{
-//					object[parts[i]]=value;
-//					break;
-//				}
-//				if (Object.isDefined(object[parts[i]]))
-//				{
-//					object=object[parts[i]];
-//				}
-//				else
-//				{
-//					if (i+1!=j)
-//					{
-//						object[parts[i]]={};
-//						object=object[parts[i]];
-//					}
-//				}
-//			}
-//			console.debug('ID:',this.getID());
-//			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{name:this.getID()});
-//			return this;
-//		},
-		/**
-		 * This method allows you to iterate over each item
-		 * in the model's data store.
-		 * 
-		 * Example:
-	$JSKK.Class.create
-	(
+		flagDirty: function()
 		{
-			$namespace:	'Application.component.myComponent.controller',
-			$name:		'Default',
-			$extends:	framework.mvc.Controller
-		}
-	)
-	(
-		{},
-		{
-			generateList: function()
-			{
-				var HTML=['<ul>'];
-				this.getModel('Default').each
-				(
-					function(item)
-					{
-						HTML.push('<li><a href="'+item.url+'">'+item.name+'</a></li>');
-					}
-				);
-				HTML.push('</ul>');
-				return HTML.join('');
-			}
-		}
-	);
-		 * @param {Function} callback A closure which will be called at each iteration.
-		 * The first parameter of the closure will be the data item.
-		 * @return {framework.mvc.Model}
-		 */
-		each: function(callback)
-		{
-			this.data.each(callback);
+			this.dirty=true;
 			return this;
 		},
-		/**
-		 * Adds a record to the model's store.
-		 * @param {Mixed} record The record to be added to the store.
-		 * @return {framework.mvc.Model}
-		 */
-		add: function(record)
+		flagClean: function()
 		{
-			this.data.push(record);
-			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{id:this.getID()});
-			return this;
+			this.dirty=false;
 		},
-		/**
-		 * Removes a record from the store.
-		 * @param {Mixed} record The record to be removed from the store.
-		 * @return {framework.mvc.Model}
-		 */
-		remove: function(record)
+		isDirty: function()
 		{
-			var newData=[];
-			for (var i=0,j=this.data.length; i<j; i++)
-			{
-				if (this.data[i]!=record)
-				{
-					newData.push(this.data[i]);
-				}
-			}
-			this.data=newData;
-			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{id:this.getID()});
-			return this;
+			return this.dirty;
+		},
+		isClean: function()
+		{
+			return !this.dirty;
 		}
 	}
 );

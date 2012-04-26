@@ -1,5 +1,5 @@
 /**
- * @class framework.mvc.stateful.Model
+ * @class framework.data.stateful.Store
  * 
  * 
  * 
@@ -13,8 +13,8 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.mvc.stateful',
-		$name:		'Model',
+		$namespace:	'framework.data.stateful',
+		$name:		'Store',
 		$uses:
 		[
 			framework.trait.ComponentConnector,
@@ -23,7 +23,11 @@ $JSKK.Class.create
 	}
 )
 (
-	{},
+	{
+		LOCK_NONE:		'none',
+		LOCK_READONLY:	'readonly',
+		LOCK_FULL:		'full'
+	},
 	{
 		/**
 		 * @property {Boolean} ready A flag indicating that the component's state is ready.
@@ -34,36 +38,48 @@ $JSKK.Class.create
 		 * @property {Array} readyViews A container filled with views which a controller has
 		 * flagged as ready.
 		 * 
-		 * See {@link framework.mvc.stateful.Model#setViewReady} and
-		 * {@link framework.mvc.stateful.Model#getReadyViews} for more information and
+		 * See {@link framework.data.stateful.Store#setViewReady} and
+		 * {@link framework.data.stateful.Store#getReadyViews} for more information and
 		 * examples of how to use this.
 		 * @private
 		 */
 		readyViews:	[],
 		/**
-		 * @param {Object} state The state store.
+		 * @property {Object} state The state store.
 		 * @private
 		 */
 		state:		{},
+		/**
+		 * 
+		 * @property {String} lockState This property will block behaviours on this store depending on its state.
+		 * @private
+		 */
+		lockState:	'none',
 		/**
 		 * Sets a state property with a new value.
 		 * 
 		 * Sends signal:
 		 * 
-		 * * {@link framework.Signal.STATEFULMODEL_DONE_CHANGE}
+		 * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}
 		 * 
 		 * @param {String} key The property to set.
 		 * @param {Mixed} value The new value.
-		 * @return {framework.mvc.stateful.Model}
+		 * @return {framework.mvc.stateful.Store}
 		 */
 		set: function(key,value)
 		{
-			this.state[key]=value;
-//			this.sendSignal(framework.Signal.STATEFULMODEL_DONE_CHANGE,{change:[key,value]});
-			var changeSet	={};
-			changeSet[key]	=value;
-			
-			this.sendSignal(framework.Signal.STATEFULMODEL_DONE_CHANGE,{component:this.getCmpName(),change:changeSet});
+			if (this.lockState==framework.data.stateful.Store.LOCK_NONE)
+			{
+				this.state[key]	=value;
+				var changeSet	={};
+				changeSet[key]	=value;
+				
+				this.sendSignal(framework.Signal.STATEFULSTORE_DONE_CHANGE,{component:this.getCmpName(),change:changeSet});
+			}
+			else
+			{
+				throw new Error('Store "'+this.$reflect('name')+'" is in lock state "'+this.lockState+'" and so cannot be modified.');
+			}
 			return this;
 		},
 		/**
@@ -71,18 +87,18 @@ $JSKK.Class.create
 		 * 
 		 * Sends signals:
 		 * 
-		 * * {@link framework.Signal.STATEFULMODEL_IS_READY}
-		 * * {@link framework.Signal.STATEFULMODEL_DONE_CHANGE}
+		 * * {@link framework.Signal.STATEFULSTORE_IS_READY}
+		 * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}
 		 * 
 		 * @param {Boolean} ready The ready state.
-		 * @return {framework.mvc.stateful.Model}
+		 * @return {framework.data.stateful.Store}
 		 */
 		setReady: function(ready)
 		{
 			this.ready=ready;
 			if (ready)
 			{
-				this.sendSignal(framework.Signal.STATEFULMODEL_IS_READY,{component:this.getCmpName()});
+				this.sendSignal(framework.Signal.STATEFULSTORE_IS_READY,{component:this.getCmpName()});
 				var globalState=this.getStateMgr().getState();
 				for (var globalItem in globalState)
 				{
@@ -96,7 +112,7 @@ $JSKK.Class.create
 					}
 				}
 			}
-			this.sendSignal(framework.Signal.STATEFULMODEL_DONE_CHANGE,{component:this.getCmpName(),change:globalState});
+			this.sendSignal(framework.Signal.STATEFULSTORE_DONE_CHANGE,{component:this.getCmpName(),change:globalState});
 			return this;
 		},
 		/**
@@ -138,7 +154,7 @@ $JSKK.Class.create
 		}
 	);
 		 * @param {String} view The name of the view.
-		 * @return {framework.mvc.stateful.Model}
+		 * @return {framework.data.stateful.Store}
 		 */
 		setViewReady: function(view)
 		{
@@ -178,6 +194,27 @@ $JSKK.Class.create
 		getReadyViews: function()
 		{
 			return this.readyViews;
+		},
+		/**
+		 * Locks the model based on the type of lock given to this method.
+		 * @param {String} lockType The type of lock. Valid lock types are:
+		 * * {@link framework.data.stateful.Store#LOCK_NONE}
+		 * * {@link framework.data.stateful.Store#LOCK_READONLY}
+		 * * {@link framework.data.stateful.Store#LOCK_FULL}
+		 * 
+		 * @retrun {framework.data.stateful.Store}
+		 */
+		lock: function(lockType)
+		{
+			if (['none','readonly','full'].inArray(lockType))
+			{
+				this.lockState=lockType;
+			}
+			else
+			{
+				throw new Error('"'+lockType+'" is an invalid lock type. Valid locks are "none", "readonly" and "full".');
+			}
+			return this;
 		}
 	}
 );

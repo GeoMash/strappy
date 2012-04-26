@@ -124,22 +124,39 @@ $JSKK.Class.create
 		 */
 		CONTROLLER_DO_DESTROY:		'controller.do.destroy',
 		
+		//Stores
+		/**
+		 * @property STORE_DONE_CHANGE
+		 * @static
+		 */
+		STORE_DONE_CHANGE:			'store.done.change',
+		/**
+		 * @property STORE_DONE_SYNC
+		 * @static
+		 */
+		STORE_DONE_SYNC:			'store.done.sync',
+		/**
+		 * @property STORE_FAILED_SYNC
+		 * @static
+		 */
+		STORE_FAILED_SYNC:			'store.failed.sync',
+		/**
+		 * @property STATEFULSTORE_DONE_CHANGE
+		 * @static
+		 */
+		STATEFULSTORE_DONE_CHANGE:	'stateful.store.done.change',
+		/**
+		 * @property STATEFULSTORE_IS_READY
+		 * @static
+		 */
+		STATEFULSTORE_IS_READY:		'stateful.store.is.ready',
+		
 		//Models
 		/**
 		 * @property MODEL_DONE_CHANGE
 		 * @static
 		 */
 		MODEL_DONE_CHANGE:			'model.done.change',
-		/**
-		 * @property STATEFULMODEL_DONE_CHANGE
-		 * @static
-		 */
-		STATEFULMODEL_DONE_CHANGE:	'stateful.model.done.change',
-		/**
-		 * @property STATEFULMODEL_IS_READY
-		 * @static
-		 */
-		STATEFULMODEL_IS_READY:		'stateful.model.is.ready',
 		/**
 		 * @property COMMAND_COMPLETE
 		 * @static

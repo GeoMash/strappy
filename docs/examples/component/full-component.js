@@ -21,7 +21,7 @@ $JSKK.Class.create
 			errorWindow:	'Application.component.DialogWindow',
 			successWindow:	'Application.component.DialogWindow'
 		},
-		models:
+		stores:
 		[
 			'State',
 			'User'

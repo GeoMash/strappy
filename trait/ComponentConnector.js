@@ -104,9 +104,9 @@ $JSKK.Trait.create
 		 * @param {String} model The name of the model.
 		 * @return {framework.mvc.Model} The Model instance.
 		 */
-		getModel: function(model)
+		getStore: function(store)
 		{
-			return this.getParentComponent().getModel(model);
+			return this.getParentComponent().getStore(store);
 		},
 		/**
 		 * Fetches a view from the parent component.

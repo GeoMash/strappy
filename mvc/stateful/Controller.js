@@ -36,11 +36,11 @@ $JSKK.Class.create
 	{},
 	{
 		/**
-		 * @property {framework.mvc.stateful.Model} stateModel A reference to the
+		 * @property {framework.mvc.stateful.Model} stateStore A reference to the
 		 * associated state model.
 		 * @private
 		 */
-		stateModel:	null,
+		stateStore:	null,
 		/**
 		 * @constructor
 		 * 
@@ -54,10 +54,19 @@ $JSKK.Class.create
 				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL],
 				[framework.Signal.VIEW_IS_READY,			'onViewReady']
 			);
-			if (!(this.stateModel=this.getModel('State')))
+			if (!(this.stateStore=this.getStore('State')))
 			{
 				throw new Error('Unable to initialize "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" State Controller. Controller requires a state model.');
 			}
+			(this.$reflect('uses') || []).each
+			(
+				function(trait)
+				{
+					console.debug(trait.toString());
+//					console.debug(trait.$reflect('name'));
+				}
+			);
+//			console.debug('USES: ',this.$reflect('uses'));
 		},
 		/**
 		 * A private method which wraps the functionality of
@@ -72,7 +81,7 @@ $JSKK.Class.create
 		_onStateChange: function(signal)
 		{
 			//Ignore all state changes if the state model is not flagged as ready.
-			if (this.stateModel.isReady())
+			if (this.stateStore.isReady())
 			{
 				this.onStateChange(signal.getBody());
 			}
@@ -102,7 +111,7 @@ $JSKK.Class.create
 		 */
 		setReady:		function()
 		{
-			this.stateModel.setReady(true);
+			this.stateStore.setReady(true);
 			return this;
 		},
 		/**
@@ -113,7 +122,7 @@ $JSKK.Class.create
 		 */
 		updateState:	function(key,value)
 		{
-			this.stateModel.set(key,value);
+			this.stateStore.set(key,value);
 			return this;
 		},
 		/**
@@ -123,7 +132,7 @@ $JSKK.Class.create
 		 */
 		setViewReadyState: function(view)
 		{
-			this.stateModel.setViewReady(view);
+			this.stateStore.setViewReady(view);
 			return this;
 		},
 		/**
@@ -132,7 +141,7 @@ $JSKK.Class.create
 		 */
 		getReadyViews: function()
 		{
-			return this.stateModel.getReadyViews();
+			return this.stateStore.getReadyViews();
 		}
 	}
 );
