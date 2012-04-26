@@ -48,7 +48,7 @@ $JSKK.Class.create
 			for (var i=0,j=records.length; i<j; i++)
 			{
 				index=newRecords.push(new this.model(records[i]));
-				newRecords[index].bindStore(this);
+				newRecords[(index-1)].bindStore(this);
 			}
 			return newRecords;
 		},
