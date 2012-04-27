@@ -1,3 +1,15 @@
+/**
+ * @class framework.data.Store
+ * 
+ * 
+ * 
+ * @mixins framework.trait.ComponentConnector
+ * @mixins framework.trait.signal.Send
+ * @abstract
+ * 
+ * @uses framework.trait.ComponentConnector
+ * @uses framework.trait.signal.Send
+ */
 $JSKK.Class.create
 (
 	{
@@ -11,9 +23,7 @@ $JSKK.Class.create
 	}
 )
 (
-	{
-		
-	},
+	{},
 	{
 		proxy:		null,
 		model:		null,
@@ -122,6 +132,9 @@ $JSKK.Class.create
 			this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID()});
 			return this;
 		},
+		/**
+		 * 
+		 */
 		getAll: function()
 		{
 			return this.records;
@@ -135,14 +148,23 @@ $JSKK.Class.create
 		{
 			return this.records[index];
 		},
+		/**
+		 * 
+		 */
 		first: function()
 		{
 			return this.getAt(0);
 		},
+		/**
+		 * 
+		 */
 		last: function()
 		{
 			return this.getAt(this.records.length-1);
 		},
+		/**
+		 * 
+		 */
 		find: function(key,value)
 		{
 			var records=[];
@@ -158,6 +180,9 @@ $JSKK.Class.create
 			);
 			return records;
 		},
+		/**
+		 * 
+		 */
 		findBy: function(callback)
 		{
 			var records=[];
@@ -174,6 +199,54 @@ $JSKK.Class.create
 			return records;
 		},
 		/**
+		 * 
+		 */
+		setAll: function()
+		{
+			var	args		=$JSKK.toArray(arguments),
+				keyVals		={},
+				transaction	=new framework.data.Transaction();
+			if (Object.isDefined(args[1]))
+			{
+				keyVals[args.shift()]=args.shift();
+			}
+			else
+			{
+				keyVals=args.shift();
+			}
+			var thisModel	=null,
+				field		=null;
+			for (field in keyVals)
+			{
+				for (var i=0,j=this.records.length; i<j; i++)
+				{
+					thisModel=transaction.attachModel(this.records[i]);
+					thisModel.set(field,keyVals[field]);
+				}
+			}
+			transaction.execute
+			(
+				{
+					onSuccess:	function(response)
+					{
+						if (response.success)
+						{
+							transaction.commit();
+							this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
+						}
+						else
+						{
+							transaction.rollback();
+						}
+					},
+					onFailure: function()
+					{
+						transaction.rollback();
+					}
+				}
+			);
+		},
+		/**
 		 * Sets a record at a given index in the store.
 		 * @param {Number} index The index.
 		 * @param {Mixed} data The new data to set.
@@ -184,22 +257,39 @@ $JSKK.Class.create
 			this.records[index]=data;
 //			this.sendSignal('view.change',data);
 		},
+		/**
+		 * This method will fetch all dirty models and attach them to a
+		 * proxy sync request.
+		 * The expected response is a new record set. 
+		 * 
+		 * 
+		 * TODO: Detail this.
+		 */
 		sync: function()
 		{
 			if (this.proxy && Object.isFunction(this.proxy.sync))
 			{
+				var changeset=[];
+				this.getDirty().each
+				(
+					function(model)
+					{
+						changeset.push(model.getRecord());
+					}
+				);
 				this.proxy.sync
 				(
 					{
-						onSuccess: function(data)
+						data:		changeset,
+						onSuccess:	function(data)
 						{
 							this.records=this.newRecord(data);
-							this.sendSignal(framework.Signal.STORE_DONE_SYNC,{id:this.getID()});
-							this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID()});
+							this.sendSignal(framework.Signal.STORE_DONE_SYNC,{id:this.getID(),component:this.getCmpName()});
+							this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
 						}.bind(this),
 						onFailure: function()
 						{
-							this.sendSignal(framework.Signal.STORE_FAILED_SYNC,{id:this.getID()});
+							this.sendSignal(framework.Signal.STORE_FAILED_SYNC,{id:this.getID(),component:this.getCmpName()});
 						}.bind(this)
 					}
 				);
@@ -208,6 +298,24 @@ $JSKK.Class.create
 			{
 				throw new Exception('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
+		},
+		/**
+		 * 
+		 */
+		getDirty: function()
+		{
+			var dirty=[];
+			this.records.each
+			(
+				function(model)
+				{
+					if (model.isDirty())
+					{
+						dirty.push(model);
+					}
+				}
+			);
+			return dirty;
 		}
 	}
 );
