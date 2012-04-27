@@ -180,12 +180,27 @@ $JSKK.Class.create
 		},
 		/**
 		 * Sets a record at a given index in the store.
-		 * @param {Number} index The index.
-		 * @param {Mixed} data The new data to set.
+		 * @param {Mixed} field The field OR an object containing key/value
+		 * pairs of values to set.
+		 * @param {Mixed} value The new value to set. Don't use this if "field" is an object.
 		 */
-        set: function(key,value)
+        set: function()
 		{
-			this.record[key]=value;
+			var	args		=$JSKK.toArray(arguments),
+				keyVals		={},
+				transaction	=new framework.data.Transaction();
+			if (Object.isDefined(args[1]))
+			{
+				keyVals[args.shift()]=args.shift();
+			}
+			else
+			{
+				keyVals=args.shift();
+			}
+			for (var field in keyVals)
+			{
+				this.record[field]=keyVals[field];
+			}
 			this.flagDirty();
 			if (this.lockState==framework.mvc.Model.LOCK_NONE && !this.isClone())
 			{
