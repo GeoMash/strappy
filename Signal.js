@@ -158,6 +158,16 @@ $JSKK.Class.create
 		 */
 		MODEL_DONE_CHANGE:			'model.done.change',
 		/**
+		 * @property MODEL_DONE_SYNC
+		 * @static
+		 */
+		MODEL_DONE_SYNC:			'model.done.sync',
+		/**
+		 * @property MODEL_FAILED_SYNC
+		 * @static
+		 */
+		MODEL_FAILED_SYNC:			'model.failed.sync',
+		/**
 		 * @property MODEL_LOCK_CHANGE
 		 * @static
 		 */
