@@ -21,6 +21,7 @@ $JSKK.Class.create
 	{
 		dirty:		false,
 		phantom:	false,
+		_clone:		false,
 		fields:		[],
 		record:		{},
 		store:		null,
@@ -84,7 +85,15 @@ $JSKK.Class.create
 		 */
         get: function(key)
 		{
-			return this.record[key];
+			if (this.lockState==framework.mvc.Model.LOCK_NONE
+			|| this.lockState==framework.mvc.Model.LOCK_READONLY)
+			{
+				return this.record[key];
+			}
+			else
+			{
+				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents reading.');
+			}
 		},
 		/**
 		 * Sets a record at a given index in the store.
@@ -95,8 +104,22 @@ $JSKK.Class.create
 		{
 			this.record[key]=value;
 			this.flagDirty();
-//			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{id:this.getStore().getID()});
-//			this.sendSignal('view.change',data);
+			if (this.lockState==framework.mvc.Model.LOCK_NONE)
+			{
+				this.getStore().sendSignal
+				(
+					framework.Signal.MODEL_DONE_CHANGE,
+					{
+						id:			this.getStore().getID(),
+						component:	this.getStore().getCmpName(),
+						model:		this
+					}
+				);
+			}
+			else
+			{
+				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents any modification.');
+			}
 		},
 		/**
 		 * 
@@ -141,7 +164,7 @@ $JSKK.Class.create
 			if (['none','readonly','full'].inArray(lockType))
 			{
 				this.lockState=lockType;
-				this.store.sendSignal
+				this.getStore().sendSignal
 				(
 					framework.Signal.MODEL_LOCK_CHANGE,
 					{
@@ -163,7 +186,16 @@ $JSKK.Class.create
 		 */
 		clone: function()
 		{
-			return new (this.$reflect('self'))(this.record);
+			var clone=new (this.$reflect('self'))(this.record);
+			clone._clone=true;
+			return clone;
+		},
+		/**
+		 * 
+		 */
+		isClone: function()
+		{
+			return this._clone;
 		},
 		/**
 		 * 
