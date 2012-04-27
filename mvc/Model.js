@@ -79,6 +79,72 @@ $JSKK.Class.create
 			return this.store;
 		},
 		/**
+		 * This method will attach any changes to a
+		 * proxy sync request.
+		 * The expected response is a replacement record. 
+		 * 
+		 * 
+		 * TODO: Detail this.
+		 */
+		sync: function()
+		{
+			var proxy=this.getStore().getProxy();
+			if (Object.isFunction(proxy.sync))
+			{
+				proxy.sync
+				(
+					{
+						data:		(this.isDirty()?this.record:{}),
+						onSuccess:	function(data)
+						{
+							this.record=data;
+							if (!this.isClone())
+							{
+								this.sendSignal
+								(
+									framework.Signal.MODEL_DONE_SYNC,
+									{
+										id:			this.getID(),
+										component:	this.getCmpName(),
+										model:		this
+									}
+								);
+								this.sendSignal
+								(
+									framework.Signal.MODEL_DONE_CHANGE,
+									{
+										id:			this.getID(),
+										component:	this.getCmpName(),
+										model:		this
+									}
+								);
+							}
+						}.bind(this),
+						onFailure: function()
+						{
+							if (!this.isClone())
+							{
+								this.sendSignal
+								(
+									framework.Signal.MODEL_FAILED_SYNC,
+									{
+										id:			this.getID(),
+										component:	this.getCmpName(),
+										model:		this
+									}
+								);
+							}
+						}.bind(this)
+					}
+				);
+				this.flagClean();
+			}
+			else
+			{
+				throw new Exception('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached to its bound store.');
+			}
+		},
+		/**
 		 * Fetches a record based on its index in the store.
 		 * @param {Number} index The index.
 		 * @return {Mixed} The record.
