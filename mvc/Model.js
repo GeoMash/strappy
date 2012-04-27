@@ -313,6 +313,14 @@ $JSKK.Class.create
 			{
 				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" does not have a phantom model associated with it.');
 			}
+		},
+		/**
+		 * 
+		 */
+		destroyPhantom: function()
+		{
+			delete this.phantom;
+			this.phantom=null;
 		}
 	}
 );
