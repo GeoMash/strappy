@@ -87,6 +87,33 @@
 					throw new Error('Attempt to bind signal to undefined callback "'+signals[i][1]+'".');
 				}
 			}
+		},
+		registerSignalOnce: function(signal,callback)
+		{
+			if (!Object.isFunction(callback))
+			{
+				if (Object.isFunction(this[callback]))
+				{
+					callback=this[callback];
+				}
+				else
+				{
+					throw new Error('Attempt to bind signal to undefined callback "'+callback+'".');
+				}
+			}
+			this.getRadioTower().observeOnce
+			(
+				signal,
+				function(signal)
+				{
+					var body=signal.getBody();
+					if (body.id==this.getID()
+					|| body.component==this.getCmpName())
+					{
+						return callback(signal);
+					}
+				}.bind(this)
+			);
 		}
 	}
 );
