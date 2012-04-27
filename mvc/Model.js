@@ -171,24 +171,29 @@ $JSKK.Class.create
 		 * * {@link framework.mvc.Model#LOCK_NONE}
 		 * * {@link framework.mvc.Model#LOCK_READONLY}
 		 * * {@link framework.mvc.Model#LOCK_FULL}
+		 * @param {Boolean} supressSignal Blocks the MODLEL_LOCK_CHANGE signal
+		 * from being fired.
 		 * 
 		 * @retrun {framework.data.stateful.Store}
 		 */
-		lock: function(lockType)
+		lock: function(lockType,supressSignal)
 		{
 			if (['none','readonly','full'].inArray(lockType))
 			{
 				this.lockState=lockType;
-				this.getStore().sendSignal
-				(
-					framework.Signal.MODEL_LOCK_CHANGE,
-					{
-						id:			this.getStore().getID(),
-						component:	this.getStore().getCmpName(),
-						model:		this,
-						lock:		this.lockState
-					}
-				);
+				if (supressSignal!==true)
+				{
+					this.getStore().sendSignal
+					(
+						framework.Signal.MODEL_LOCK_CHANGE,
+						{
+							id:			this.getStore().getID(),
+							component:	this.getStore().getCmpName(),
+							model:		this,
+							lock:		this.lockState
+						}
+					);
+				}
 			}
 			else
 			{
