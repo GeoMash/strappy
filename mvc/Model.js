@@ -96,6 +96,21 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * 
+		 */
+		getRecord: function()
+		{
+			if (this.lockState==framework.mvc.Model.LOCK_NONE
+			|| this.lockState==framework.mvc.Model.LOCK_READONLY)
+			{
+				return this.record;
+			}
+			else
+			{
+				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents reading.');
+			}
+		},
+		/**
 		 * Sets a record at a given index in the store.
 		 * @param {Number} index The index.
 		 * @param {Mixed} data The new data to set.
@@ -211,6 +226,20 @@ $JSKK.Class.create
 		hasPhantom: function()
 		{
 			return Boolean(this.phantom);
+		},
+		/**
+		 * 
+		 */
+		getPhantom: function()
+		{
+			if (this.hasPhantom())
+			{
+				return this.phatom;
+			}
+			else
+			{
+				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" does not have a phantom model associated with it.');
+			}
 		}
 	}
 );
