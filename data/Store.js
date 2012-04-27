@@ -245,6 +245,7 @@ $JSKK.Class.create
 					}
 				}
 			);
+			return this;
 		},
 		/**
 		 * Sets a record at a given index in the store.
