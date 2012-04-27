@@ -121,7 +121,7 @@ $JSKK.Class.create
 		{
 			this.record[key]=value;
 			this.flagDirty();
-			if (this.lockState==framework.mvc.Model.LOCK_NONE || this.isClone())
+			if (this.lockState==framework.mvc.Model.LOCK_NONE && !this.isClone())
 			{
 				this.getStore().sendSignal
 				(
