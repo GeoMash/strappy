@@ -46,7 +46,6 @@ $JSKK.Class.create
 	},
 	{
 		models:		[],
-		changeset:	[],
 		state:		0,
 		lockState:	'full',
 //		/**
@@ -62,9 +61,9 @@ $JSKK.Class.create
 			&& Object.isFunction(model.$reflect)
 			&& (model.$reflect('extends')==framework.mvc.Model))
 			{
+				model.lock(this.lockState);
 				var clone=model.clone();
 				model.attachPhantom(clone);
-				model.lock(this.lockState);
 				this.models.push(model);
 				return clone;
 			}
