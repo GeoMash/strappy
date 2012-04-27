@@ -158,6 +158,11 @@ $JSKK.Class.create
 		 */
 		MODEL_DONE_CHANGE:			'model.done.change',
 		/**
+		 * @property MODEL_LOCK_CHANGE
+		 * @static
+		 */
+		MODEL_LOCK_CHANGE:			'model.lock.change',
+		/**
 		 * @property COMMAND_COMPLETE
 		 * @static
 		 */
