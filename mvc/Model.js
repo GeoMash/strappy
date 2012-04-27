@@ -168,16 +168,17 @@ $JSKK.Class.create
 		/**
 		 * 
 		 */
-		setPhantom: function(phantom)
+		attachPhantom: function(phantomModel)
 		{
-			this.phantom=Boolean(phantom);
+			this.phantom=phantomModel;
+			return this;
 		},
 		/**
 		 * 
 		 */
-		isPhantom: function()
+		hasPhantom: function()
 		{
-			return this.phantom;
+			return Boolean(this.phantom);
 		}
 	}
 );
