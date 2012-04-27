@@ -48,6 +48,7 @@ $JSKK.Class.create
 		models:		[],
 		changeset:	[],
 		state:		0,
+		lockState:	'full',
 //		/**
 //		 * 
 //		 */
@@ -59,9 +60,13 @@ $JSKK.Class.create
 		{
 			if (Object.isDefined(model)
 			&& Object.isFunction(model.$reflect)
-			&& (model.$reflect('extends')==framework.mvc.Model || model.$reflect('extends')==framework.mvc.stateful.Model))
+			&& (model.$reflect('extends')==framework.mvc.Model))
 			{
+				var clone=model.clone();
+				model.attachPhantom(clone);
+				model.lock(this.lockState);
 				this.models.push(model);
+				return clone;
 			}
 			else
 			{
@@ -98,23 +103,38 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
-		 * Applies a full lock to the associated model.
+		 * Applies a full lock to the associated models.
 		 * 
 		 * @return {framework.Transaction}
 		 */
 		fullLock: function()
 		{
-			this.model.lock('full');
+			this.lockState='full';
+			this.models.each
+			(
+				function(model)
+				{
+					model.lock('full');
+				}
+			);
+			return this;
 			return this;
 		},
 		/**
-		 * Applies a read-only lock to the associated model.
+		 * Applies a read-only lock to the associated models.
 		 * 
 		 * @return {framework.Transaction}
 		 */
 		readOnly: function()
 		{
-			this.model.lock('readonly');
+			this.lockState='readonly';
+			this.models.each
+			(
+				function(model)
+				{
+					model.lock('readonly');
+				}
+			);
 			return this;
 		}
 	}
