@@ -56,9 +56,19 @@ $JSKK.Class.create
 			)
 			.fail(config.onFailure || $JSKK.emptyFunction);
 		},
+		/**
+		 * 
+		 */
 		sync: function(config)
 		{
-			$.get(this.config.url)
+			$.ajax
+			(
+				{
+					type:	'POST',
+					url:	this.config.url,
+					data:	config.data || {}
+				}
+			)
 			.done
 			(
 				function(response)
