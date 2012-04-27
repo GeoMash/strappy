@@ -83,6 +83,35 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * 
+		 */
+		execute: function()
+		{
+			this.models.each
+			(
+				function(model)
+				{
+					//Fetch the the phantom model.
+					var	phantom=model.getPhantom();
+					
+					//Check if anything was changed.
+					if (phantom.isDirty())
+					{
+						/* The phantom model was changed, so submit this to the
+						 * server if the original model has an associated store & proxy.
+						 */
+						//TODO: QUEUEING!!!!
+						if (model.getStore())
+						{
+							phantom	.bindStore(model.getStore())
+									.sync()
+									.unbindStore();
+						}
+					}
+				}
+			);
+		},
+		/**
 		 * Commits the transaction.
 		 * 
 		 * @return {framework.Transaction}
@@ -90,7 +119,18 @@ $JSKK.Class.create
 		commit: function()
 		{
 			this.state|=framework.Transaction.STATE_COMITTED;
-			return this;
+			this.models.each
+			(
+				function(model,index)
+				{
+					model.lock(framework.mvc.Model.LOCK_NONE);
+					model.set(model.getPhantom().getRecord());
+					model.destroyPhantom();
+					delete this.models[index];
+				}.bind(this)
+			);
+			delete this.models;
+			delete this;
 		},
 		/**
 		 * 
@@ -99,7 +139,17 @@ $JSKK.Class.create
 		rollback: function()
 		{
 			this.state|=framework.Transaction.STATE_ROLLEDBACK;
-			return this;
+			
+			this.models.each
+			(
+				function(model,index)
+				{
+					model.destroyPhantom();
+					delete this.models[index];
+				}.bind(this)
+			);
+			delete this.models;
+			delete this;
 		},
 		/**
 		 * Applies a full lock to the associated models.
