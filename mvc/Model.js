@@ -86,7 +86,8 @@ $JSKK.Class.create
         get: function(key)
 		{
 			if (this.lockState==framework.mvc.Model.LOCK_NONE
-			|| this.lockState==framework.mvc.Model.LOCK_READONLY)
+			|| this.lockState==framework.mvc.Model.LOCK_READONLY
+			|| this.isClone())
 			{
 				return this.record[key];
 			}
@@ -101,7 +102,8 @@ $JSKK.Class.create
 		getRecord: function()
 		{
 			if (this.lockState==framework.mvc.Model.LOCK_NONE
-			|| this.lockState==framework.mvc.Model.LOCK_READONLY)
+			|| this.lockState==framework.mvc.Model.LOCK_READONLY
+			|| this.isClone())
 			{
 				return this.record;
 			}
@@ -119,7 +121,7 @@ $JSKK.Class.create
 		{
 			this.record[key]=value;
 			this.flagDirty();
-			if (this.lockState==framework.mvc.Model.LOCK_NONE)
+			if (this.lockState==framework.mvc.Model.LOCK_NONE || this.isClone())
 			{
 				this.getStore().sendSignal
 				(
@@ -181,7 +183,7 @@ $JSKK.Class.create
 			if (['none','readonly','full'].inArray(lockType))
 			{
 				this.lockState=lockType;
-				if (supressSignal!==true)
+				if (supressSignal!==true && !this.isClone())
 				{
 					this.getStore().sendSignal
 					(
