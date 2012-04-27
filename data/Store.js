@@ -214,6 +214,7 @@ $JSKK.Class.create
 			{
 				keyVals=args.shift();
 			}
+			transaction.start();
 			var thisModel	=null,
 				field		=null;
 			for (field in keyVals)
