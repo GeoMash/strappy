@@ -146,6 +146,9 @@ $JSKK.Class.create
 		},
 		/**
 		 * Fetches a record based on its index in the store.
+		 * 
+		 * Note: This method is affected by lock state.
+		 * 
 		 * @param {Number} index The index.
 		 * @return {Mixed} The record.
 		 */
@@ -163,7 +166,11 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Gets the full record object of this model.
 		 * 
+		 * Note: This method is affected by lock state.
+		 * 
+		 * @return {Object} The record object.
 		 */
 		getRecord: function()
 		{
@@ -220,7 +227,8 @@ $JSKK.Class.create
 			}
 		},
 		/**
-		 * 
+		 * Flags the model as being changed.
+		 * @return {framework.mvc.Model} this
 		 */
 		flagDirty: function()
 		{
@@ -228,21 +236,25 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
-		 * 
+		 * Flags the model as being unchanged.
+		 * @return {framework.mvc.Model} this
 		 */
 		flagClean: function()
 		{
 			this.dirty=false;
+			return this;
 		},
 		/**
-		 * 
+		 * Checks to see if any modifications have been made to this model.
+		 * @return {Boolean} True if the model has been changed.
 		 */
 		isDirty: function()
 		{
 			return this.dirty;
 		},
 		/**
-		 * 
+		 * Checks to see if no modifications have been made to this model.
+		 * @return {Boolean} True if the model has not been changed.
 		 */
 		isClean: function()
 		{
@@ -285,7 +297,14 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Creates a copy of this model.
 		 * 
+		 * Note: This does not deep copy the model. It will simply
+		 * take a snapshot of its record state and initatiate a new
+		 * model of the same original with those record values.
+		 * This new model isntance will not be flagged as dirty.
+		 * 
+		 * @return {framework.mvc.Model} The cloned instance.
 		 */
 		clone: function()
 		{
@@ -294,14 +313,19 @@ $JSKK.Class.create
 			return clone;
 		},
 		/**
-		 * 
+		 * Checks to see if this model instance is a clone.
+		 * @return {Boolean} True if the model is a clone.
 		 */
 		isClone: function()
 		{
 			return this._clone;
 		},
 		/**
+		 * Attaches a phantom instance of this model.
 		 * 
+		 * Note: This is usually used with internally by transactions.
+		 * 
+		 * @return {framework.mvc.Model} this
 		 */
 		attachPhantom: function(phantomModel)
 		{
@@ -309,14 +333,17 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
-		 * 
+		 * Checks to see if a phantom record has been attached.
+		 * @return {Boolean} True if this model has a phantom record attached.
 		 */
 		hasPhantom: function()
 		{
 			return Boolean(this.phantom);
 		},
 		/**
-		 * 
+		 * Fetches the attached phantom record. Throws an error if there is no
+		 * phantom record attached.
+		 * @return {framework.mvc.Model} The phantom record.
 		 */
 		getPhantom: function()
 		{
@@ -330,12 +357,14 @@ $JSKK.Class.create
 			}
 		},
 		/**
-		 * 
+		 * Destroys the phantom record attached to this model.
+		 * @return {framework.mvc.Model} this
 		 */
 		destroyPhantom: function()
 		{
 			delete this.phantom;
 			this.phantom=null;
+			return this;
 		}
 	}
 );
