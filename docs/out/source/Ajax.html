@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='framework-data-proxy-Ajax'>/**
+</span> * @class framework.data.proxy.Ajax
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * @abstract
+ */
+$JSKK.Class.create
+(
+	{
+		$namespace:	'framework.data.proxy',
+		$name:		'Ajax',
+		$uses:
+		[
+			$JSKK.trait.Configurable
+		]
+	}
+)
+(
+	{},
+	{
+		config:
+		{
+			url:	''
+		},
+		get: function(config)
+		{
+			if (Object.isUndefined(config.method))
+			{
+				method='POST';
+			}
+			$.get
+			(
+				{
+					method:		'POST',
+					url:		this.config.url,
+					data:		config.filter || {}
+				}
+			)
+			.done
+			(
+				function(response)
+				{
+					if (response.success)
+					{
+						(config.onSuccess || $JSKK.emptyFunction)(response.data,response.message);
+					}
+					else
+					{
+						(config.onFailure || $JSKK.emptyFunction)(response.message);
+					}
+				}
+			)
+			.fail(config.onFailure || $JSKK.emptyFunction);
+		},
+<span id='framework-data-proxy-Ajax-method-sync'>		/**
+</span>		 * 
+		 */
+		sync: function(config)
+		{
+			$.ajax
+			(
+				{
+					type:	'POST',
+					url:	this.config.url,
+					data:	config.data || {}
+				}
+			)
+			.done
+			(
+				function(response)
+				{
+					if (response.success)
+					{
+						(config.onSuccess || $JSKK.emptyFunction)(response.data,response.message);
+					}
+					else
+					{
+						(config.onFailure || $JSKK.emptyFunction)(response.message);
+					}
+				}
+			)
+			.fail(config.onFailure || $JSKK.emptyFunction);
+		}
+	}
+)</pre>
+</body>
+</html>

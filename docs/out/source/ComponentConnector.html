@@ -22,7 +22,7 @@
  * {@link framework.mvc.View views} and {@link framework.mvc.Controller controllers}.
  * 
  * This trait will expose a set of useful functionality to the class that
- * is using it.
+ * is using it, including all the hooks required to access parts of the component.
  * 
  * @abstract
  */
@@ -115,15 +115,15 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getCmp(cmp);
 		},
-<span id='framework-trait-ComponentConnector-method-getModel'>		/**
+<span id='framework-trait-ComponentConnector-method-getStore'>		/**
 </span>		 * Fetches a model from the parent component.
 		 * 
 		 * @param {String} model The name of the model.
 		 * @return {framework.mvc.Model} The Model instance.
 		 */
-		getModel: function(model)
+		getStore: function(store)
 		{
-			return this.getParentComponent().getModel(model);
+			return this.getParentComponent().getStore(store);
 		},
 <span id='framework-trait-ComponentConnector-method-getView'>		/**
 </span>		 * Fetches a view from the parent component.

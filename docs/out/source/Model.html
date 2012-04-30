@@ -19,173 +19,368 @@
 </span> * @class framework.mvc.Model
  * 
  * 
- * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Send
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Send
  */
 $JSKK.Class.create
 (
 	{
 		$namespace:	'framework.mvc',
-		$name:		'Model',
-		$uses:
-		[
-			framework.trait.ComponentConnector,
-			framework.trait.signal.Send
-		]
+		$name:		'Model'
 	}
 )
 (
-	{},
 	{
-<span id='framework-mvc-Model-property-data'>		/**
-</span>		 * @property {Array} data Holds the data for this model (store).
-		 * @private 
-		 */
-		data:		[],
-<span id='global-property-proxy'>		/**
-</span>		 * @property {framework.Proxy} proxy
+		LOCK_NONE:		'none',
+		LOCK_READONLY:	'readonly',
+		LOCK_FULL:		'full'
+	},
+	{
+		dirty:		false,
+		phantom:	false,
+		_clone:		false,
+		fields:		[],
+		record:		{},
+		store:		null,
+<span id='framework-mvc-Model-property-lockState'>		/**
+</span>		 * 
+		 * @property {String} lockState This property will block behaviours on this store depending on its state.
 		 * @private
-		 * @ignore
 		 */
-		proxy:		null,
-<span id='framework-mvc-Model-method-getRecord'>		/**
+		lockState:	'none',
+<span id='framework-mvc-Model-method-init'>		/**
+</span>		 * 
+		 */
+		init: function(record)
+		{
+			if (Object.isDefined(record))
+			{
+				this.record=Object.clone(this.fields);
+				for (var field in this.fields)
+				{
+					if (Object.isDefined(record[field]))
+					{
+						this.record[field]=record[field];
+					}
+				}
+			}
+			else
+			{
+				for (var field in this.fields)
+				{
+					this.record[field]=this.fields[field];
+				}
+			}
+		},
+<span id='framework-mvc-Model-method-bindStore'>		/**
+</span>		 * 
+		 */
+		bindStore: function(store)
+		{
+			this.store=store;
+			return this;
+		},
+<span id='framework-mvc-Model-method-unbindStore'>		/**
+</span>		 * 
+		 */
+		unbindStore: function()
+		{
+			this.store=null;
+			return this;
+		},
+<span id='framework-mvc-Model-method-getStore'>		/**
+</span>		 * 
+		 */
+		getStore: function()
+		{
+			return this.store;
+		},
+<span id='framework-mvc-Model-method-sync'>		/**
+</span>		 * This method will attach any changes to a
+		 * proxy sync request.
+		 * The expected response is a replacement record. 
+		 * 
+		 * 
+		 * TODO: Detail this.
+		 */
+		sync: function()
+		{
+			var proxy=this.getStore().getProxy();
+			if (Object.isFunction(proxy.sync))
+			{
+				proxy.sync
+				(
+					{
+						data:		(this.isDirty()?this.record:{}),
+						onSuccess:	function(data)
+						{
+							this.record=data;
+							if (!this.isClone())
+							{
+								this.sendSignal
+								(
+									framework.Signal.MODEL_DONE_SYNC,
+									{
+										id:			this.getID(),
+										component:	this.getCmpName(),
+										model:		this
+									}
+								);
+								this.sendSignal
+								(
+									framework.Signal.MODEL_DONE_CHANGE,
+									{
+										id:			this.getID(),
+										component:	this.getCmpName(),
+										model:		this
+									}
+								);
+							}
+						}.bind(this),
+						onFailure: function()
+						{
+							if (!this.isClone())
+							{
+								this.sendSignal
+								(
+									framework.Signal.MODEL_FAILED_SYNC,
+									{
+										id:			this.getID(),
+										component:	this.getCmpName(),
+										model:		this
+									}
+								);
+							}
+						}.bind(this)
+					}
+				);
+				this.flagClean();
+			}
+			else
+			{
+				throw new Exception('The model &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; cannot be synced as it does not have a syncable proxy attached to its bound store.');
+			}
+		},
+<span id='framework-mvc-Model-method-get'>		/**
 </span>		 * Fetches a record based on its index in the store.
+		 * 
+		 * Note: This method is affected by lock state.
+		 * 
 		 * @param {Number} index The index.
 		 * @return {Mixed} The record.
 		 */
-        getRecord: function(index)
+        get: function(key)
 		{
-			return this.data[index];
-		},
-<span id='framework-mvc-Model-method-setRecord'>		/**
-</span>		 * Sets a record at a given index in the store.
-		 * @param {Number} index The index.
-		 * @param {Mixed} data The new data to set.
-		 */
-        setRecord: function(index,data)
-		{
-			data.id=this.data[0].id;
-			this.data[index]=data;
-			this.sendSignal('view.change',data);
-		},
-//		get: function(key)
-//		{
-//			var	parts	=key.split('.'),
-//				object	=this.data;
-//			for (var i=0,j=parts.length; i&lt;j; i++)
-//			{
-//				if (Object.isDefined(object[parts[i]]))
-//				{
-//					object=object[parts[i]];
-//				}
-//				else
-//				{
-//					return null;
-//				}
-//			}
-//			return object;
-//		},
-//		set: function(key,value)
-//		{
-//			var	parts	=key.split('.'),
-//				object	=this.data;
-//			for (var i=0,j=parts.length; i&lt;j; i++)
-//			{
-//				if (i+1==j)
-//				{
-//					object[parts[i]]=value;
-//					break;
-//				}
-//				if (Object.isDefined(object[parts[i]]))
-//				{
-//					object=object[parts[i]];
-//				}
-//				else
-//				{
-//					if (i+1!=j)
-//					{
-//						object[parts[i]]={};
-//						object=object[parts[i]];
-//					}
-//				}
-//			}
-//			console.debug('ID:',this.getID());
-//			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{name:this.getID()});
-//			return this;
-//		},
-<span id='framework-mvc-Model-method-each'>		/**
-</span>		 * This method allows you to iterate over each item
-		 * in the model's data store.
-		 * 
-		 * Example:
-	$JSKK.Class.create
-	(
-		{
-			$namespace:	'Application.component.myComponent.controller',
-			$name:		'Default',
-			$extends:	framework.mvc.Controller
-		}
-	)
-	(
-		{},
-		{
-			generateList: function()
+			if (this.lockState==framework.mvc.Model.LOCK_NONE
+			|| this.lockState==framework.mvc.Model.LOCK_READONLY
+			|| this.isClone())
 			{
-				var HTML=['&lt;ul&gt;'];
-				this.getModel('Default').each
+				return this.record[key];
+			}
+			else
+			{
+				throw new Error('The model &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; is in a lock state that prevents reading.');
+			}
+		},
+<span id='framework-mvc-Model-method-getRecord'>		/**
+</span>		 * Gets the full record object of this model.
+		 * 
+		 * Note: This method is affected by lock state.
+		 * 
+		 * @return {Object} The record object.
+		 */
+		getRecord: function()
+		{
+			if (this.lockState==framework.mvc.Model.LOCK_NONE
+			|| this.lockState==framework.mvc.Model.LOCK_READONLY
+			|| this.isClone())
+			{
+				return this.record;
+			}
+			else
+			{
+				throw new Error('The model &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; is in a lock state that prevents reading.');
+			}
+		},
+<span id='framework-mvc-Model-method-set'>		/**
+</span>		 * Sets a record at a given index in the store.
+		 * @param {Mixed} field The field OR an object containing key/value
+		 * pairs of values to set.
+		 * @param {Mixed} value The new value to set. Don't use this if &quot;field&quot; is an object.
+		 */
+        set: function()
+		{
+			var	args		=$JSKK.toArray(arguments),
+				keyVals		={},
+				transaction	=new framework.data.Transaction();
+			if (Object.isDefined(args[1]))
+			{
+				keyVals[args.shift()]=args.shift();
+			}
+			else
+			{
+				keyVals=args.shift();
+			}
+			for (var field in keyVals)
+			{
+				this.record[field]=keyVals[field];
+			}
+			this.flagDirty();
+			if (this.lockState==framework.mvc.Model.LOCK_NONE &amp;&amp; !this.isClone())
+			{
+				this.getStore().sendSignal
 				(
-					function(item)
+					framework.Signal.MODEL_DONE_CHANGE,
 					{
-						HTML.push('&lt;li&gt;&lt;a href=&quot;'+item.url+'&quot;&gt;'+item.name+'&lt;/a&gt;&lt;/li&gt;');
+						id:			this.getStore().getID(),
+						component:	this.getStore().getCmpName(),
+						model:		this
 					}
 				);
-				HTML.push('&lt;/ul&gt;');
-				return HTML.join('');
 			}
-		}
-	);
-		 * @param {Function} callback A closure which will be called at each iteration.
-		 * The first parameter of the closure will be the data item.
-		 * @return {framework.mvc.Model}
-		 */
-		each: function(callback)
-		{
-			this.data.each(callback);
-			return this;
-		},
-<span id='framework-mvc-Model-method-add'>		/**
-</span>		 * Adds a record to the model's store.
-		 * @param {Mixed} record The record to be added to the store.
-		 * @return {framework.mvc.Model}
-		 */
-		add: function(record)
-		{
-			this.data.push(record);
-			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{name:this.getID()});
-			return this;
-		},
-<span id='framework-mvc-Model-method-remove'>		/**
-</span>		 * Removes a record from the store.
-		 * @param {Mixed} record The record to be removed from the store.
-		 * @return {framework.mvc.Model}
-		 */
-		remove: function(record)
-		{
-			var newData=[];
-			for (var i=0,j=this.data.length; i&lt;j; i++)
+			else
 			{
-				if (this.data[i]!=record)
+				throw new Error('The model &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; is in a lock state that prevents any modification.');
+			}
+		},
+<span id='framework-mvc-Model-method-flagDirty'>		/**
+</span>		 * Flags the model as being changed.
+		 * @return {framework.mvc.Model} this
+		 */
+		flagDirty: function()
+		{
+			this.dirty=true;
+			return this;
+		},
+<span id='framework-mvc-Model-method-flagClean'>		/**
+</span>		 * Flags the model as being unchanged.
+		 * @return {framework.mvc.Model} this
+		 */
+		flagClean: function()
+		{
+			this.dirty=false;
+			return this;
+		},
+<span id='framework-mvc-Model-method-isDirty'>		/**
+</span>		 * Checks to see if any modifications have been made to this model.
+		 * @return {Boolean} True if the model has been changed.
+		 */
+		isDirty: function()
+		{
+			return this.dirty;
+		},
+<span id='framework-mvc-Model-method-isClean'>		/**
+</span>		 * Checks to see if no modifications have been made to this model.
+		 * @return {Boolean} True if the model has not been changed.
+		 */
+		isClean: function()
+		{
+			return !this.dirty;
+		},
+<span id='framework-mvc-Model-method-lock'>		/**
+</span>		 * Locks the model based on the type of lock given to this method.
+		 * @param {String} lockType The type of lock. Valid lock types are:&lt;br&gt;
+		 * * {@link framework.mvc.Model#LOCK_NONE}&lt;br&gt;
+		 * * {@link framework.mvc.Model#LOCK_READONLY}&lt;br&gt;
+		 * * {@link framework.mvc.Model#LOCK_FULL}&lt;br&gt;
+		 * @param {Boolean} supressSignal Blocks the MODEL_LOCK_CHANGE signal
+		 * from being fired.
+		 * 
+		 * @retrun {framework.data.stateful.Store}
+		 */
+		lock: function(lockType,supressSignal)
+		{
+			if (['none','readonly','full'].inArray(lockType))
+			{
+				this.lockState=lockType;
+				if (supressSignal!==true &amp;&amp; !this.isClone())
 				{
-					newData.push(this.data[i]);
+					this.getStore().sendSignal
+					(
+						framework.Signal.MODEL_LOCK_CHANGE,
+						{
+							id:			this.getStore().getID(),
+							component:	this.getStore().getCmpName(),
+							model:		this,
+							lock:		this.lockState
+						}
+					);
 				}
 			}
-			this.data=newData;
-			this.sendSignal(framework.Signal.MODEL_DONE_CHANGE,{name:this.getID()});
+			else
+			{
+				throw new Error('&quot;'+lockType+'&quot; is an invalid lock type. Valid locks are &quot;none&quot;, &quot;readonly&quot; and &quot;full&quot;.');
+			}
+			return this;
+		},
+<span id='framework-mvc-Model-method-clone'>		/**
+</span>		 * Creates a copy of this model.
+		 * 
+		 * Note: This does not deep copy the model. It will simply
+		 * take a snapshot of its record state and initatiate a new
+		 * model of the same original with those record values.
+		 * This new model isntance will not be flagged as dirty.
+		 * 
+		 * @return {framework.mvc.Model} The cloned instance.
+		 */
+		clone: function()
+		{
+			var clone=new (this.$reflect('self'))(this.record);
+			clone._clone=true;
+			return clone;
+		},
+<span id='framework-mvc-Model-method-isClone'>		/**
+</span>		 * Checks to see if this model instance is a clone.
+		 * @return {Boolean} True if the model is a clone.
+		 */
+		isClone: function()
+		{
+			return this._clone;
+		},
+<span id='framework-mvc-Model-method-attachPhantom'>		/**
+</span>		 * Attaches a phantom instance of this model.
+		 * 
+		 * Note: This is usually used with internally by transactions.
+		 * 
+		 * @return {framework.mvc.Model} this
+		 */
+		attachPhantom: function(phantomModel)
+		{
+			this.phantom=phantomModel;
+			return this;
+		},
+<span id='framework-mvc-Model-method-hasPhantom'>		/**
+</span>		 * Checks to see if a phantom record has been attached.
+		 * @return {Boolean} True if this model has a phantom record attached.
+		 */
+		hasPhantom: function()
+		{
+			return Boolean(this.phantom);
+		},
+<span id='framework-mvc-Model-method-getPhantom'>		/**
+</span>		 * Fetches the attached phantom record. Throws an error if there is no
+		 * phantom record attached.
+		 * @return {framework.mvc.Model} The phantom record.
+		 */
+		getPhantom: function()
+		{
+			if (this.hasPhantom())
+			{
+				return this.phatom;
+			}
+			else
+			{
+				throw new Error('The model &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; does not have a phantom model associated with it.');
+			}
+		},
+<span id='framework-mvc-Model-method-destroyPhantom'>		/**
+</span>		 * Destroys the phantom record attached to this model.
+		 * @return {framework.mvc.Model} this
+		 */
+		destroyPhantom: function()
+		{
+			delete this.phantom;
+			this.phantom=null;
 			return this;
 		}
 	}

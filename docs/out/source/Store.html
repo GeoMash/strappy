@@ -15,8 +15,8 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-mvc-stateful-Model'>/**
-</span> * @class framework.mvc.stateful.Model
+  <pre class="prettyprint lang-js"><span id='framework-data-stateful-Store'>/**
+</span> * @class framework.data.stateful.Store
  * 
  * 
  * 
@@ -30,8 +30,8 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.mvc.stateful',
-		$name:		'Model',
+		$namespace:	'framework.data.stateful',
+		$name:		'Store',
 		$uses:
 		[
 			framework.trait.ComponentConnector,
@@ -40,66 +40,82 @@ $JSKK.Class.create
 	}
 )
 (
-	{},
 	{
-<span id='framework-mvc-stateful-Model-property-ready'>		/**
+		LOCK_NONE:		'none',
+		LOCK_READONLY:	'readonly',
+		LOCK_FULL:		'full'
+	},
+	{
+<span id='framework-data-stateful-Store-property-ready'>		/**
 </span>		 * @property {Boolean} ready A flag indicating that the component's state is ready.
 		 * @private
 		 */
 		ready:		false,
-<span id='framework-mvc-stateful-Model-property-readyViews'>		/**
+<span id='framework-data-stateful-Store-property-readyViews'>		/**
 </span>		 * @property {Array} readyViews A container filled with views which a controller has
 		 * flagged as ready.
 		 * 
-		 * See {@link framework.mvc.stateful.Model#setViewReady} and
-		 * {@link framework.mvc.stateful.Model#getReadyViews} for more information and
+		 * See {@link framework.data.stateful.Store#setViewReady} and
+		 * {@link framework.data.stateful.Store#getReadyViews} for more information and
 		 * examples of how to use this.
 		 * @private
 		 */
 		readyViews:	[],
-<span id='framework-mvc-stateful-Model-method-state'>		/**
-</span>		 * @param {Object} state The state store.
+<span id='framework-data-stateful-Store-property-state'>		/**
+</span>		 * @property {Object} state The state store.
 		 * @private
 		 */
 		state:		{},
-<span id='framework-mvc-stateful-Model-method-set'>		/**
+<span id='framework-data-stateful-Store-property-lockState'>		/**
+</span>		 * 
+		 * @property {String} lockState This property will block behaviours on this store depending on its state.
+		 * @private
+		 */
+		lockState:	'none',
+<span id='framework-data-stateful-Store-method-set'>		/**
 </span>		 * Sets a state property with a new value.
 		 * 
 		 * Sends signal:
 		 * 
-		 * * {@link framework.Signal.STATEFULMODEL_DONE_CHANGE}
+		 * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}
 		 * 
 		 * @param {String} key The property to set.
 		 * @param {Mixed} value The new value.
-		 * @return {framework.mvc.stateful.Model}
+		 * @return {framework.data.stateful.Store}
 		 */
 		set: function(key,value)
 		{
-			this.state[key]=value;
-//			this.sendSignal(framework.Signal.STATEFULMODEL_DONE_CHANGE,{change:[key,value]});
-			var changeSet	={};
-			changeSet[key]	=value;
-			
-			this.sendSignal(framework.Signal.STATEFULMODEL_DONE_CHANGE,{component:this.getCmpName(),change:changeSet});
+			if (this.lockState==framework.data.stateful.Store.LOCK_NONE)
+			{
+				this.state[key]	=value;
+				var changeSet	={};
+				changeSet[key]	=value;
+				
+				this.sendSignal(framework.Signal.STATEFULSTORE_DONE_CHANGE,{component:this.getCmpName(),change:changeSet});
+			}
+			else
+			{
+				throw new Error('Store &quot;'+this.$reflect('name')+'&quot; is in lock state &quot;'+this.lockState+'&quot; and so cannot be modified.');
+			}
 			return this;
 		},
-<span id='framework-mvc-stateful-Model-method-setReady'>		/**
+<span id='framework-data-stateful-Store-method-setReady'>		/**
 </span>		 * This method will set the ready state of the component.
 		 * 
 		 * Sends signals:
 		 * 
-		 * * {@link framework.Signal.STATEFULMODEL_IS_READY}
-		 * * {@link framework.Signal.STATEFULMODEL_DONE_CHANGE}
+		 * * {@link framework.Signal.STATEFULSTORE_IS_READY}
+		 * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}
 		 * 
 		 * @param {Boolean} ready The ready state.
-		 * @return {framework.mvc.stateful.Model}
+		 * @return {framework.data.stateful.Store}
 		 */
 		setReady: function(ready)
 		{
 			this.ready=ready;
 			if (ready)
 			{
-				this.sendSignal(framework.Signal.STATEFULMODEL_IS_READY,{component:this.getCmpName()});
+				this.sendSignal(framework.Signal.STATEFULSTORE_IS_READY,{component:this.getCmpName()});
 				var globalState=this.getStateMgr().getState();
 				for (var globalItem in globalState)
 				{
@@ -113,10 +129,10 @@ $JSKK.Class.create
 					}
 				}
 			}
-			this.sendSignal(framework.Signal.STATEFULMODEL_DONE_CHANGE,{component:this.getCmpName(),change:globalState});
+			this.sendSignal(framework.Signal.STATEFULSTORE_DONE_CHANGE,{component:this.getCmpName(),change:globalState});
 			return this;
 		},
-<span id='framework-mvc-stateful-Model-method-isReady'>		/**
+<span id='framework-data-stateful-Store-method-isReady'>		/**
 </span>		 * Checks if the component's ready state is true.
 		 * @return {Boolean} True if the component state is ready.
 		 */
@@ -124,7 +140,7 @@ $JSKK.Class.create
 		{
 			return this.ready;
 		},
-<span id='framework-mvc-stateful-Model-method-get'>		/**
+<span id='framework-data-stateful-Store-method-get'>		/**
 </span>		 * Gets a state property from the model's store.
 		 * @param {String} key The state property to fetch.
 		 * @return {Mixed} The value of the property.
@@ -133,7 +149,7 @@ $JSKK.Class.create
 		{
 			return this.state[key];
 		},
-<span id='framework-mvc-stateful-Model-method-setViewReady'>		/**
+<span id='framework-data-stateful-Store-method-setViewReady'>		/**
 </span>		 * Stores the view name in a private store for ready views.
 		 * 
 		 * Example:
@@ -155,14 +171,14 @@ $JSKK.Class.create
 		}
 	);
 		 * @param {String} view The name of the view.
-		 * @return {framework.mvc.stateful.Model}
+		 * @return {framework.data.stateful.Store}
 		 */
 		setViewReady: function(view)
 		{
 			this.readyViews.push(view);
 			return this;
 		},
-<span id='framework-mvc-stateful-Model-method-getReadyViews'>		/**
+<span id='framework-data-stateful-Store-method-getReadyViews'>		/**
 </span>		 * Returns an array of ready views.
 		 * 
 		 * Example:
@@ -195,6 +211,27 @@ $JSKK.Class.create
 		getReadyViews: function()
 		{
 			return this.readyViews;
+		},
+<span id='framework-data-stateful-Store-method-lock'>		/**
+</span>		 * Locks the model based on the type of lock given to this method.
+		 * @param {String} lockType The type of lock. Valid lock types are:
+		 * * {@link framework.data.stateful.Store#LOCK_NONE}
+		 * * {@link framework.data.stateful.Store#LOCK_READONLY}
+		 * * {@link framework.data.stateful.Store#LOCK_FULL}
+		 * 
+		 * @retrun {framework.data.stateful.Store}
+		 */
+		lock: function(lockType)
+		{
+			if (['none','readonly','full'].inArray(lockType))
+			{
+				this.lockState=lockType;
+			}
+			else
+			{
+				throw new Error('&quot;'+lockType+'&quot; is an invalid lock type. Valid locks are &quot;none&quot;, &quot;readonly&quot; and &quot;full&quot;.');
+			}
+			return this;
 		}
 	}
 );</pre>

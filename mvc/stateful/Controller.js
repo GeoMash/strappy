@@ -36,7 +36,7 @@ $JSKK.Class.create
 	{},
 	{
 		/**
-		 * @property {framework.mvc.stateful.Model} stateStore A reference to the
+		 * @property {framework.data.stateful.Store} stateStore A reference to the
 		 * associated state model.
 		 * @private
 		 */

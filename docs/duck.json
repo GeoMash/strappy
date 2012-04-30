@@ -24,7 +24,10 @@
         "../mvc/Model.js",
         "../mvc/View.js",
         "../mvc/Controller.js",
-        "../mvc/stateful/Model.js",
-        "../mvc/stateful/Controller.js"
+        "../mvc/stateful/Controller.js",
+        "../data/stateful/Store.js",
+        "../data/Store.js",
+        "../data/Transaction.js",
+        "../data/proxy/Ajax.js"
     ]
 }

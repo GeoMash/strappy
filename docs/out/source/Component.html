@@ -78,7 +78,7 @@
 		}
 	);
  * 
- * @mixins $JSKK.trait.Configurable
+ * @mi!xins $JSKK.trait.Configurable
  * @abstract
  * 
  * @uses framework.RadioTower
@@ -88,11 +88,11 @@ $JSKK.Class.create
 (
 	{
 		$namespace:	'framework',
-		$name:		'Component',
-		$uses:
-		[
-			$JSKK.trait.Configurable
-		]
+		$name:		'Component'//,
+//		$uses:
+//		[
+//			$JSKK.trait.Configurable
+//		]
 	}
 )
 (
@@ -141,8 +141,8 @@ $JSKK.Class.create
 		 * 
 		 */
 		components:		{},
-<span id='framework-Component-property-models'>		/**
-</span>		 * @property models Specify a list of models to pre-load.
+<span id='framework-Component-property-stores'>		/**
+</span>		 * @property stores Specify a list of stores to pre-load.
 		 * 
 	$JSKK.Class.create
 	(
@@ -155,7 +155,7 @@ $JSKK.Class.create
 	(
 		{},
 		{
-			models:
+			stores:
 			[
 				'State',
 				'User'
@@ -163,7 +163,7 @@ $JSKK.Class.create
 		}
 	);
 		 */
-		models:			[],
+		stores:			[],
 <span id='framework-Component-property-views'>		/**
 </span>		 * @property views Specify a list of views to pre-load.
 		 * 
@@ -209,11 +209,11 @@ $JSKK.Class.create
 	);
 		 */
 		controllers:	[],
-<span id='framework-Component-property-_models'>		/**
-</span>		 * @property _models A container for all the initialized models.
+<span id='framework-Component-property-_stores'>		/**
+</span>		 * @property _stores A container for all the initialized stores.
 		 * @private
 		 */
-		_models:		{},
+		_stores:		{},
 <span id='framework-Component-property-_views'>		/**
 </span>		 * @property _views A container for all the initialized views.
 		 * @private
@@ -292,7 +292,7 @@ $JSKK.Class.create
 			this.initStateMgr();
 			this.initChildComponents();
 			this.initViews();
-			this.initModels();
+			this.initStores();
 			this.initControllers();
 			
 			if (Object.isFunction(this.initCmp))
@@ -300,7 +300,6 @@ $JSKK.Class.create
 				this.initCmp();
 			}
 			this.ready=true;
-			this.reconfigure();
 		},
 <span id='framework-Component-method-initRadioTower'>		/**
 </span>		 * Initalizes the component's conneciton to the Radio Tower.
@@ -475,44 +474,44 @@ $JSKK.Class.create
 				throw new Error('Error - view &quot;'+view+'&quot; has not been initilized.');
 			}
 		},
-<span id='framework-Component-method-initModels'>		/**
-</span>		 * Initializes all the models associated with this component.
+<span id='framework-Component-method-initStores'>		/**
+</span>		 * Initializes all the stores associated with this component.
 		 * 
 		 * @private
 		 */
-		initModels: function()
+		initStores: function()
 		{
-			for (var i=0,j=this.models.length; i&lt;j; i++)
+			for (var i=0,j=this.stores.length; i&lt;j; i++)
 			{
 				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
-				&amp;&amp; Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]]))
+				&amp;&amp; Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]]))
 				{
-					this._models[this.models[i]]=new this.my.NSObject[this.my.name.lowerFirst()].model[this.models[i]](this);
+					this._stores[this.stores[i]]=new this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]](this);
 				}
 				else
 				{
-					throw new Error('Error - model &quot;'+this.models[i]+'&quot; not loaded for component &quot;'+this.my.name+'&quot;.');
+					throw new Error('Error - store &quot;'+this.stores[i]+'&quot; not loaded for component &quot;'+this.my.name+'&quot;.');
 					break;
 				}
 			}
 		},
-<span id='framework-Component-method-getModel'>		/**
-</span>		 * Returns an associated model which is pre-defined in this
+<span id='framework-Component-method-getStore'>		/**
+</span>		 * Returns an associated store which is pre-defined in this
 		 * components &quot;models&quot; property.
 		 * 
-		 * @param {String} model The name of the model to get.
+		 * @param {String} store The name of the store to get.
 		 * @throws 
-		 * @return {framework.mvc.Model} The requested model if it has been defined.
+		 * @return {framework.mvc.Model} The requested store if it has been defined.
 		 */
-		getModel: function(model)
+		getStore: function(store)
 		{
-			if (Object.isDefined(this._models[model]))
+			if (Object.isDefined(this._stores[store]))
 			{
-				return this._models[model];
+				return this._stores[store];
 			}
 			else
 			{
-				throw new Error('Error - model &quot;'+model+'&quot; has not been initilized.');
+				throw new Error('Error - store &quot;'+store+'&quot; has not been initilized.');
 			}
 		},
 <span id='framework-Component-method-configure'>		/**
@@ -553,7 +552,8 @@ $JSKK.Class.create
 			(
 				function()
 				{
-					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
+					this.configure(this.config);
+//					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
 		},
