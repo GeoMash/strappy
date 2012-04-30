@@ -1,3 +1,9 @@
+/**
+ * @class framework.data.Transaction
+ * 
+ * 
+ * @uses framework.mvc.Model
+ */
 $JSKK.Class.create
 (
 	{
@@ -38,7 +44,7 @@ $JSKK.Class.create
 		 */
 		STATE_FAILED:		16,
 		/**
-		 * @property STATE_FAILED The transaction failed.
+		 * @property STATE_ROLLEDBACK The transaction failed.
 		 * @static
 		 */
 		STATE_ROLLEDBACK:	32
@@ -74,7 +80,7 @@ $JSKK.Class.create
 		},
 		/**
 		 * Starts the transaction process. Automatically calls {@see framework.Transaction#fullLock}.
-		 * @return {framework.Transaction}
+		 * @return {framework.data.Transaction} this
 		 */
 		start: function()
 		{
@@ -114,7 +120,7 @@ $JSKK.Class.create
 		/**
 		 * Commits the transaction.
 		 * 
-		 * @return {framework.Transaction}
+		 * @return {framework.data.Transaction} this
 		 */
 		commit: function()
 		{
@@ -134,7 +140,7 @@ $JSKK.Class.create
 		},
 		/**
 		 * 
-		 * @return {framework.Transaction}
+		 * @return {framework.data.Transaction} this
 		 */
 		rollback: function()
 		{
@@ -154,7 +160,7 @@ $JSKK.Class.create
 		/**
 		 * Applies a full lock to the associated models.
 		 * 
-		 * @return {framework.Transaction}
+		 * @return {framework.data.Transaction} this
 		 */
 		fullLock: function()
 		{
@@ -172,7 +178,7 @@ $JSKK.Class.create
 		/**
 		 * Applies a read-only lock to the associated models.
 		 * 
-		 * @return {framework.Transaction}
+		 * @return {framework.data.Transaction} this
 		 */
 		readOnly: function()
 		{

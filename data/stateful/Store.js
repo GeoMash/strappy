@@ -64,7 +64,7 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} key The property to set.
 		 * @param {Mixed} value The new value.
-		 * @return {framework.mvc.stateful.Store}
+		 * @return {framework.data.stateful.Store}
 		 */
 		set: function(key,value)
 		{

@@ -262,11 +262,11 @@ $JSKK.Class.create
 		},
 		/**
 		 * Locks the model based on the type of lock given to this method.
-		 * @param {String} lockType The type of lock. Valid lock types are:
-		 * * {@link framework.mvc.Model#LOCK_NONE}
-		 * * {@link framework.mvc.Model#LOCK_READONLY}
-		 * * {@link framework.mvc.Model#LOCK_FULL}
-		 * @param {Boolean} supressSignal Blocks the MODLEL_LOCK_CHANGE signal
+		 * @param {String} lockType The type of lock. Valid lock types are:<br>
+		 * * {@link framework.mvc.Model#LOCK_NONE}<br>
+		 * * {@link framework.mvc.Model#LOCK_READONLY}<br>
+		 * * {@link framework.mvc.Model#LOCK_FULL}<br>
+		 * @param {Boolean} supressSignal Blocks the MODEL_LOCK_CHANGE signal
 		 * from being fired.
 		 * 
 		 * @retrun {framework.data.stateful.Store}
