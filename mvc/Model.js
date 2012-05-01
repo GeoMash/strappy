@@ -85,8 +85,10 @@ $JSKK.Class.create
 		 * 
 		 * 
 		 * TODO: Detail this.
+		 * 
+		 * @return {framework.mvc.Model} this
 		 */
-		sync: function()
+		sync: function(config)
 		{
 			var proxy=this.getStore().getProxy();
 			if (Object.isFunction(proxy.sync))
@@ -119,6 +121,13 @@ $JSKK.Class.create
 									}
 								);
 							}
+							else
+							{
+								if (Object.isFunction(config.onSuccess))
+								{
+									config.onSuccess();
+								}
+							}
 						}.bind(this),
 						onFailure: function()
 						{
@@ -134,6 +143,13 @@ $JSKK.Class.create
 									}
 								);
 							}
+							else
+							{
+								if (Object.isFunction(config.onFailure))
+								{
+									config.onFailure();
+								}
+							}
 						}.bind(this)
 					}
 				);
@@ -143,6 +159,7 @@ $JSKK.Class.create
 			{
 				throw new Exception('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached to its bound store.');
 			}
+			return this;
 		},
 		/**
 		 * Fetches a record based on its index in the store.
@@ -193,22 +210,29 @@ $JSKK.Class.create
 		 */
         set: function()
 		{
-			var	args		=$JSKK.toArray(arguments),
-				keyVals		={},
-				transaction	=new framework.data.Transaction();
-			if (Object.isDefined(args[1]))
+			
+			if (this.lockState==framework.mvc.Model.LOCK_NONE || this.isClone())
 			{
-				keyVals[args.shift()]=args.shift();
+				var	args		=$JSKK.toArray(arguments),
+					keyVals		={};
+				if (Object.isDefined(args[1]))
+				{
+					keyVals[args.shift()]=args.shift();
+				}
+				else
+				{
+					keyVals=args.shift();
+				}
+				for (var field in keyVals)
+				{
+					this.record[field]=keyVals[field];
+				}
+				this.flagDirty();
 			}
 			else
 			{
-				keyVals=args.shift();
+				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents any modification.');
 			}
-			for (var field in keyVals)
-			{
-				this.record[field]=keyVals[field];
-			}
-			this.flagDirty();
 			if (this.lockState==framework.mvc.Model.LOCK_NONE && !this.isClone())
 			{
 				this.getStore().sendSignal
@@ -220,10 +244,6 @@ $JSKK.Class.create
 						model:		this
 					}
 				);
-			}
-			else
-			{
-				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents any modification.');
 			}
 		},
 		/**
@@ -349,7 +369,7 @@ $JSKK.Class.create
 		{
 			if (this.hasPhantom())
 			{
-				return this.phatom;
+				return this.phantom;
 			}
 			else
 			{

@@ -84,15 +84,41 @@ $JSKK.Class.create
 		 */
 		start: function()
 		{
-			this.state|=framework.Transaction.STATE_STARTED;
+			this.state|=framework.data.Transaction.STATE_STARTED;
 			this.fullLock();
 			return this;
 		},
 		/**
 		 * 
 		 */
-		execute: function()
+		execute: function(config)
 		{
+			var models=
+			{
+				total:	this.models.length,
+				done:	0,
+				fails:	0
+			};
+			$JSKK.when(models,{object:'done',value:models.total}).isEqualTo
+			(
+				function()
+				{
+					if (models.fails===0)
+					{
+						if (Object.isFunction(config.onSuccess))
+						{
+							config.onSuccess();
+						}
+					}
+					else
+					{
+						if (Object.isFunction(config.onFailure))
+						{
+							config.onFailure();
+						}
+					}
+				}.bind(this)
+			);
 			this.models.each
 			(
 				function(model)
@@ -110,7 +136,20 @@ $JSKK.Class.create
 						if (model.getStore())
 						{
 							phantom	.bindStore(model.getStore())
-									.sync()
+									.sync
+									(
+										{
+											onSuccess: function()
+											{
+												models.done++;
+											},
+											onFailure: function()
+											{
+												models.done++;
+												models.fails++;
+											}
+										}
+									)
 									.unbindStore();
 						}
 					}
@@ -120,15 +159,15 @@ $JSKK.Class.create
 		/**
 		 * Commits the transaction.
 		 * 
-		 * @return {framework.data.Transaction} this
+		 * @return {void}
 		 */
 		commit: function()
 		{
-			this.state|=framework.Transaction.STATE_COMITTED;
+			this.state|=framework.data.Transaction.STATE_COMITTED;
 			this.models.each
 			(
 				function(model,index)
-				{
+				{console.debug(model,framework.mvc.Model.LOCK_NONE);
 					model.lock(framework.mvc.Model.LOCK_NONE);
 					model.set(model.getPhantom().getRecord());
 					model.destroyPhantom();
@@ -144,7 +183,7 @@ $JSKK.Class.create
 		 */
 		rollback: function()
 		{
-			this.state|=framework.Transaction.STATE_ROLLEDBACK;
+			this.state|=framework.data.Transaction.STATE_ROLLEDBACK;
 			
 			this.models.each
 			(

@@ -228,18 +228,11 @@ $JSKK.Class.create
 			transaction.execute
 			(
 				{
-					onSuccess:	function(response)
+					onSuccess:	function()
 					{
-						if (response.success)
-						{
-							transaction.commit();
-							this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
-						}
-						else
-						{
-							transaction.rollback();
-						}
-					},
+						transaction.commit();
+						this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
+					}.bind(this),
 					onFailure: function()
 					{
 						transaction.rollback();
@@ -286,8 +279,8 @@ $JSKK.Class.create
 						onSuccess:	function(data)
 						{
 							this.records=this.newRecord(data);
-							this.sendSignal(framework.Signal.STORE_DONE_SYNC,{id:this.getID(),component:this.getCmpName()});
 							this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
+							this.sendSignal(framework.Signal.STORE_DONE_SYNC,{id:this.getID(),component:this.getCmpName()});
 						}.bind(this),
 						onFailure: function()
 						{
@@ -300,6 +293,13 @@ $JSKK.Class.create
 			{
 				throw new Exception('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
+		},
+		/**
+		 * 
+		 */
+		getProxy: function()
+		{
+			return this.proxy;
 		},
 		/**
 		 * 

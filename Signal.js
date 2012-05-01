@@ -23,11 +23,11 @@ $JSKK.Class.create
 (
 	{
 		$namespace:		'framework',
-		$name:			'Signal',
-		$uses:
-		[
-			$JSKK.trait.Configurable
-		]
+		$name:			'Signal'//,
+//		$uses:
+//		[
+//			$JSKK.trait.Configurable
+//		]
 	}
 )
 (
@@ -200,6 +200,13 @@ $JSKK.Class.create
 			 * key/value pair values.
 			 */
 			filter:	{}		// Optional
+		},
+		init: function(config)
+		{
+			this.config.name	=config.name	|| null;
+			this.config.body	=config.body	|| null;
+			this.config.type	=config.type	|| null;
+			this.config.filter	=config.filter	|| {};
 		},
 		/**
 		 * Gets the name of the signal.
