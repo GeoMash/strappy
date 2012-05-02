@@ -205,7 +205,8 @@ $JSKK.Class.create
 		{
 			var	args		=$JSKK.toArray(arguments),
 				keyVals		={},
-				transaction	=new framework.data.Transaction();
+				transaction	=new framework.data.Transaction();//,
+//				queue		=new framework.data.Queue();
 			if (Object.isDefined(args[1]))
 			{
 				keyVals[args.shift()]=args.shift();
@@ -215,7 +216,7 @@ $JSKK.Class.create
 				keyVals=args.shift();
 			}
 			transaction.start();
-			var thisModel	=null,
+			var	thisModel	=null,
 				field		=null;
 			for (field in keyVals)
 			{
@@ -276,15 +277,15 @@ $JSKK.Class.create
 				(
 					{
 						data:		changeset,
-						onSuccess:	function(data)
+						onSuccess:	function(response)
 						{
-							this.records=this.newRecord(data);
+							this.records=this.newRecord(response.data);
 							this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
 							this.sendSignal(framework.Signal.STORE_DONE_SYNC,{id:this.getID(),component:this.getCmpName()});
 						}.bind(this),
-						onFailure: function()
+						onFailure: function(response)
 						{
-							this.sendSignal(framework.Signal.STORE_FAILED_SYNC,{id:this.getID(),component:this.getCmpName()});
+							this.sendSignal(framework.Signal.STORE_FAILED_SYNC,{id:this.getID(),component:this.getCmpName(),response:response});
 						}.bind(this)
 					}
 				);

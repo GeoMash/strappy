@@ -97,9 +97,9 @@ $JSKK.Class.create
 				(
 					{
 						data:		(this.isDirty()?this.record:{}),
-						onSuccess:	function(data)
+						onSuccess:	function(response)
 						{
-							this.record=data;
+							this.record=response.data;
 							if (!this.isClone())
 							{
 								this.sendSignal

@@ -58,14 +58,14 @@ $JSKK.Class.create
 			{
 				throw new Error('Unable to initialize "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" State Controller. Controller requires a state model.');
 			}
-			(this.$reflect('uses') || []).each
-			(
-				function(trait)
-				{
-					console.debug(trait.toString());
-//					console.debug(trait.$reflect('name'));
-				}
-			);
+//			(this.$reflect('uses') || []).each
+//			(
+//				function(trait)
+//				{
+//					console.debug(trait.toString());
+////					console.debug(trait.$reflect('name'));
+//				}
+//			);
 //			console.debug('USES: ',this.$reflect('uses'));
 		},
 		/**

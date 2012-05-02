@@ -15,7 +15,8 @@ $JSKK.Class.create
 		$name:		'Ajax',
 		$uses:
 		[
-			$JSKK.trait.Configurable
+			$JSKK.trait.Configurable,
+			$JSKK.trait.Observable
 		]
 	}
 )
@@ -26,64 +27,88 @@ $JSKK.Class.create
 		{
 			url:	''
 		},
+		events:
+		{
+			onBeforeRequest: true
+		},
 		get: function(config)
 		{
-			if (Object.isUndefined(config.method))
+			config.url=this.config.url;
+			if (this.fireEvent('onBeforeRequest',this,config)!==false)
 			{
-				method='POST';
+				if (Object.isUndefined(config.method))
+				{
+					config.method='POST';
+				}
+				$.get
+				(
+					{
+						type:		config.method,
+						url:		config.url,
+						data:		config.filter || {}
+					}
+				)
+				.done(this._onDone.bind(this,config))
+				.fail(config.onFailure || $JSKK.emptyFunction);
 			}
-			$.get
-			(
-				{
-					method:		'POST',
-					url:		this.config.url,
-					data:		config.filter || {}
-				}
-			)
-			.done
-			(
-				function(response)
-				{
-					if (response.success)
-					{
-						(config.onSuccess || $JSKK.emptyFunction)(response.data,response.message);
-					}
-					else
-					{
-						(config.onFailure || $JSKK.emptyFunction)(response.message);
-					}
-				}
-			)
-			.fail(config.onFailure || $JSKK.emptyFunction);
 		},
 		/**
 		 * 
 		 */
 		sync: function(config)
 		{
-			$.ajax
-			(
-				{
-					type:	'POST',
-					url:	this.config.url,
-					data:	config.data || {}
-				}
-			)
-			.done
-			(
-				function(response)
-				{
-					if (response.success)
+			config.url=this.config.url;
+			if (this.fireEvent('onBeforeRequest',this,config)!==false)
+			{
+				$.ajax
+				(
 					{
-						(config.onSuccess || $JSKK.emptyFunction)(response.data,response.message);
+						type:	'POST',
+						url:	config.url,
+						data:	config.data || {}
 					}
-					else
+				)
+				.done(this._onDone.bind(this,config))
+				.fail(config.onFailure || $JSKK.emptyFunction);
+			}
+		},
+		/**
+		 * 
+		 */
+		raw: function(config)
+		{
+			console.debug('RAW DATA:',$.stringify(config.data));
+			config.url=this.config.url;
+			if (this.fireEvent('onBeforeRequest',this,config)!==false)
+			{
+				$.ajax
+				(
 					{
-						(config.onFailure || $JSKK.emptyFunction)(response.message);
+						type:			'POST',
+						contentType:	'application/json',
+						processData:	false,
+						url:			config.url,
+						data:			$.stringify(config.data) || {}
 					}
-				}
-			)
-			.fail(config.onFailure || $JSKK.emptyFunction);
+				)
+				.done(this._onDone.bind(this,config))
+				.fail(config.onFailure || $JSKK.emptyFunction);
+			}
+		},
+		/**
+		 * 
+		 * @private
+		 */
+		_onDone: function(config,response)
+		{
+			if (response.success)
+			{
+				(config.onSuccess || $JSKK.emptyFunction)(response);
+			}
+			else
+			{
+				(config.onFailure || $JSKK.emptyFunction)(response);
+			}
 		}
 	}
 )

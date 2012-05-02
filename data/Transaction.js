@@ -52,15 +52,19 @@ $JSKK.Class.create
 	},
 	{
 		models:		[],
+		queue:		false,
 		state:		0,
 		lockState:	'full',
-//		/**
-//		 * 
-//		 */
-//		init: function()
-//		{
-//			
-//		},
+		/**
+		 * 
+		 */
+		init: function(queue)
+		{
+			if (queue!==false)
+			{
+				this.queue=new framework.data.Queue();
+			}
+		},
 		attachModel: function(model)
 		{
 			if (Object.isDefined(model)
@@ -71,6 +75,11 @@ $JSKK.Class.create
 				var clone=model.clone();
 				model.attachPhantom(clone);
 				this.models.push(model);
+				
+				if (this.queue)
+				{
+					this.queue.attachProxy(model.getStore().getProxy());
+				}
 				return clone;
 			}
 			else
@@ -155,6 +164,7 @@ $JSKK.Class.create
 					}
 				}
 			);
+			this.queue.execute();
 		},
 		/**
 		 * Commits the transaction.
