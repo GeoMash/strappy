@@ -1,0 +1,4 @@
+* Dynamically create child components.
+* Components need a unique signature.
+* Remove signaling within components.
+* Restrict signaling to component-to-component communication.
