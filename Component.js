@@ -382,6 +382,39 @@ $JSKK.Class.create
 				this.components[component]=new object();
 			}
 		},
+		newChildComponent: function(component)
+		{
+			var parts		=component.split('.'),
+				object		=window[parts[0]],
+				config		=null;
+			
+			if (Object.isDefined(object))
+			{
+				for (var i=1,j=parts.length; i<j; i++)
+				{
+					if (Object.isDefined(object[parts[i]]))
+					{
+						object=object[parts[i]];
+					}
+					else
+					{
+						throw new Error('Error! component "'+this.components[component]+'" not loaded.');
+						break;
+					}
+				}
+			}
+			else
+			{
+				throw new Error('Error! component "'+this.components[component]+'" not loaded.');
+			}
+			if (!Object.isDefined(this.components[component]))
+			{
+				this.components[component]=[];
+			}
+			var cmp=new object();
+			this.components[component].push(cmp);
+			return cmp;
+		},
 		/**
 		 * Returns a child component which is pre-defined in this
 		 * components "components" property.
