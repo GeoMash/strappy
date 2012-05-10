@@ -3,3 +3,4 @@
 * Remove signaling within components.
 * Restrict signaling to component-to-component communication.
 * Gracefully fail async requests.
+* View Content Caching.
