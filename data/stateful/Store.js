@@ -18,7 +18,7 @@ $JSKK.Class.create
 		$uses:
 		[
 			framework.trait.ComponentConnector,
-			framework.trait.signal.Send
+			$JSKK.trait.Observable
 		]
 	}
 )
@@ -29,6 +29,11 @@ $JSKK.Class.create
 		LOCK_FULL:		'full'
 	},
 	{
+		events:
+		{
+			onChange:	true,
+			onReady:	true
+		},
 		/**
 		 * @property {Boolean} ready A flag indicating that the component's state is ready.
 		 * @private
@@ -74,7 +79,7 @@ $JSKK.Class.create
 				var changeSet	={};
 				changeSet[key]	=value;
 				
-				this.sendSignal(framework.Signal.STATEFULSTORE_DONE_CHANGE,{component:this.getCmpName(),change:changeSet});
+				this.fireEvent('onChange',this);
 			}
 			else
 			{
@@ -98,7 +103,7 @@ $JSKK.Class.create
 			this.ready=ready;
 			if (ready)
 			{
-				this.sendSignal(framework.Signal.STATEFULSTORE_IS_READY,{component:this.getCmpName()});
+				this.fireEvent('onReady',this);
 				var globalState=this.getStateMgr().getState();
 				for (var globalItem in globalState)
 				{
@@ -112,7 +117,7 @@ $JSKK.Class.create
 					}
 				}
 			}
-			this.sendSignal(framework.Signal.STATEFULSTORE_DONE_CHANGE,{component:this.getCmpName(),change:globalState});
+			this.fireEvent('onChange',this);
 			return this;
 		},
 		/**

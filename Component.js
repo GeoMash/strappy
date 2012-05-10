@@ -61,9 +61,10 @@
 		}
 	);
  * 
- * @mi!xins $JSKK.trait.Configurable
+ * @mixins $JSKK.trait.Observable
  * @abstract
  * 
+ * @uses $JSKK.trait.Observable
  * @uses framework.RadioTower
  * @uses framework.StateMgr
  */
@@ -71,16 +72,20 @@ $JSKK.Class.create
 (
 	{
 		$namespace:	'framework',
-		$name:		'Component'//,
-//		$uses:
-//		[
-//			$JSKK.trait.Configurable
-//		]
+		$name:		'Component',
+		$uses:
+		[
+			$JSKK.trait.Observable
+		]
 	}
 )
 (
 	{},
 	{
+		events:
+		{
+			onConfigured:	true
+		},
 		/**
 		 * @cfg attachTo The DOM element that this component will attach itself to. (required)
 		 */
@@ -418,6 +423,25 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Returns an associated controller which is pre-defined in this
+		 * components "controllers" property.
+		 * 
+		 * @param {String} controller The name of the controller to get.
+		 * @throws Error if the controller has not been initilized.
+		 * @return {framework.mvc.View} The requested controller if it has been defined.
+		 */
+		getController: function(controller)
+		{
+			if (Object.isDefined(this._controllers[controller]))
+			{
+				return this._controllers[controller];
+			}
+			else
+			{
+				throw new Error('Error - controller "'+controller+'" has not been initilized.');
+			}
+		},
+		/**
 		 * Initializes all the views associated with this component.
 		 * 
 		 * @private
@@ -518,6 +542,7 @@ $JSKK.Class.create
 						this.config=newConfig;
 					}
 					this._configured=true;
+					this.fireEvent('onConfigured',this);
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);

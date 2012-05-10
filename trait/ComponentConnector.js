@@ -109,6 +109,16 @@ $JSKK.Trait.create
 			return this.getParentComponent().getStore(store);
 		},
 		/**
+		 * Fetches a controller from the parent component.
+		 * 
+		 * @param {String} controller The name of the controller.
+		 * @return {framework.mvc.Controller} The Controller instance.
+		 */
+		getController: function(controller)
+		{
+			return this.getParentComponent().getController(controller);
+		},
+		/**
 		 * Fetches a view from the parent component.
 		 * 
 		 * @param {String} view The name of the view.

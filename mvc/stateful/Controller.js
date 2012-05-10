@@ -28,13 +28,18 @@ $JSKK.Class.create
 		[
 			framework.trait.ComponentConnector,
 			framework.trait.signal.Receive,
-			framework.trait.signal.Send
+			framework.trait.signal.Send,
+			$JSKK.trait.Observable
 		]
 	}
 )
 (
 	{},
 	{
+		events:
+		{
+			onReadyState:	true
+		},
 		/**
 		 * @property {framework.data.stateful.Store} stateStore A reference to the
 		 * associated state model.
@@ -51,8 +56,8 @@ $JSKK.Class.create
 		{
 			this.registerSignals
 			(
-				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL],
-				[framework.Signal.VIEW_IS_READY,			'onViewReady']
+				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL]//,
+//				[framework.Signal.VIEW_IS_READY,			'onViewReady']
 			);
 			if (!(this.stateStore=this.getStore('State')))
 			{
@@ -112,6 +117,7 @@ $JSKK.Class.create
 		setReady:		function()
 		{
 			this.stateStore.setReady(true);
+			this.fireEvent('onReadyState',this,true);
 			return this;
 		},
 		/**

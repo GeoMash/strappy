@@ -1,25 +1,18 @@
 /**
- * @class framework.data.Store
+ * @class framework.data.SingleModelStore
  * 
  * 
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Send
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Send
  */
 $JSKK.Class.create
 (
 	{
 		$namespace:		'framework.data',
-		$name:			'Store',
-		$uses:
-		[
-			framework.trait.ComponentConnector,
-			framework.trait.signal.Send
-		]
+		$name:			'MultiModelStore',
+		$extends:		framework.data.SingleModelStore,
+		$abstract:		true
 	}
 )
 (
@@ -57,7 +50,7 @@ $JSKK.Class.create
 				index=		0;
 			for (var i=0,j=records.length; i<j; i++)
 			{
-				index=newRecords.push(new this.model(records[i]));
+				index=newRecords.push(new this.model(null,records[i]));
 				newRecords[(index-1)].bindStore(this);
 			}
 			return newRecords;
@@ -110,7 +103,7 @@ $JSKK.Class.create
 		add: function(record)
 		{
 			this.records.push(record);
-			this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID()});
+			this.fireEvent('onChange',this);
 			return this;
 		},
 		/**
@@ -129,7 +122,7 @@ $JSKK.Class.create
 				}
 			}
 			this.records=newRecords;
-			this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID()});
+			this.fireEvent('onChange',this);
 			return this;
 		},
 		/**
@@ -232,7 +225,7 @@ $JSKK.Class.create
 					onSuccess:	function()
 					{
 						transaction.commit();
-						this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
+						this.fireEvent('onChange',this);
 					}.bind(this),
 					onFailure: function()
 					{
@@ -280,12 +273,12 @@ $JSKK.Class.create
 						onSuccess:	function(response)
 						{
 							this.records=this.newRecord(response.data);
-							this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
-							this.sendSignal(framework.Signal.STORE_DONE_SYNC,{id:this.getID(),component:this.getCmpName()});
+							this.fireEvent('onChange',this,response);
+							this.fireEvent('onSync',this,response);
 						}.bind(this),
 						onFailure: function(response)
 						{
-							this.sendSignal(framework.Signal.STORE_FAILED_SYNC,{id:this.getID(),component:this.getCmpName(),response:response});
+							this.fireEvent('onSyncFailed',this,response);
 						}.bind(this)
 					}
 				);

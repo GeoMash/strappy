@@ -30,13 +30,18 @@ $JSKK.Class.create
 		[
 			framework.trait.ComponentConnector,
 			framework.trait.signal.Receive,
-			framework.trait.signal.Send
+			framework.trait.signal.Send,
+			$JSKK.trait.Observable
 		]
 	}
 )
 (
 	{},
 	{
+		events:
+		{
+			
+		},
 		/**
 		 * @constructor
 		 * 
@@ -44,13 +49,7 @@ $JSKK.Class.create
 		 */
 		init: function()
 		{
-			this.registerSignals
-			(
-				[framework.Signal.CMP_DO_RECONFIGURE,		'onReconfigure'],
-				[framework.Signal.VIEW_IS_READY,			'onViewReady'],
-				[framework.Signal.VIEW_DONE_GOTBASEHTML,	'onGotBaseHTML'],
-				[framework.Signal.STATEFULSTORE_IS_READY,	'onReadyState']
-			);
+			
 		},
 		/**
 		 * This method will be called when a component fires a {@link framework.Signal.CMP_DO_RECONFIGURE Do Reconfigure}

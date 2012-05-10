@@ -9,7 +9,11 @@ $JSKK.Class.create
 (
 	{
 		$namespace:	'framework.mvc',
-		$name:		'Model'
+		$name:		'Model',
+		$uses:
+		[
+			$JSKK.trait.Observable
+		]
 	}
 )
 (
@@ -19,6 +23,12 @@ $JSKK.Class.create
 		LOCK_FULL:		'full'
 	},
 	{
+		events:
+		{
+			onSync:			true,
+			onFailedSync:	true,
+			onChange:		true
+		},
 		dirty:		false,
 		phantom:	false,
 		_clone:		false,
@@ -102,24 +112,8 @@ $JSKK.Class.create
 							this.record=response.data;
 							if (!this.isClone())
 							{
-								this.sendSignal
-								(
-									framework.Signal.MODEL_DONE_SYNC,
-									{
-										id:			this.getID(),
-										component:	this.getCmpName(),
-										model:		this
-									}
-								);
-								this.sendSignal
-								(
-									framework.Signal.MODEL_DONE_CHANGE,
-									{
-										id:			this.getID(),
-										component:	this.getCmpName(),
-										model:		this
-									}
-								);
+								this.fireEvent('onSync',this);
+								this.fireEvent('onChange',this);
 							}
 							else
 							{
@@ -133,15 +127,7 @@ $JSKK.Class.create
 						{
 							if (!this.isClone())
 							{
-								this.sendSignal
-								(
-									framework.Signal.MODEL_FAILED_SYNC,
-									{
-										id:			this.getID(),
-										component:	this.getCmpName(),
-										model:		this
-									}
-								);
+								this.fireEvent('onFailedSync',this);
 							}
 							else
 							{
@@ -235,15 +221,7 @@ $JSKK.Class.create
 			}
 			if (this.lockState==framework.mvc.Model.LOCK_NONE && !this.isClone())
 			{
-				this.getStore().sendSignal
-				(
-					framework.Signal.MODEL_DONE_CHANGE,
-					{
-						id:			this.getStore().getID(),
-						component:	this.getStore().getCmpName(),
-						model:		this
-					}
-				);
+				this.fireEvent('onChange',this);
 			}
 		},
 		/**
