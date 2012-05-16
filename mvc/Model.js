@@ -27,7 +27,8 @@ $JSKK.Class.create
 		{
 			onSync:			true,
 			onFailedSync:	true,
-			onChange:		true
+			onChange:		true,
+			onLockChange:	true
 		},
 		dirty:		false,
 		phantom:	false,
@@ -264,28 +265,19 @@ $JSKK.Class.create
 		 * * {@link framework.mvc.Model#LOCK_NONE}<br>
 		 * * {@link framework.mvc.Model#LOCK_READONLY}<br>
 		 * * {@link framework.mvc.Model#LOCK_FULL}<br>
-		 * @param {Boolean} supressSignal Blocks the MODEL_LOCK_CHANGE signal
+		 * @param {Boolean} supressEvent Blocks the onLockChange event
 		 * from being fired.
 		 * 
 		 * @retrun {framework.data.stateful.Store}
 		 */
-		lock: function(lockType,supressSignal)
+		lock: function(lockType,supressEvent)
 		{
 			if (['none','readonly','full'].inArray(lockType))
 			{
 				this.lockState=lockType;
-				if (supressSignal!==true && !this.isClone())
+				if (supressEvent!==true && !this.isClone())
 				{
-					this.getStore().sendSignal
-					(
-						framework.Signal.MODEL_LOCK_CHANGE,
-						{
-							id:			this.getStore().getID(),
-							component:	this.getStore().getCmpName(),
-							model:		this,
-							lock:		this.lockState
-						}
-					);
+					this.fireEvent('onLockChange',this,this.lockState);
 				}
 			}
 			else
@@ -306,7 +298,7 @@ $JSKK.Class.create
 		 */
 		clone: function()
 		{
-			var clone=new (this.$reflect('self'))(this.record);
+			var clone=new (this.$reflect('self'))({},this.record);
 			clone._clone=true;
 			return clone;
 		},

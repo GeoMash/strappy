@@ -28,9 +28,10 @@ $JSKK.Class.create
 	{
 		events:
 		{
-			onChange:		true,
-			onSync:			true,
-			onSyncFailed:	true
+			onChange:			true,
+			onSync:				true,
+			onSyncFailed:		true,
+			onModelLockChange:	true,
 		},
 		proxy:		null,
 		model:		null,
@@ -56,7 +57,16 @@ $JSKK.Class.create
 		 */
 		newRecord: function(record)
 		{
-			return new this.model(null,record);
+			return new this.model
+			(
+				{
+					onLockChange: function(model,lockState)
+					{console.debug('onLockChange');
+//						this.fireEvent('onModelLockChange',this,model,lockState);
+					}.bind(this)
+				},
+				record
+			);
 		},
 		/**
 		 * 

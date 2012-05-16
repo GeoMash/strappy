@@ -50,7 +50,7 @@ $JSKK.Class.create
 				index=		0;
 			for (var i=0,j=records.length; i<j; i++)
 			{
-				index=newRecords.push(new this.model(null,records[i]));
+				index=newRecords.push(this.newRecord.$parent(records[i]));
 				newRecords[(index-1)].bindStore(this);
 			}
 			return newRecords;
@@ -198,8 +198,7 @@ $JSKK.Class.create
 		{
 			var	args		=$JSKK.toArray(arguments),
 				keyVals		={},
-				transaction	=new framework.data.Transaction();//,
-//				queue		=new framework.data.Queue();
+				transaction	=new framework.data.Transaction();
 			if (Object.isDefined(args[1]))
 			{
 				keyVals[args.shift()]=args.shift();
