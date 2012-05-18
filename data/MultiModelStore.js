@@ -19,6 +19,9 @@ $JSKK.Class.create
 	{},
 	{
 		proxy:		null,
+		BTL:		null,
+		BTL_GET:	null,
+		BTL_SET:	null,
 		model:		null,
 		data:		[],
 		records:	[],
@@ -97,11 +100,15 @@ $JSKK.Class.create
 		},
 		/**
 		 * Adds a record to the store.
+		 * 
+		 * Note: The record will be flagged as dirty when it is added to the store.
+		 * 
 		 * @param {Mixed} record The record to be added to the store.
 		 * @return {framework.mvc.Model}
 		 */
 		add: function(record)
 		{
+			record.flagDirty();
 			this.records.push(record);
 			this.fireEvent('onChange',this);
 			return this;
@@ -282,9 +289,36 @@ $JSKK.Class.create
 					}
 				);
 			}
+			else if (Object.isAssocArray(this.BTL))
+			{
+				var	changeset	=[];
+				this.getDirty().each
+				(
+					function(model)
+					{
+						var index=changeset.push(model.getRecord())-1;
+						console.debug(index,changeset);
+						changeset[index]=this.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
+					}.bind(this)
+				);
+				this.BTL.startQueue();
+				if (changeset.length)
+				{
+					this.BTL_SET(changeset);
+				}
+				this.BTL_GET
+				(
+					null,
+					function(response)
+					{
+						console.debug('BTL_GET',arguments);
+					}.bind(this)
+				);
+				this.BTL.executeQueue();
+			}
 			else
 			{
-				throw new Exception('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
+				throw new Error('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
 		},
 		/**
@@ -311,6 +345,25 @@ $JSKK.Class.create
 				}
 			);
 			return dirty;
+		},
+		configureBTL: function(config)
+		{
+			if (!Object.isAssocArray(config.handler))
+			{
+				throw new Error('Invalid BTL handler assigned with MultiModelStore.configureBTL().');
+			}
+			if (!Object.isFunction(config.get))
+			{
+				throw new Error('Invalid getter assigned with MultiModelStore.configureBTL().');
+			}
+			if (!Object.isFunction(config.set))
+			{
+				throw new Error('Invalid setter assigned with MultiModelStore.configureBTL().');
+			}
+			this.BTL	=config.handler;
+			this.BTL_GET=config.get;
+			this.BTL_SET=config.set;
+			return this;
 		}
 	}
 );
