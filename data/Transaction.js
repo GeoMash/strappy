@@ -141,7 +141,6 @@ $JSKK.Class.create
 						/* The phantom model was changed, so submit this to the
 						 * server if the original model has an associated store & proxy.
 						 */
-						//TODO: QUEUEING!!!!
 						if (model.getStore())
 						{
 							phantom	.bindStore(model.getStore())
@@ -177,7 +176,7 @@ $JSKK.Class.create
 			this.models.each
 			(
 				function(model,index)
-				{console.debug(model,framework.mvc.Model.LOCK_NONE);
+				{
 					model.lock(framework.mvc.Model.LOCK_NONE);
 					model.set(model.getPhantom().getRecord());
 					model.destroyPhantom();

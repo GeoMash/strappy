@@ -61,9 +61,10 @@
 		}
 	);
  * 
- * @mi!xins $JSKK.trait.Configurable
+ * @mixins $JSKK.trait.Observable
  * @abstract
  * 
+ * @uses $JSKK.trait.Observable
  * @uses framework.RadioTower
  * @uses framework.StateMgr
  */
@@ -71,16 +72,20 @@ $JSKK.Class.create
 (
 	{
 		$namespace:	'framework',
-		$name:		'Component'//,
-//		$uses:
-//		[
-//			$JSKK.trait.Configurable
-//		]
+		$name:		'Component',
+		$uses:
+		[
+			$JSKK.trait.Observable
+		]
 	}
 )
 (
 	{},
 	{
+		events:
+		{
+			onConfigured:	true
+		},
 		/**
 		 * @cfg attachTo The DOM element that this component will attach itself to. (required)
 		 */
@@ -377,6 +382,39 @@ $JSKK.Class.create
 				this.components[component]=new object();
 			}
 		},
+		newChildComponent: function(component)
+		{
+			var parts		=component.split('.'),
+				object		=window[parts[0]],
+				config		=null;
+			
+			if (Object.isDefined(object))
+			{
+				for (var i=1,j=parts.length; i<j; i++)
+				{
+					if (Object.isDefined(object[parts[i]]))
+					{
+						object=object[parts[i]];
+					}
+					else
+					{
+						throw new Error('Error! component "'+this.components[component]+'" not loaded.');
+						break;
+					}
+				}
+			}
+			else
+			{
+				throw new Error('Error! component "'+this.components[component]+'" not loaded.');
+			}
+			if (!Object.isDefined(this.components[component]))
+			{
+				this.components[component]=[];
+			}
+			var cmp=new object();
+			this.components[component].push(cmp);
+			return cmp;
+		},
 		/**
 		 * Returns a child component which is pre-defined in this
 		 * components "components" property.
@@ -415,6 +453,25 @@ $JSKK.Class.create
 					throw new Error('Error controller "'+this.controllers[i]+'" not loaded.');
 					break;
 				}
+			}
+		},
+		/**
+		 * Returns an associated controller which is pre-defined in this
+		 * components "controllers" property.
+		 * 
+		 * @param {String} controller The name of the controller to get.
+		 * @throws Error if the controller has not been initilized.
+		 * @return {framework.mvc.View} The requested controller if it has been defined.
+		 */
+		getController: function(controller)
+		{
+			if (Object.isDefined(this._controllers[controller]))
+			{
+				return this._controllers[controller];
+			}
+			else
+			{
+				throw new Error('Error - controller "'+controller+'" has not been initilized.');
 			}
 		},
 		/**
@@ -518,6 +575,7 @@ $JSKK.Class.create
 						this.config=newConfig;
 					}
 					this._configured=true;
+					this.fireEvent('onConfigured',this);
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);

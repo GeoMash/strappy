@@ -16,10 +16,10 @@ $JSKK.Class.create
 	
 	},
 	{
-		proxies:	[],
-		requests:	{},
-		executing:	false,
-		nextRID:	1,
+		proxies:		[],
+		requests:		{},
+		executing:		false,
+		nextSequence:	1,
 		/**
 		 * 
 		 */
@@ -41,7 +41,7 @@ $JSKK.Class.create
 							{
 								this.requests[request.url]=[];
 							}
-							request.rid		=this.nextRID++;
+							request.sequence=this.nextSequence++;
 							request.proxy	=proxy;
 							if (!Object.isDefined(request.data))
 							{
@@ -53,7 +53,7 @@ $JSKK.Class.create
 						return false;
 					}.bind(this)
 				);
-				console.debug('PROXY',proxy);
+//				console.debug('PROXY',proxy);
 			}
 			return this;
 		},
@@ -69,13 +69,13 @@ $JSKK.Class.create
 			{
 				for (var i=0,j=this.requests[url].length; i<j; i++)
 				{
-					this.requests[url][i].ts=Date.parse(new Date());
+					this.requests[url][i].timestamp=Date.parse(new Date());
 					requests.push
 					(
 						{
-							rid:	this.requests[url][i].rid,
-							data:	this.requests[url][i].data,
-							ts:		this.requests[url][i].ts
+							sequence:	this.requests[url][i].sequence,
+							data:		this.requests[url][i].data,
+							timestamp:	this.requests[url][i].timestampw
 						}
 					);
 				}
@@ -95,6 +95,12 @@ $JSKK.Class.create
 					}
 				);
 			}
+		},
+		push: function(request)
+		{
+			this.requests[request.url].push(request);
+			delete request.url;
+			return this;
 		}
 	}
 );

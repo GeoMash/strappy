@@ -1,31 +1,27 @@
 /**
- * @class framework.data.Store
+ * @class framework.data.SingleModelStore
  * 
  * 
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Send
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Send
  */
 $JSKK.Class.create
 (
 	{
 		$namespace:		'framework.data',
-		$name:			'Store',
-		$uses:
-		[
-			framework.trait.ComponentConnector,
-			framework.trait.signal.Send
-		]
+		$name:			'MultiModelStore',
+		$extends:		framework.data.SingleModelStore,
+		$abstract:		true
 	}
 )
 (
 	{},
 	{
 		proxy:		null,
+		BTL:		null,
+		BTL_GET:	null,
+		BTL_SET:	null,
 		model:		null,
 		data:		[],
 		records:	[],
@@ -57,7 +53,7 @@ $JSKK.Class.create
 				index=		0;
 			for (var i=0,j=records.length; i<j; i++)
 			{
-				index=newRecords.push(new this.model(records[i]));
+				index=newRecords.push(this.newRecord.$parent(records[i]));
 				newRecords[(index-1)].bindStore(this);
 			}
 			return newRecords;
@@ -104,13 +100,17 @@ $JSKK.Class.create
 		},
 		/**
 		 * Adds a record to the store.
+		 * 
+		 * Note: The record will be flagged as dirty when it is added to the store.
+		 * 
 		 * @param {Mixed} record The record to be added to the store.
 		 * @return {framework.mvc.Model}
 		 */
 		add: function(record)
 		{
+			record.flagDirty();
 			this.records.push(record);
-			this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID()});
+			this.fireEvent('onChange',this);
 			return this;
 		},
 		/**
@@ -129,7 +129,7 @@ $JSKK.Class.create
 				}
 			}
 			this.records=newRecords;
-			this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID()});
+			this.fireEvent('onChange',this);
 			return this;
 		},
 		/**
@@ -205,8 +205,7 @@ $JSKK.Class.create
 		{
 			var	args		=$JSKK.toArray(arguments),
 				keyVals		={},
-				transaction	=new framework.data.Transaction();//,
-//				queue		=new framework.data.Queue();
+				transaction	=new framework.data.Transaction();
 			if (Object.isDefined(args[1]))
 			{
 				keyVals[args.shift()]=args.shift();
@@ -232,7 +231,7 @@ $JSKK.Class.create
 					onSuccess:	function()
 					{
 						transaction.commit();
-						this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
+						this.fireEvent('onChange',this);
 					}.bind(this),
 					onFailure: function()
 					{
@@ -280,19 +279,46 @@ $JSKK.Class.create
 						onSuccess:	function(response)
 						{
 							this.records=this.newRecord(response.data);
-							this.sendSignal(framework.Signal.STORE_DONE_CHANGE,{id:this.getID(),component:this.getCmpName()});
-							this.sendSignal(framework.Signal.STORE_DONE_SYNC,{id:this.getID(),component:this.getCmpName()});
+							this.fireEvent('onChange',this,response);
+							this.fireEvent('onSync',this,response);
 						}.bind(this),
 						onFailure: function(response)
 						{
-							this.sendSignal(framework.Signal.STORE_FAILED_SYNC,{id:this.getID(),component:this.getCmpName(),response:response});
+							this.fireEvent('onSyncFailed',this,response);
 						}.bind(this)
 					}
 				);
 			}
+			else if (Object.isAssocArray(this.BTL))
+			{
+				var	changeset	=[];
+				this.getDirty().each
+				(
+					function(model)
+					{
+						var index=changeset.push(model.getRecord())-1;
+						console.debug(index,changeset);
+						changeset[index]=this.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
+					}.bind(this)
+				);
+				this.BTL.startQueue();
+				if (changeset.length)
+				{
+					this.BTL_SET(changeset);
+				}
+				this.BTL_GET
+				(
+					null,
+					function(response)
+					{
+						console.debug('BTL_GET',arguments);
+					}.bind(this)
+				);
+				this.BTL.executeQueue();
+			}
 			else
 			{
-				throw new Exception('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
+				throw new Error('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
 		},
 		/**
@@ -319,6 +345,25 @@ $JSKK.Class.create
 				}
 			);
 			return dirty;
+		},
+		configureBTL: function(config)
+		{
+			if (!Object.isAssocArray(config.handler))
+			{
+				throw new Error('Invalid BTL handler assigned with MultiModelStore.configureBTL().');
+			}
+			if (!Object.isFunction(config.get))
+			{
+				throw new Error('Invalid getter assigned with MultiModelStore.configureBTL().');
+			}
+			if (!Object.isFunction(config.set))
+			{
+				throw new Error('Invalid setter assigned with MultiModelStore.configureBTL().');
+			}
+			this.BTL	=config.handler;
+			this.BTL_GET=config.get;
+			this.BTL_SET=config.set;
+			return this;
 		}
 	}
 );
