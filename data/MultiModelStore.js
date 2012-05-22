@@ -199,7 +199,7 @@ $JSKK.Class.create
 			return records;
 		},
 		/**
-		 * 
+		 * Sets all the associated models 
 		 */
 		setAll: function()
 		{
@@ -309,9 +309,11 @@ $JSKK.Class.create
 				this.BTL_GET
 				(
 					null,
-					function(response)
+					function(records)
 					{
-						console.debug('BTL_GET',arguments);
+						this.records=this.newRecord(records);
+						this.fireEvent('onChange',this,records);
+						this.fireEvent('onSync',this,records);
 					}.bind(this)
 				);
 				this.BTL.executeQueue();

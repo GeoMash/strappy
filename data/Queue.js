@@ -12,9 +12,7 @@ $JSKK.Class.create
 	}
 )
 (
-	{
-	
-	},
+	{},
 	{
 		proxies:		[],
 		requests:		{},
@@ -75,7 +73,7 @@ $JSKK.Class.create
 						{
 							sequence:	this.requests[url][i].sequence,
 							data:		this.requests[url][i].data,
-							timestamp:	this.requests[url][i].timestampw
+							timestamp:	this.requests[url][i].timestamp
 						}
 					);
 				}
@@ -84,23 +82,60 @@ $JSKK.Class.create
 				(
 					{
 						data:		requests,
-						onSuccess: function(response)
-						{
-							console.debug('Queue response:',response);
-						},
-						onFailure: function()
-						{
-							console.debug('Queue failed:',response);
-						}
+						onSuccess:	this.__onDone.bind(this),
+						onFailure:	this.__onDone.bind(this),
+						onComplete:	this.__onDone.bind(this)
 					}
 				);
 			}
 		},
+		/**
+		 * 
+		 * @private
+		 */
+		__onDone: function(response)
+		{
+			var request=null;
+			for (var i=0,j=response.length; i<j; i++)
+			{
+				request=this.getRequest(response[i].sequence);
+				if (response[i].success)
+				{
+					if (Object.isFunction(request.onComplete))	request.onComplete(response[i].data);
+					if (Object.isFunction(request.onSuccess))	request.onSuccess(response[i].data);
+				}
+				else
+				{
+					if (Object.isFunction(request.onComplete))	request.onComplete(response[i].data);
+					if (Object.isFunction(request.onFailure))	request.onFailure(response[i].data);
+				}
+			}
+		},
+		/**
+		 * 
+		 */
 		push: function(request)
 		{
 			this.requests[request.url].push(request);
 			delete request.url;
 			return this;
+		},
+		/**
+		 * 
+		 */
+		getRequest: function(sequence)
+		{
+			for (var url in this.requests)
+			{
+				for (var i=0,j=this.requests[url].length; i<j; i++)
+				{
+					if (this.requests[url][i].sequence==sequence)
+					{
+						return this.requests[url][i];
+					}
+				}
+			}
+			return null;
 		}
 	}
 );

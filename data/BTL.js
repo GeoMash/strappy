@@ -31,7 +31,11 @@ $JSKK.Class.create
 					{
 						call:	call,
 						data:	params
-					}
+					},
+					onComplete: function(response)
+					{
+						if (Object.isFunction(callback))callback(response);
+					}.bind(this)
 				}
 			);
 		}

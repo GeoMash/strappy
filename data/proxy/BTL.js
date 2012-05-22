@@ -49,10 +49,10 @@ $JSKK.Class.create
 				.done(this._onDone.bind(this,config))
 				.fail
 				(
-					function()
+					function(response)
 					{
 						console.warn('BTL Proxies raw() method hasn\'t been confiugred to deal with failures.');
-						config.onComplete
+//						config.onComplete();
 					}
 				);
 			}
