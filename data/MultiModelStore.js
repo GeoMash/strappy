@@ -1,6 +1,6 @@
 /**
- * @class framework.data.SingleModelStore
- * 
+ * @class framework.data.MultiModelStore
+ * @extends framework.data.AbstractStore
  * 
  * 
  * @abstract
@@ -11,22 +11,33 @@ $JSKK.Class.create
 	{
 		$namespace:		'framework.data',
 		$name:			'MultiModelStore',
-		$extends:		framework.data.SingleModelStore,
+		$extends:		framework.data.AbstractStore,
 		$abstract:		true
 	}
 )
 (
 	{},
 	{
-		proxy:		null,
 		BTL:		null,
 		BTL_GET:	null,
 		BTL_SET:	null,
 		model:		null,
+		/**
+		 * @property {Array} data initial records to start the store with.
+		 * @private
+		 */
 		data:		[],
+		/**
+		 * @property {Array} records Represent an array of
+		 * {@link framework.mvc.Model model} instances.
+		 * @private
+		 */
 		records:	[],
 		/**
+		 * @constructor
+		 * Sets up and validates the store.
 		 * 
+		 * @return {framework.data.MultiModelStore}
 		 */
 		init: function()
 		{
@@ -41,7 +52,15 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Creates new model instances based on the attached model
+		 * and returns them.
 		 * 
+		 * Also binds locking events to the new model instances which handles
+		 * chaining model lock change events to the store's
+		 * onModelLockChange event.
+		 * 
+		 * @param {Object} record an object representing the model.
+		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
 		 */
 		newRecord: function(records)
 		{
@@ -133,7 +152,9 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Returns all attched model instances (records).
 		 * 
+		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
 		 */
 		getAll: function()
 		{
@@ -149,39 +170,101 @@ $JSKK.Class.create
 			return this.records[index];
 		},
 		/**
+		 * Returns the first attached model.
 		 * 
+		 * @return {framework.mvc.Model} The model.
 		 */
 		first: function()
 		{
 			return this.getAt(0);
 		},
 		/**
+		 * Returns the last attached model.
 		 * 
+		 * @return {framework.mvc.Model} The model.
 		 */
 		last: function()
 		{
 			return this.getAt(this.records.length-1);
 		},
-		/**
-		 * 
-		 */
-		find: function(key,value)
+		get: function()
 		{
-			var records=[];
+			
+		},
+		set: function()
+		{
+			
+		},
+		/**
+		 * Finds attached models based on a simple key value search.
+		 * 
+		 * Find all Toms.
+	var toms=this.getStore('Person').find('name','Tom');
+		 * 
+		 * Find all ACTIVE Toms.
+		 * 
+	var activeToms=this.getStore('Person').find
+	(
+		{
+			name:	'Tom',
+			active:	true
+		}
+	);
+		 * 
+		 * @param {String} key The key to search against.
+		 * @param {Mixed} value The value to search for.
+		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 */
+		find: function()
+		{
+			var	args		=$JSKK.toArray(arguments),
+				keyVals		={},
+				records		=[];
+			if (Object.isDefined(args[1]))
+			{
+				keyVals[args.shift()]=args.shift();
+			}
+			else
+			{
+				keyVals=args.shift();
+			}
 			this.each
 			(
 				function(record)
 				{
-					if (record.get(key)==value)
+					for (var field in keyVals)
 					{
-						records.push(record);
+						if (record.get(field)!=keyVals[field])
+						{
+							return false;
+						}
 					}
+					records.push(record);
 				}.bind(this)
 			);
 			return records;
 		},
 		/**
+		 * Finds attached models based on custom searching logic provided
+		 * by a callback function which gets passed to this method.
 		 * 
+		 * The function will be called for each model instance in the store.
+		 * The function should return true for evey record that you want returned.
+		 * 
+	var activeToms=this.getStore('Person').findBy
+	(
+		function(model)
+		{
+			if (model.get('name')=='Tom'
+			&& model.get('active'))
+			{
+				return true;
+			}
+		}
+	);
+		 * 
+		 * @param {Function} callback A function to call for each record.
+		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
 		 */
 		findBy: function(callback)
 		{
@@ -199,7 +282,7 @@ $JSKK.Class.create
 			return records;
 		},
 		/**
-		 * Sets all the associated models 
+		 * Sets all the associated models
 		 */
 		setAll: function()
 		{
@@ -217,13 +300,10 @@ $JSKK.Class.create
 			transaction.start();
 			var	thisModel	=null,
 				field		=null;
-			for (field in keyVals)
+			for (var i=0,j=this.records.length; i<j; i++)
 			{
-				for (var i=0,j=this.records.length; i<j; i++)
-				{
-					thisModel=transaction.attachModel(this.records[i]);
-					thisModel.set(field,keyVals[field]);
-				}
+				thisModel=transaction.attachModel(this.records[i]);
+				thisModel.set(keyVals);
 			}
 			transaction.execute
 			(
@@ -241,17 +321,19 @@ $JSKK.Class.create
 			);
 			return this;
 		},
-		/**
-		 * Sets a record at a given index in the store.
-		 * @param {Number} index The index.
-		 * @param {Mixed} data The new data to set.
-		 */
-        setAt: function(index,data)
-		{
-			data.id=this.records[0].id;
-			this.records[index]=data;
-//			this.sendSignal('view.change',data);
-		},
+//		/**
+//		 * Sets a record at a given index in the store.
+//		 * @param {Number} index The index.
+//		 * @param {Mixed} data The new data to set.
+//		 * 
+//		 */
+//        setAt: function(index,data)
+//		{
+//			data.id=this.records[0].id;
+//			this.records[index]=data;
+//			
+//			this.fireEvent('onChange',this,index,data);
+//		},
 		/**
 		 * This method will fetch all dirty models and attach them to a
 		 * proxy sync request.
@@ -323,15 +405,14 @@ $JSKK.Class.create
 				throw new Error('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
 		},
-		/**
-		 * 
-		 */
-		getProxy: function()
+		isDirty: function()
 		{
-			return this.proxy;
+			return Boolean(this.getDirty().length);
 		},
 		/**
+		 * Returns all the attached models which are dirty (have been modified).
 		 * 
+		 * @return {Array} An array of dirty records.
 		 */
 		getDirty: function()
 		{
@@ -348,6 +429,11 @@ $JSKK.Class.create
 			);
 			return dirty;
 		},
+		/**
+		 * 
+		 * 
+		 * @see framework.data.BTL
+		 */
 		configureBTL: function(config)
 		{
 			if (!Object.isAssocArray(config.handler))

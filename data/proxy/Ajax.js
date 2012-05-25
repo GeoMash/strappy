@@ -1,36 +1,23 @@
 /**
  * @class framework.data.proxy.Ajax
+ * @extends framework.data.proxy.AbstractProxy
  * 
  * 
- * 
- * 
- * 
- * 
- * @abstract
  */
 $JSKK.Class.create
 (
 	{
 		$namespace:	'framework.data.proxy',
 		$name:		'Ajax',
-		$uses:
-		[
-			$JSKK.trait.Configurable,
-			$JSKK.trait.Observable
-		]
+		$extends:	framework.data.proxy.AbstractProxy
 	}
 )
 (
 	{},
 	{
-		config:
-		{
-			url:	''
-		},
-		events:
-		{
-			onBeforeRequest: true
-		},
+		/**
+		 * 
+		 */
 		get: function(config)
 		{
 			config.url=this.config.url;
@@ -95,10 +82,6 @@ $JSKK.Class.create
 				.fail(config.onFailure || $JSKK.emptyFunction);
 			}
 		},
-		/**
-		 * 
-		 * @private
-		 */
 		_onDone: function(config,response)
 		{
 			if (response.success)

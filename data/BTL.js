@@ -1,5 +1,5 @@
 /**
- * @class framework.data.proxy.BTL
+ * @class framework.data.BTL
  * 
  * Batchable Transmission Layer
  * 

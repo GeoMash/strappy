@@ -44,7 +44,7 @@
 				errorWindow:	'Application.component.DialogWindow',
 				successWindow:	'Application.component.DialogWindow'
 			},
-			models:
+			stores:
 			[
 				'State',
 				'User'
@@ -382,6 +382,36 @@ $JSKK.Class.create
 				this.components[component]=new object();
 			}
 		},
+		/**
+		 * Creates a new child component.
+		 * 
+		 * This can be useful for when you want to dynamically
+		 * create child components.
+		 * 
+	$JSKK.Class.create
+	(
+		{
+			$namespace:	'Application.component.myComponent.controller',
+			$name:		'Default',
+			$extends:	framework.mvc.Controller
+		}
+	)
+	(
+		{},
+		{
+			onGotBaseHTML: function(view)
+			{
+				var thisChildCmp=null;
+				for (var i=0; i<10; i++)
+				{
+					thisChildCmp=this.getParentComponent().newChildComponent('Application.component.Tile');
+					thisChildCmp.configure({attachTo:view.getContainer()});
+				}
+			}
+		}
+	);
+		 * 
+		 */
 		newChildComponent: function(component)
 		{
 			var parts		=component.split('.'),

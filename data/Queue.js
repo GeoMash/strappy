@@ -1,6 +1,8 @@
 /**
  * @class framework.data.Queue
  * 
+ * This class is used by other data communication classes
+ * to provide a means to queue up requests via proxies.
  * 
  * @uses framework.mvc.Model
  */
@@ -14,12 +16,32 @@ $JSKK.Class.create
 (
 	{},
 	{
+		/**
+		 * @property proxies Contains a list of attached proxies.
+		 * @private
+		 */
 		proxies:		[],
+		/**
+		 * @property requests Contains a list of captured requests.
+		 * @private
+		 */
 		requests:		{},
+		/**
+		 * @property executing A flag to determin weather or not the queued items are being run or not.
+		 * @private
+		 */
 		executing:		false,
+		/**
+		 * @property nextSequence Incremental sequencing number.
+		 * @private
+		 */
 		nextSequence:	1,
 		/**
-		 * 
+		 * This method attaches a proxy to the queue object. Any request
+		 * the proxy makes will be intercepted and stored in the request queue
+		 * until the {@link framework.data.Queue.execute() execute} method is called.
+		 * @param {framework.data.proxy.AbstractProxy} proxy 
+		 * @return {framework.data.Queue} this
 		 */
 		attachProxy: function(proxy)
 		{
@@ -56,7 +78,9 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Executes the queue, running all queued requests as a single batched request.
 		 * 
+		 * @return {framework.data.Queue} this
 		 */
 		execute: function()
 		{
@@ -88,10 +112,11 @@ $JSKK.Class.create
 					}
 				);
 			}
+			return this;
 		},
 		/**
 		 * 
-		 * @private
+		 * @private 
 		 */
 		__onDone: function(response)
 		{
@@ -112,7 +137,12 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Pushes a raw request object into the queue.
 		 * 
+		 * @param {Object} request A raw request object. Note that this must
+		 * also include a "url" property.
+		 * 
+		 * @return {framework.data.Queue} this
 		 */
 		push: function(request)
 		{
@@ -121,7 +151,10 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Fetches a request based on its assigned sequence number.
 		 * 
+		 * @param {Number} sequence The sequence number for the request.
+		 * @return {Mixed} The request object if found, or null.
 		 */
 		getRequest: function(sequence)
 		{

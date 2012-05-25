@@ -1,7 +1,9 @@
 /**
  * @class framework.data.Transaction
  * 
+ * Model Transaction Utility.
  * 
+ * @uses framework.data.Queue
  * @uses framework.mvc.Model
  */
 $JSKK.Class.create
@@ -56,7 +58,12 @@ $JSKK.Class.create
 		state:		0,
 		lockState:	'full',
 		/**
+		 * @constructor
 		 * 
+		 * Sets up the transaction object, enabling or disabling queueing.
+		 * 
+		 * @param {Boolean} queue True if queueing is enabled.
+		 * @return {framework.data.Transaction}
 		 */
 		init: function(queue)
 		{
@@ -65,6 +72,14 @@ $JSKK.Class.create
 				this.queue=new framework.data.Queue();
 			}
 		},
+		/**
+		 * Attaches a model to the transaction. This method will return a cloned instance
+		 * of the model. All changes to the cloned instance will be reflected on the original
+		 * model once the transaction has been comitted.
+		 * 
+		 * @param {framework.mvc.Model} model The model to attach to the transaction.
+		 * @return {framework.data.Transaction} A clone of the original model.
+		 */
 		attachModel: function(model)
 		{
 			if (Object.isDefined(model)
@@ -98,7 +113,12 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Executes the transaction.
 		 * 
+		 * @param {Object} config A config object.
+		 * @param {Function} config.onSuccess Called when the transaction is successful.
+		 * @param {Function} config.onFailure Called when the transaction has failed.
+		 * @return {framework.data.Transaction} this
 		 */
 		execute: function(config)
 		{
@@ -164,11 +184,15 @@ $JSKK.Class.create
 				}
 			);
 			this.queue.execute();
+			return this;
 		},
 		/**
 		 * Commits the transaction.
 		 * 
-		 * @return {void}
+		 * All changes made to any of the attached model's clones will
+		 * be reflected upon the original models.
+		 * 
+		 * @return {framework.data.Transaction} this
 		 */
 		commit: function()
 		{
@@ -187,6 +211,9 @@ $JSKK.Class.create
 			delete this;
 		},
 		/**
+		 * Rolls back the transaction, effectively trashing all
+		 * changes made to all attached models and destroying the
+		 * transaction object.
 		 * 
 		 * @return {framework.data.Transaction} this
 		 */

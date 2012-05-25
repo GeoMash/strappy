@@ -1,36 +1,30 @@
 /**
  * @class framework.data.proxy.BTL
+ * @extends framework.data.proxy.AbstractProxy
  * 
- * Batchable Transmission Layer
+ * Batchable Transmission Layer Proxy
  * 
  * 
- * 
- * 
- * @abstract
  */
 $JSKK.Class.create
 (
 	{
 		$namespace:	'framework.data.proxy',
 		$name:		'BTL',
-		$uses:
-		[
-			$JSKK.trait.Configurable,
-			$JSKK.trait.Observable
-		]
+		$extends:	framework.data.proxy.AbstractProxy
 	}
 )
 (
 	{},
 	{
-		config:
-		{
-			url:	''
-		},
-		events:
-		{
-			onBeforeRequest: true
-		},
+		/**
+		 * Sends a raw request to the server as JSON.
+		 * @param config An object containing configuration for the request. 
+		 * @param config.url The url to send the request to.
+		 * @param config.data The data which will be converted to a JSON string and sent
+		 * with the request.
+		 * @return {framework.data.proxy.BTL} this
+		 */
 		raw: function(config)
 		{
 			config.url=this.config.url;
@@ -56,6 +50,7 @@ $JSKK.Class.create
 					}
 				);
 			}
+			return this;
 		},
 		_onDone: function(config,response)
 		{

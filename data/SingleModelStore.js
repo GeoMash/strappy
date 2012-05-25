@@ -1,44 +1,27 @@
 /**
  * @class framework.data.SingleModelStore
- * 
- * 
- * 
- * @mixins framework.trait.ComponentConnector
- * @mixins $JSKK.trait.Observable
+ * @extends framework.data.AbstractStore
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses $JSKK.trait.Observable
+ * 
  */
 $JSKK.Class.create
 (
 	{
 		$namespace:		'framework.data',
 		$name:			'SingleModelStore',
-		$abstract:		true,
-		$uses:
-		[
-			framework.trait.ComponentConnector,
-			$JSKK.trait.Observable
-		]
+		$extends:		framework.data.AbstractStore,
+		$abstract:		true
 	}
 )
 (
 	{},
 	{
-		events:
-		{
-			onChange:			true,
-			onSync:				true,
-			onSyncFailed:		true,
-			onModelLockChange:	true,
-		},
-		proxy:		null,
-		model:		null,
-		data:		{},
-		record:		null,
 		/**
+		 * @constructor
+		 * Sets up and validates the store.
 		 * 
+		 * @return {framework.data.SingleModelStore}
 		 */
 		init: function()
 		{
@@ -53,37 +36,21 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Gets the value of a given field from the attached model.
 		 * 
-		 */
-		newRecord: function(record)
-		{
-			return new this.model
-			(
-				{
-					onLockChange: function(model,lockState)
-					{console.debug('onLockChange');
-//						this.fireEvent('onModelLockChange',this,model,lockState);
-					}.bind(this)
-				},
-				record
-			);
-		},
-		/**
-		 * 
-		 */
-		getModel: function()
-		{
-			return this.record;
-		},
-		/**
-		 * 
+		 * @param {String} field The name of the field to fetch the value of.
+		 * @return {Mixed} The value of the field.
 		 */
 		get: function(field)
 		{
 			return this.record.get(field);
 		},
 		/**
+		 * Sets a value of a given field on the attached model.
 		 * 
+		 * @param {String} field The field to assign a value to.
+		 * @param {Mixed} value The value to be assigned to the field.
+		 * @return 
 		 */
 		set: function(field,value)
 		{
@@ -92,18 +59,17 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
-		 * This method will fetch all dirty models and attach them to a
-		 * proxy sync request.
-		 * The expected response is a new record set. 
+		 * This method will check if the attached model is dirty. If so,
+		 * it will send it to the server. Otherwise it will ignore the model
+		 * and simply request a new one.
 		 * 
-		 * 
-		 * TODO: Detail this.
+		 * @return {framework.data.SingleModelStore}
 		 */
 		sync: function()
 		{
 			if (this.proxy && Object.isFunction(this.proxy.sync))
 			{
-				var changeset=[];
+				var changeset=[]; 
 				if (this.isDirty())
 				{
 					changeset=[this.record];
@@ -129,17 +95,8 @@ $JSKK.Class.create
 			{
 				throw new Exception('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
+			return this;
 		},
-		/**
-		 * 
-		 */
-		getProxy: function()
-		{
-			return this.proxy;
-		},
-		/**
-		 * 
-		 */
 		isDirty: function()
 		{
 			return this.record.isDirty();
