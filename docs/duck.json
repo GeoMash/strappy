@@ -26,8 +26,14 @@
         "../mvc/Controller.js",
         "../mvc/stateful/Controller.js",
         "../data/stateful/Store.js",
-        "../data/Store.js",
+        "../data/AbstractStore.js",
+        "../data/SingleModelStore.js",
+        "../data/MultiModelStore.js",
+        "../data/Queue.js",
         "../data/Transaction.js",
-        "../data/proxy/Ajax.js"
+        "../data/proxy/AbstractProxy.js",
+        "../data/proxy/Ajax.js",
+        "../data/proxy/BTL.js",
+        "../data/BTL.js"
     ]
 }

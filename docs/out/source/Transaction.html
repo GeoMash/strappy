@@ -18,7 +18,9 @@
   <pre class="prettyprint lang-js"><span id='framework-data-Transaction'>/**
 </span> * @class framework.data.Transaction
  * 
+ * Model Transaction Utility.
  * 
+ * @uses framework.data.Queue
  * @uses framework.mvc.Model
  */
 $JSKK.Class.create
@@ -69,15 +71,32 @@ $JSKK.Class.create
 	},
 	{
 		models:		[],
+		queue:		false,
 		state:		0,
 		lockState:	'full',
-//		/**
-//		 * 
-//		 */
-//		init: function()
-//		{
-//			
-//		},
+<span id='framework-data-Transaction-method-constructor'>		/**
+</span>		 * @constructor
+		 * 
+		 * Sets up the transaction object, enabling or disabling queueing.
+		 * 
+		 * @param {Boolean} queue True if queueing is enabled.
+		 * @return {framework.data.Transaction}
+		 */
+		init: function(queue)
+		{
+			if (queue!==false)
+			{
+				this.queue=new framework.data.Queue();
+			}
+		},
+<span id='framework-data-Transaction-method-attachModel'>		/**
+</span>		 * Attaches a model to the transaction. This method will return a cloned instance
+		 * of the model. All changes to the cloned instance will be reflected on the original
+		 * model once the transaction has been comitted.
+		 * 
+		 * @param {framework.mvc.Model} model The model to attach to the transaction.
+		 * @return {framework.data.Transaction} A clone of the original model.
+		 */
 		attachModel: function(model)
 		{
 			if (Object.isDefined(model)
@@ -88,6 +107,11 @@ $JSKK.Class.create
 				var clone=model.clone();
 				model.attachPhantom(clone);
 				this.models.push(model);
+				
+				if (this.queue)
+				{
+					this.queue.attachProxy(model.getStore().getProxy());
+				}
 				return clone;
 			}
 			else
@@ -101,15 +125,46 @@ $JSKK.Class.create
 		 */
 		start: function()
 		{
-			this.state|=framework.Transaction.STATE_STARTED;
+			this.state|=framework.data.Transaction.STATE_STARTED;
 			this.fullLock();
 			return this;
 		},
 <span id='framework-data-Transaction-method-execute'>		/**
-</span>		 * 
+</span>		 * Executes the transaction.
+		 * 
+		 * @param {Object} config A config object.
+		 * @param {Function} config.onSuccess Called when the transaction is successful.
+		 * @param {Function} config.onFailure Called when the transaction has failed.
+		 * @return {framework.data.Transaction} this
 		 */
-		execute: function()
+		execute: function(config)
 		{
+			var models=
+			{
+				total:	this.models.length,
+				done:	0,
+				fails:	0
+			};
+			$JSKK.when(models,{object:'done',value:models.total}).isEqualTo
+			(
+				function()
+				{
+					if (models.fails===0)
+					{
+						if (Object.isFunction(config.onSuccess))
+						{
+							config.onSuccess();
+						}
+					}
+					else
+					{
+						if (Object.isFunction(config.onFailure))
+						{
+							config.onFailure();
+						}
+					}
+				}.bind(this)
+			);
 			this.models.each
 			(
 				function(model)
@@ -123,25 +178,42 @@ $JSKK.Class.create
 						/* The phantom model was changed, so submit this to the
 						 * server if the original model has an associated store &amp; proxy.
 						 */
-						//TODO: QUEUEING!!!!
 						if (model.getStore())
 						{
 							phantom	.bindStore(model.getStore())
-									.sync()
+									.sync
+									(
+										{
+											onSuccess: function()
+											{
+												models.done++;
+											},
+											onFailure: function()
+											{
+												models.done++;
+												models.fails++;
+											}
+										}
+									)
 									.unbindStore();
 						}
 					}
 				}
 			);
+			this.queue.execute();
+			return this;
 		},
 <span id='framework-data-Transaction-method-commit'>		/**
 </span>		 * Commits the transaction.
+		 * 
+		 * All changes made to any of the attached model's clones will
+		 * be reflected upon the original models.
 		 * 
 		 * @return {framework.data.Transaction} this
 		 */
 		commit: function()
 		{
-			this.state|=framework.Transaction.STATE_COMITTED;
+			this.state|=framework.data.Transaction.STATE_COMITTED;
 			this.models.each
 			(
 				function(model,index)
@@ -156,12 +228,15 @@ $JSKK.Class.create
 			delete this;
 		},
 <span id='framework-data-Transaction-method-rollback'>		/**
-</span>		 * 
+</span>		 * Rolls back the transaction, effectively trashing all
+		 * changes made to all attached models and destroying the
+		 * transaction object.
+		 * 
 		 * @return {framework.data.Transaction} this
 		 */
 		rollback: function()
 		{
-			this.state|=framework.Transaction.STATE_ROLLEDBACK;
+			this.state|=framework.data.Transaction.STATE_ROLLEDBACK;
 			
 			this.models.each
 			(

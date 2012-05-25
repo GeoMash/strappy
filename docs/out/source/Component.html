@@ -61,7 +61,7 @@
 				errorWindow:	'Application.component.DialogWindow',
 				successWindow:	'Application.component.DialogWindow'
 			},
-			models:
+			stores:
 			[
 				'State',
 				'User'
@@ -78,9 +78,10 @@
 		}
 	);
  * 
- * @mi!xins $JSKK.trait.Configurable
+ * @mixins $JSKK.trait.Observable
  * @abstract
  * 
+ * @uses $JSKK.trait.Observable
  * @uses framework.RadioTower
  * @uses framework.StateMgr
  */
@@ -88,16 +89,20 @@ $JSKK.Class.create
 (
 	{
 		$namespace:	'framework',
-		$name:		'Component'//,
-//		$uses:
-//		[
-//			$JSKK.trait.Configurable
-//		]
+		$name:		'Component',
+		$uses:
+		[
+			$JSKK.trait.Observable
+		]
 	}
 )
 (
 	{},
 	{
+		events:
+		{
+			onConfigured:	true
+		},
 <span id='framework-Component-cfg-attachTo'>		/**
 </span>		 * @cfg attachTo The DOM element that this component will attach itself to. (required)
 		 */
@@ -394,6 +399,69 @@ $JSKK.Class.create
 				this.components[component]=new object();
 			}
 		},
+<span id='framework-Component-method-newChildComponent'>		/**
+</span>		 * Creates a new child component.
+		 * 
+		 * This can be useful for when you want to dynamically
+		 * create child components.
+		 * 
+	$JSKK.Class.create
+	(
+		{
+			$namespace:	'Application.component.myComponent.controller',
+			$name:		'Default',
+			$extends:	framework.mvc.Controller
+		}
+	)
+	(
+		{},
+		{
+			onGotBaseHTML: function(view)
+			{
+				var thisChildCmp=null;
+				for (var i=0; i&lt;10; i++)
+				{
+					thisChildCmp=this.getParentComponent().newChildComponent('Application.component.Tile');
+					thisChildCmp.configure({attachTo:view.getContainer()});
+				}
+			}
+		}
+	);
+		 * 
+		 */
+		newChildComponent: function(component)
+		{
+			var parts		=component.split('.'),
+				object		=window[parts[0]],
+				config		=null;
+			
+			if (Object.isDefined(object))
+			{
+				for (var i=1,j=parts.length; i&lt;j; i++)
+				{
+					if (Object.isDefined(object[parts[i]]))
+					{
+						object=object[parts[i]];
+					}
+					else
+					{
+						throw new Error('Error! component &quot;'+this.components[component]+'&quot; not loaded.');
+						break;
+					}
+				}
+			}
+			else
+			{
+				throw new Error('Error! component &quot;'+this.components[component]+'&quot; not loaded.');
+			}
+			if (!Object.isDefined(this.components[component]))
+			{
+				this.components[component]=[];
+			}
+			var cmp=new object();
+			this.components[component].push(cmp);
+			return cmp;
+		},
 <span id='framework-Component-method-getCmp'>		/**
 </span>		 * Returns a child component which is pre-defined in this
 		 * components &quot;components&quot; property.
@@ -432,6 +500,25 @@ $JSKK.Class.create
 					throw new Error('Error controller &quot;'+this.controllers[i]+'&quot; not loaded.');
 					break;
 				}
+			}
+		},
+<span id='framework-Component-method-getController'>		/**
+</span>		 * Returns an associated controller which is pre-defined in this
+		 * components &quot;controllers&quot; property.
+		 * 
+		 * @param {String} controller The name of the controller to get.
+		 * @throws Error if the controller has not been initilized.
+		 * @return {framework.mvc.View} The requested controller if it has been defined.
+		 */
+		getController: function(controller)
+		{
+			if (Object.isDefined(this._controllers[controller]))
+			{
+				return this._controllers[controller];
+			}
+			else
+			{
+				throw new Error('Error - controller &quot;'+controller+'&quot; has not been initilized.');
 			}
 		},
 <span id='framework-Component-method-initViews'>		/**
@@ -535,6 +622,7 @@ $JSKK.Class.create
 						this.config=newConfig;
 					}
 					this._configured=true;
+					this.fireEvent('onConfigured',this);
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);

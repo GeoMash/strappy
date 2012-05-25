@@ -125,6 +125,16 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getStore(store);
 		},
+<span id='framework-trait-ComponentConnector-method-getController'>		/**
+</span>		 * Fetches a controller from the parent component.
+		 * 
+		 * @param {String} controller The name of the controller.
+		 * @return {framework.mvc.Controller} The Controller instance.
+		 */
+		getController: function(controller)
+		{
+			return this.getParentComponent().getController(controller);
+		},
 <span id='framework-trait-ComponentConnector-method-getView'>		/**
 </span>		 * Fetches a view from the parent component.
 		 * 

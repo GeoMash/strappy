@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='framework-data-proxy-AbstractProxy'>/**
+</span> * @class framework.data.proxy.AbstractProxy
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * @abstract
+ */
+$JSKK.Class.create
+(
+	{
+		$namespace:	'framework.data.proxy',
+		$name:		'AbstractProxy',
+		$abstract:	true,
+		$uses:
+		[
+			$JSKK.trait.Configurable,
+			$JSKK.trait.Observable
+		]
+	}
+)
+(
+	{},
+	{
+<span id='framework-data-proxy-AbstractProxy-cfg-url'>		/**
+</span>		 * @cfg {String} url The URL to assocate with this prxy.
+		 */
+		config:
+		{
+			url:	''
+		},
+<span id='framework-data-proxy-AbstractProxy-property-events'>		/**
+</span>		 * @property events A list of observable events.
+		 * @property events.onBeforeRequest Fired before any request is made.
+		 * @private
+		 */
+		events:
+		{
+			onBeforeRequest: true
+		},
+<span id='framework-data-proxy-AbstractProxy-method-raw'>		/**
+</span>		 * Typically used by other utility classes to perform abstract
+		 * requests.
+		 * @return {Mixed}
+		 */
+		raw: $JSKK.Class.ABSTRACT_METHOD,
+<span id='framework-data-proxy-AbstractProxy-method-_onDone'>		/**
+</span>		 * @private
+		 * @return {void}
+		 */
+		_onDone: $JSKK.Class.ABSTRACT_METHOD
+	}
+)</pre>
+</body>
+</html>

@@ -45,13 +45,18 @@ $JSKK.Class.create
 		[
 			framework.trait.ComponentConnector,
 			framework.trait.signal.Receive,
-			framework.trait.signal.Send
+			framework.trait.signal.Send,
+			$JSKK.trait.Observable
 		]
 	}
 )
 (
 	{},
 	{
+		events:
+		{
+			onReadyState:	true
+		},
 <span id='framework-mvc-stateful-Controller-property-stateStore'>		/**
 </span>		 * @property {framework.data.stateful.Store} stateStore A reference to the
 		 * associated state model.
@@ -68,21 +73,21 @@ $JSKK.Class.create
 		{
 			this.registerSignals
 			(
-				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL],
-				[framework.Signal.VIEW_IS_READY,			'onViewReady']
+				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL]//,
+//				[framework.Signal.VIEW_IS_READY,			'onViewReady']
 			);
 			if (!(this.stateStore=this.getStore('State')))
 			{
 				throw new Error('Unable to initialize &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; State Controller. Controller requires a state model.');
 			}
-			(this.$reflect('uses') || []).each
-			(
-				function(trait)
-				{
-					console.debug(trait.toString());
-//					console.debug(trait.$reflect('name'));
-				}
-			);
+//			(this.$reflect('uses') || []).each
+//			(
+//				function(trait)
+//				{
+//					console.debug(trait.toString());
+////					console.debug(trait.$reflect('name'));
+//				}
+//			);
 //			console.debug('USES: ',this.$reflect('uses'));
 		},
 <span id='framework-mvc-stateful-Controller-method-_onStateChange'>		/**
@@ -129,6 +134,7 @@ $JSKK.Class.create
 		setReady:		function()
 		{
 			this.stateStore.setReady(true);
+			this.fireEvent('onReadyState',this,true);
 			return this;
 		},
 <span id='framework-mvc-stateful-Controller-method-updateState'>		/**
