@@ -30,11 +30,41 @@ $JSKK.Class.create
 			onChange:		true,
 			onLockChange:	true
 		},
+		/**
+		 * @property {Boolean} dirty A flag to show weather or not the model instance has been modified
+		 * since it was last synced.
+		 * @private
+		 */
 		dirty:		false,
+		/**
+		 * @property {Mixed} phantom False if no cloned instance is attached. Otherwise a cloned instance of
+		 * this model.
+		 * @private
+		 */
 		phantom:	false,
+		/**
+		 * @property {Boolean} _clone A flag to show weather or not the model instance has been modified
+		 * since it was last synced.
+		 * @private
+		 */
 		_clone:		false,
+		/**
+		 * @property {String} idField The field that is used as the ID for the model instance.
+		 */
+		idField:	'id',
+		/**
+		 * @property {Array} field A list of fields and their default values.
+		 */
 		fields:		[],
+		/**
+		 * @property {Object} record The raw record for the model instance.
+		 * @private
+		 */
 		record:		{},
+		/**
+		 * @property {framework.data.AbstractStore} store The store that the model instance is attached to.
+		 * @private
+		 */
 		store:		null,
 		/**
 		 * 
@@ -188,6 +218,19 @@ $JSKK.Class.create
 			{
 				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents reading.');
 			}
+		},
+		/**
+		 * Gets the ID of the model instance.
+		 * 
+		 * @return {Number} The id of the model instance.
+		 */
+		getId: function()
+		{
+			if (Object.isString(this.idField))
+			{
+				return this.get(this.idField);
+			}
+			return null;
 		},
 		/**
 		 * Sets a record at a given index in the store.

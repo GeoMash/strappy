@@ -196,6 +196,25 @@ $JSKK.Class.create
 			
 		},
 		/**
+		 * 
+		 */
+		getById: function(modelId)
+		{
+			var ret=null;
+			this.each
+			(
+				function(record)
+				{
+					if (record.getId()==modelId)
+					{
+						ret=record;
+						return false;
+					}
+				}.bind(this)
+			);
+			return ret;
+		},
+		/**
 		 * Finds attached models based on a simple key value search.
 		 * 
 		 * Find all Toms.
