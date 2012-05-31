@@ -85,7 +85,7 @@ Example:
 Binding
 =======
 
-Bind everything with .bind. If you MUST create create a shortcut to this, don't use "me" use "$this".
+Bind everything with the "bind" function extension. If you MUST create create a shortcut to this, don't use "me" use "$this".
 
 <br>
 Example:
@@ -93,7 +93,7 @@ Example:
 	{
 		this.getView('Default').getWrapper().append($(child));
 	}.bind(this));
-
+	
 	var $this=this;
 	this.draggableConfig.helper	=this.dragHelper.bind(this);
 	this.droppableConfig.drop	=function(event, ui) {$this.dropHandler(this, event, ui);};
@@ -101,6 +101,67 @@ Example:
 
 <br>
 <br>
+
+Controllers, Views & Traits
+===========================
+
+A few rules to follow here.
+
+<br>
+Controllers & Views
+-----------
+Seems that "many controllers, few views" is a good way to go.
+So try to break down your controllers into categories. Eventually we'll start to see some patterns emerge as we
+build components. This will increase the speed at which we can create components due to code reuse and convetion.
+<br>
+A few good ways to identify if something should be in a controller or a view:
+<br>
+###Controllers:
+<br>
+* Does the code try to made a decision?
+* Does it iteract with another controller or component?
+* Does it write to a store?
+<br>
+###Views:
+<br>
+* Does it bind to a DOM event?
+* Does it directly affect the DOM?
+* Does USE models to generate HTML?
+* Does it generate HTML?
+<br>
+
+Traits
+------
+Additionally, we want to try to avoid code duplication as much as possible. So if something can be rewritten to be
+more generic. Rewrite it as a trait and use it in components.
+<br>
+We may need to break these down into "view traits" and "controller traits".
+<br>
+The traits namespace will be "<projectName>.trait.<controller/view>.<traitName>" and will be globally accessible.
 <br>
 
 
+Method Names
+============
+
+Simple rules to follow here.
+<br>
+* Camel case only.
+* No underscores! - Not even to start the method name.
+* Make them meaningful. I don't care if the method names are massive, so long as they make sense.
+<br>
+Constants
+=========
+
+JSKK provides a static section (its the first {} block). Put all constants there.
+If a class is referring to its own constant, than the cleanest solution is to use reflection to access it.
+<br>
+Example:
+
+	if (foo==this.reflect('self').SOME_CONSTANT)
+	{
+		//Do something...
+	}
+
+<br>
+<br>
