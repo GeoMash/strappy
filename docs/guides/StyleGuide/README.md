@@ -158,7 +158,7 @@ If a class is referring to its own constant, than the cleanest solution is to us
 <br>
 Example:
 
-	if (foo==this.reflect('self').SOME_CONSTANT)
+	if (foo==this.$reflect('self').SOME_CONSTANT)
 	{
 		//Do something...
 	}
