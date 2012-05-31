@@ -12,6 +12,11 @@
 				"name": "HelloWorld",
 				"title": "Hello World Component",
 				"description": "A simple Hello World example."
+			},
+			{
+				"name": "StyleGuide",
+				"title": "Style Guide",
+				"description": "A guide for Spinifex software."
 			}
 		]
 	}
