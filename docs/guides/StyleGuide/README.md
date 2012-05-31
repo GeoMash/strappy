@@ -137,7 +137,7 @@ more generic. Rewrite it as a trait and use it in components.
 <br>
 We may need to break these down into "view traits" and "controller traits".
 <br>
-The traits namespace will be "<projectName>.trait.<controller/view>.<traitName>" and will be globally accessible.
+The traits namespace will be "&lt;projectName&gt;.trait.&lt;controller/view&gt;.&lt;traitName&gt;" and will be globally accessible.
 <br>
 
 
