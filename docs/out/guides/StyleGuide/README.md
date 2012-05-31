@@ -118,8 +118,8 @@ A few good ways to identify if something should be in a controller or a view:
 <br>
 ###Controllers:
 <br>
-* Does the code try to made a decision?
-* Does it iteract with another controller or component?
+* Does the code try to make a decision?
+* Does it interact with another controller or component?
 * Does it write to a store?
 <br>
 ###Views:
