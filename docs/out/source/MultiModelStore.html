@@ -212,6 +212,25 @@ $JSKK.Class.create
 		{
 			
 		},
+<span id='framework-data-MultiModelStore-method-getById'>		/**
+</span>		 * 
+		 */
+		getById: function(modelId)
+		{
+			var ret=null;
+			this.each
+			(
+				function(record)
+				{
+					if (record.getId()==modelId)
+					{
+						ret=record;
+						return false;
+					}
+				}.bind(this)
+			);
+			return ret;
+		},
 <span id='framework-data-MultiModelStore-method-find'>		/**
 </span>		 * Finds attached models based on a simple key value search.
 		 * 

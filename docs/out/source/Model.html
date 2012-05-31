@@ -47,11 +47,41 @@ $JSKK.Class.create
 			onChange:		true,
 			onLockChange:	true
 		},
+<span id='framework-mvc-Model-property-dirty'>		/**
+</span>		 * @property {Boolean} dirty A flag to show weather or not the model instance has been modified
+		 * since it was last synced.
+		 * @private
+		 */
 		dirty:		false,
+<span id='framework-mvc-Model-property-phantom'>		/**
+</span>		 * @property {Mixed} phantom False if no cloned instance is attached. Otherwise a cloned instance of
+		 * this model.
+		 * @private
+		 */
 		phantom:	false,
+<span id='framework-mvc-Model-property-_clone'>		/**
+</span>		 * @property {Boolean} _clone A flag to show weather or not the model instance has been modified
+		 * since it was last synced.
+		 * @private
+		 */
 		_clone:		false,
+<span id='framework-mvc-Model-property-idField'>		/**
+</span>		 * @property {String} idField The field that is used as the ID for the model instance.
+		 */
+		idField:	'id',
+<span id='framework-mvc-Model-property-field'>		/**
+</span>		 * @property {Array} field A list of fields and their default values.
+		 */
 		fields:		[],
+<span id='framework-mvc-Model-property-record'>		/**
+</span>		 * @property {Object} record The raw record for the model instance.
+		 * @private
+		 */
 		record:		{},
+<span id='framework-mvc-Model-property-store'>		/**
+</span>		 * @property {framework.data.AbstractStore} store The store that the model instance is attached to.
+		 * @private
+		 */
 		store:		null,
 <span id='framework-mvc-Model-property-lockState'>		/**
 </span>		 * 
@@ -205,6 +235,19 @@ $JSKK.Class.create
 			{
 				throw new Error('The model &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; is in a lock state that prevents reading.');
 			}
+		},
+<span id='framework-mvc-Model-method-getId'>		/**
+</span>		 * Gets the ID of the model instance.
+		 * 
+		 * @return {Number} The id of the model instance.
+		 */
+		getId: function()
+		{
+			if (Object.isString(this.idField))
+			{
+				return this.get(this.idField);
+			}
+			return null;
 		},
 <span id='framework-mvc-Model-method-set'>		/**
 </span>		 * Sets a record at a given index in the store.

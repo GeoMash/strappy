@@ -1,0 +1,1 @@
+Ext.data.JsonP.StyleGuide({"guide":"<p>This is a simple style guide for using the framework with Spinifex software.</p>\n\n<h1>Config</h1>\n\n<p>Place top level component config within the main component file.</p>\n","title":"Style Guide"});
