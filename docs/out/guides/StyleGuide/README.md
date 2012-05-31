@@ -112,7 +112,7 @@ Controllers & Views
 -----------
 Seems that "many controllers, few views" is a good way to go.
 So try to break down your controllers into categories. Eventually we'll start to see some patterns emerge as we
-build components. This will increase the speed at which we can create components due to code reuse and convetion.
+build components. This will increase the speed at which we can create components due to code reuse and convention.
 <br>
 A few good ways to identify if something should be in a controller or a view:
 <br>
