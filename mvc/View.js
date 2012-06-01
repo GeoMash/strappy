@@ -84,8 +84,8 @@ $JSKK.Class.create
 			$(config.where)[config.how](view);
 			this.fireEvent('onInsertBaseHTML',this);
 			this._ready=true;
-			this.onReady();
 			this.fireEvent('onReady',this);
+			this.onReady();
 			return this;
 		},
 		/**
