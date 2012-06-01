@@ -44,6 +44,10 @@ $JSKK.Class.create
 			if (!Object.isNull(this.model) && Object.isDefined(this.model))
 			{
 				this.records=this.newRecord(this.data);
+				for (var i=0,j=this.records.length; i<j; i++)
+				{
+					this.bindchangeEvent(this.records[i]);
+				}
 				delete this.data;
 			}
 			else
@@ -380,6 +384,10 @@ $JSKK.Class.create
 						onSuccess:	function(response)
 						{
 							this.records=this.newRecord(response.data);
+							for (var i=0,j=this.records.length; i<j; i++)
+							{
+								this.bindchangeEvent(this.records[i]);
+							}
 							this.fireEvent('onChange',this,response);
 							this.fireEvent('onSync',this,response);
 						}.bind(this),
@@ -413,6 +421,10 @@ $JSKK.Class.create
 					function(records)
 					{
 						this.records=this.newRecord(records);
+						for (var i=0,j=this.records.length; i<j; i++)
+						{
+							this.bindchangeEvent(this.records[i]);
+						}
 						this.fireEvent('onChange',this,records);
 						this.fireEvent('onSync',this,records);
 					}.bind(this)

@@ -93,6 +93,17 @@ $JSKK.Class.create
 				record
 			);
 		},
+		bindchangeEvent: function(record)
+		{
+			this.record.observe
+			(
+				'onChange',
+				function(model)
+				{
+					this.fireEvent('onChange',this,model);
+				}.bind(this)
+			);
+		},
 		/**
 		 * Returns the attached model (not an instance of it).
 		 * 

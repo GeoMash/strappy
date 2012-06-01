@@ -28,6 +28,7 @@ $JSKK.Class.create
 			if (!Object.isNull(this.model) && Object.isDefined(this.model))
 			{
 				this.record=this.newRecord(this.data);
+				this.bindchangeEvent(this.record);
 				delete this.data;
 			}
 			else
