@@ -111,9 +111,23 @@ $JSKK.Class.create
 		 */
 		onStoreChange:	$JSKK.emptyFunction,
 		/**
+		 * An abstract method to be implemented by extending classes.
 		 * 
+		 * This method should be used to asure the view state is always in sync
+		 * with any stores associated with it.
+		 * 
+		 * @return
 		 */
 		syncView:		$JSKK.Class.ABSTRACT_METHOD,
+		/**
+		 * An abstract method to be implemented by extending classes.
+		 * 
+		 * This method should be used to make calls to
+		 * {@link framework.mvc.View.bindDOMEvent bindDOMEvent}.
+		 * 
+		 * @return
+		 */
+		bindDOMEvents:		$JSKK.Class.ABSTRACT_METHOD,
 		/**
 		 * 
 		 */
@@ -170,6 +184,21 @@ $JSKK.Class.create
 			console.debug('onHide');
 			this.getContainer().fadeOut(500);
 			this.fireEvent('onHide',this);
+			return this;
+		},
+		/**
+		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} selector A CSS selector, DOM element or jQuery object.
+		 * @param {String} controller The controller which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {framework.mvc.View} this
+		 */
+		bindDOMEvent: function(event,selector,controller,method,data)
+		{
+			var controller=this.getController(controller);
+			this.getContainer().on(event,selector,data,controller[method].bind(controller));
 			return this;
 		},
 		/**
