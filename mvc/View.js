@@ -195,10 +195,22 @@ $JSKK.Class.create
 		 * @param {Object} data Any data that should be passed to the method.
 		 * @return {framework.mvc.View} this
 		 */
-		bindDOMEvent: function(event,selector,controller,method,data)
+		bindDOMEvent: function(event,selector,handler,method,data)
 		{
-			var controller=this.getController(controller);
-			this.getContainer().on(event,selector,data,controller[method].bind(controller));
+			var handle=handler.split(':');
+			if (handle.length==2)
+			{
+				switch (handle[0])
+				{
+					case 'controller':		handle=this.getController(controller);	break;
+					case 'view':			handle=this;							break;	
+				}
+			}
+			else
+			{
+				handle=this.getController(controller);
+			}
+			this.getContainer().on(event,selector,data,handle[method].bind(handle));
 			return this;
 		},
 		/**
