@@ -95,7 +95,7 @@ $JSKK.Class.create
 		},
 		bindchangeEvent: function(record)
 		{
-			this.record.observe
+			record.observe
 			(
 				'onChange',
 				function(model)
