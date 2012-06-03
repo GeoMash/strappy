@@ -202,13 +202,13 @@ $JSKK.Class.create
 			{
 				switch (handle[0])
 				{
-					case 'controller':		handle=this.getController(controller);	break;
+					case 'controller':		handle=this.getController(handler);		break;
 					case 'view':			handle=this;							break;	
 				}
 			}
 			else
 			{
-				handle=this.getController(controller);
+				handle=this.getController(handler);
 			}
 			this.getContainer().on(event,selector,data,handle[method].bind(handle));
 			return this;
