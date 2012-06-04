@@ -41,6 +41,7 @@ $JSKK.Class.create
 		 */
 		init: function()
 		{
+			this.init.$parent();
 			if (!Object.isNull(this.model) && Object.isDefined(this.model))
 			{
 				this.records=this.newRecord(this.data);

@@ -41,6 +41,7 @@ $JSKK.Class.create
 			onChange:			true,
 			onSync:				true,
 			onSyncFailed:		true,
+			onModelChange:		true,
 			onModelLockChange:	true
 		},
 		/**
@@ -69,7 +70,13 @@ $JSKK.Class.create
 		 * 
 		 * @return {framework.data.AbstractStore}
 		 */
-		init: $JSKK.Class.ABSTRACT_METHOD,
+		init: function()
+		{
+			if (Object.isNull(this.proxy))
+			{
+				this.proxy=new framework.data.proxy.MemoryProxy();
+			}
+		},
 		/**
 		 * Creates a new model instance based on the attached model
 		 * and returns it.
@@ -100,7 +107,7 @@ $JSKK.Class.create
 				'onChange',
 				function(model)
 				{
-					this.fireEvent('onChange',this,model);
+					this.fireEvent('onModelChange',this,model);
 				}.bind(this)
 			);
 		},
