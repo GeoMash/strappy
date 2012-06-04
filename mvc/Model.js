@@ -132,6 +132,7 @@ $JSKK.Class.create
 		sync: function(config)
 		{
 			var proxy=this.getStore().getProxy();
+			
 			if (Object.isFunction(proxy.sync))
 			{
 				proxy.sync
@@ -140,7 +141,16 @@ $JSKK.Class.create
 						data:		(this.isDirty()?this.record:{}),
 						onSuccess:	function(response)
 						{
-							this.record=response.data;
+							if (Object.isDefined(response.data))
+							{
+								this.record=response.data;
+							}
+							else
+							{
+								//?
+							}
+							
+							
 							if (!this.isClone())
 							{
 								this.fireEvent('onSync',this);
@@ -174,7 +184,7 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Exception('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached to its bound store.');
+				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached to its bound store.');
 			}
 			return this;
 		},
