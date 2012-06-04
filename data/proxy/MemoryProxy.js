@@ -22,7 +22,17 @@ $JSKK.Class.create
 		 */
 		raw: function(config)
 		{
-			this._onDone(config);
+			if (this.fireEvent('onBeforeRequest',this,config)!==false)
+			{
+				this._onDone(config);
+			}
+		},
+		sync: function(config)
+		{
+			if (this.fireEvent('onBeforeRequest',this,config)!==false)
+			{
+				this._onDone(config);
+			}
 		},
 		/**
 		 * @private
@@ -30,7 +40,7 @@ $JSKK.Class.create
 		 */
 		_onDone: function(config)
 		{
-			(config.onSuccess || $JSKK.emptyFunction)();
+			(config.onSuccess || $JSKK.emptyFunction)({});
 		}
 	}
 )
