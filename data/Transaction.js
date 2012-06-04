@@ -46,8 +46,8 @@
 
 	clonedModel1.set('name','Foo');
 	clonedModel2.set('name','Bar');
-
-
+	
+	//Don't actually ever unlock like this - this is for example only!!!
 	model1.lock(framework.mvc.Model.LOCK_NONE);
 	model2.lock(framework.mvc.Model.LOCK_NONE);
 	console.debug(model1.get('name'),model2.get('name'));
