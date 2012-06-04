@@ -202,8 +202,8 @@ $JSKK.Class.create
 			{
 				switch (handle[0])
 				{
-					case 'controller':		handle=this.getController(handler);		break;
-					case 'view':			handle=this;							break;	
+					case 'controller':		handle=this.getController(handle[1]);		break;
+					case 'view':			handle=this;								break;	
 				}
 			}
 			else

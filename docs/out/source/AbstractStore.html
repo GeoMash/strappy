@@ -110,6 +110,17 @@ $JSKK.Class.create
 				record
 			);
 		},
+		bindchangeEvent: function(record)
+		{
+			record.observe
+			(
+				'onChange',
+				function(model)
+				{
+					this.fireEvent('onChange',this,model);
+				}.bind(this)
+			);
+		},
 <span id='framework-data-AbstractStore-method-getModel'>		/**
 </span>		 * Returns the attached model (not an instance of it).
 		 * 
