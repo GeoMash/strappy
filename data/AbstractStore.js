@@ -48,22 +48,25 @@ $JSKK.Class.create
 		 * @property {framework.data.proxy.AbstractProxy} proxy
 		 * @private
 		 */
-		proxy:		null,
+		proxy:			null,
 		/**
 		 * @property {framework.mvc.Model} model A model object which new models will be created from
 		 * @private
 		 */
-		model:		null,
+		model:			null,
 		/**
 		 * @property {Object} data initial record to start the store with.
 		 * @private
 		 */
-		data:		{},
+		data:			{},
 		/**
 		 * @property {framework.mvc.Model} record Represents the model instance.
 		 * @private
 		 */
-		record:		null,
+		record:			null,
+		
+		transactions:	[],
+		
 		/**
 		 * @constructor
 		 * Sets up and validates the store.
@@ -107,7 +110,63 @@ $JSKK.Class.create
 				'onChange',
 				function(model)
 				{
-					this.fireEvent('onModelChange',this,model);
+					console.debug('MODEL CHANGED');
+					/**
+					 * Check if the model is in a transaction.
+					 * 
+					 * If the model is not in a transaction, fire the
+					 * onModelChange and onChange events.
+					 * 
+					 * If the model is in a transaction, find the transaction
+					 * and check if it is the last model in the transaction.
+					 * 
+					 * 	*	If it is not the last model in the transaction,
+					 * 		only remove the model from the transaction's model list.
+					 * 		
+					 * 	*	If it is the last model in the transaction, remove the
+					 * 		model from the transaction's model list and remove the
+					 * 		transaction from the transaction list.
+					 * 		Then fire the onChange event.
+					 * 		
+					 */
+					if (this.isModelInAnyTransaction(model))
+					{
+						var index=false;
+						for (var i=0,j=this.transactions.length; i<j; i++)
+						{
+							if (index)break;
+							for (var k=0,l=this.transactions[i].models.length; k<l; k++)
+							{
+								if (this.transactions[i].models[k]==model)
+								{
+									index=i;
+									break;
+								}
+							}
+						}
+						if (index!==false)
+						{
+							if (this.transactions[index].models.length===1)
+							{
+								this.releaseModelFromTransaction(model,this.transactions[index].transaction);
+								this.releaseTransaction(this.transactions[index].transaction);
+								this.fireEvent('onChange',this,model);
+							}
+							else
+							{
+								this.releaseModelFromTransaction(model,this.transactions[index].transaction);
+							}
+						}
+						else
+						{
+							throw new Error('Unable to locate a model within a transaction. BTW, this should never happen! IOW - You\'re screwed :)');
+						}
+					}
+					else
+					{
+						this.fireEvent('onModelChange',this,model);
+						this.fireEvent('onChange',this,model);
+					}
 				}.bind(this)
 			);
 		},
@@ -164,6 +223,117 @@ $JSKK.Class.create
 		 * 
 		 * @return {Boolean} true if the store is dirty.
 		 */
-		isDirty: $JSKK.Class.ABSTRACT_METHOD
+		isDirty: $JSKK.Class.ABSTRACT_METHOD,
+		
+		
+		
+		informModelIsInTransaction: function(model,transaction)
+		{
+			if (!this.hasRecordedTransaction(transaction))
+			{
+				this.recordTransaction(transaction);
+			}
+			
+			if (this.isModelInAnyTransaction(model)
+			&& !this.isModelInTransaction(model,transaction))
+			{
+				throw new Error('A model cannot be attached to two transactions at any given time.');
+			}
+			if (!this.isModelInTransaction(model,transaction))
+			{
+				this.recordModelInTransaction(model,transaction);
+			}
+		},
+		hasRecordedTransaction: function(transaction)
+		{
+			for (var i=0,j=this.transactions.length; i<j; i++)
+			{
+				if (this.transactions[i].transaction==transaction)
+				{
+					return true;
+				}
+			}
+		},
+		recordTransaction: function(transaction)
+		{
+			this.transactions.push({transaction:transaction,models:[]});
+			return this;
+		},
+		releaseTransaction: function(transaction)
+		{
+			var newArray=[];
+			for (var i=0,j=this.transactions.length; i<j; i++)
+			{
+				if (this.transactions[i].transaction!=transaction)
+				{
+					newArray.push(this.transactions[i]);
+				}
+			}
+			this.transactions=newArray;
+			return this;
+		},
+		isModelInTransaction: function(model,transaction)
+		{
+			for (var i=0,j=this.transactions.length; i<j; i++)
+			{
+				if (this.transactions[i].transaction==transaction)
+				{
+					for (var k=0,l=this.transactions[i].models.length; k<l; k++)
+					{
+						if (this.transactions[i].models[k]==model)
+						{
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		},
+		isModelInAnyTransaction: function(model)
+		{
+			for (var i=0,j=this.transactions.length; i<j; i++)
+			{
+				for (var k=0,l=this.transactions[i].models.length; k<l; k++)
+				{
+					if (this.transactions[i].models[k]==model)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		},
+		recordModelInTransaction: function(model,transaction)
+		{
+			for (var i=0,j=this.transactions.length; i<j; i++)
+			{
+				if (this.transactions[i].transaction==transaction)
+				{
+					this.transactions[i].models.push(model);
+					break;
+				}
+			}
+			return this;
+		},
+		releaseModelFromTransaction: function(model,transaction)
+		{
+			var newArray=[];
+			for (var i=0,j=this.transactions.length; i<j; i++)
+			{
+				if (this.transactions[i].transaction==transaction)
+				{
+					for (var k=0,l=this.transactions[i].models.length; k<l; k++)
+					{
+						if (this.transactions[i].models[k]!=model)
+						{
+							newArray.push(this.transactions[i].models[k]);
+						}
+					}
+					this.transactions[i].models=newArray;
+					break;
+				}
+			}
+			return this;
+		}
 	}
 );

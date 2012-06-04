@@ -137,6 +137,15 @@ $JSKK.Class.create
 			&& Object.isFunction(model.$reflect)
 			&& (model.$reflect('extends')==framework.mvc.Model))
 			{
+				/**
+				 * If the model has an attached store, inform it that
+				 * this model has been attached to a transaction.
+				 */
+				var store=model.getStore();
+				if (store)
+				{
+					store.informModelIsInTransaction(model,this);
+				}
 				model.lock(this.lockState);
 				var clone=model.clone();
 				model.attachPhantom(clone);
