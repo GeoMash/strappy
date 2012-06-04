@@ -183,7 +183,10 @@ $JSKK.Class.create
 					}
 				}
 			);
-			this.queue.execute();
+			if (this.queue)
+			{
+				this.queue.execute();
+			}
 			return this;
 		},
 		/**
