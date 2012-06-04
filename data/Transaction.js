@@ -3,6 +3,57 @@
  * 
  * Model Transaction Utility.
  * 
+ * 
+ * Example:
+	var store			=this.getStore('File'),
+		model1			=store.getById(112),
+		model2			=store.getById(119),
+		transaction		=new framework.data.Transaction(false),
+		clonedModel1	=transaction.attachModel(model1),
+		clonedModel2	=transaction.attachModel(model2);
+
+	clonedModel1.set('name','Foo');
+	clonedModel2.set('name','Bar');
+
+	transaction.execute
+	(
+		{
+			onSuccess:	function()
+			{
+				//Don't actually ever unlock like this - this is for example only!!!
+				model1.lock(framework.mvc.Model.LOCK_NONE);
+				model2.lock(framework.mvc.Model.LOCK_NONE);
+				console.debug(model1.get('name'),model2.get('name'));
+				transaction.commit();
+				console.debug(model1.get('name'),model2.get('name'));
+				console.debug('Transaction success!');
+			}.bind(this),
+			onFailure: function()
+			{
+				transaction.rollback();
+				console.debug('Transaction failure!');
+			}
+		}
+	);
+ * <br>
+ * With Memory Proxy:
+	var store			=this.getStore('File'),
+		model1			=store.getById(112),
+		model2			=store.getById(119),
+		transaction		=new framework.data.Transaction(false),
+		clonedModel1	=transaction.attachModel(model1),
+		clonedModel2	=transaction.attachModel(model2);
+
+	clonedModel1.set('name','Foo');
+	clonedModel2.set('name','Bar');
+
+
+	model1.lock(framework.mvc.Model.LOCK_NONE);
+	model2.lock(framework.mvc.Model.LOCK_NONE);
+	console.debug(model1.get('name'),model2.get('name'));
+	transaction.commit();
+	console.debug(model1.get('name'),model2.get('name'));
+ * 
  * @uses framework.data.Queue
  * @uses framework.mvc.Model
  */
