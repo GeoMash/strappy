@@ -56,22 +56,12 @@ $JSKK.Class.create
 		{
 			this.registerSignals
 			(
-				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL]//,
-//				[framework.Signal.VIEW_IS_READY,			'onViewReady']
+				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL]
 			);
 			if (!(this.stateStore=this.getStore('State')))
 			{
 				throw new Error('Unable to initialize "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" State Controller. Controller requires a state model.');
 			}
-//			(this.$reflect('uses') || []).each
-//			(
-//				function(trait)
-//				{
-//					console.debug(trait.toString());
-////					console.debug(trait.$reflect('name'));
-//				}
-//			);
-//			console.debug('USES: ',this.$reflect('uses'));
 		},
 		/**
 		 * A private method which wraps the functionality of
