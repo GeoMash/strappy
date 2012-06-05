@@ -210,7 +210,14 @@ $JSKK.Class.create
 			{
 				handle=this.getController(handler);
 			}
-			this.getContainer().on(event,selector,data,handle[method].bind(handle));
+			if (!Object.isArray(selector))
+			{
+				this.getContainer().on(event,selector,data,handle[method].bind(handle));
+			}
+			else
+			{
+				$(selector[0],this.getContainer()).on(event,selector[1],data,handle[method].bind(handle));
+			}
 			return this;
 		},
 		/**
