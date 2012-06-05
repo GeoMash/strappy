@@ -190,7 +190,7 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} event The event to bind to.
 		 * @param {String} selector A CSS selector, DOM element or jQuery object.
-		 * @param {String} controller The controller which to attach the event to.
+		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
 		 * @return {framework.mvc.View} this
@@ -218,6 +218,33 @@ $JSKK.Class.create
 			{
 				$(selector[0],this.getContainer()).on(event,selector[1],data,handle[method].bind(handle));
 			}
+			return this;
+		},
+		/**
+		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} selector A CSS selector, DOM element or jQuery object.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {framework.mvc.View} this
+		 */
+		bindBodyDOMEvent: function(event,selector,handler,method,data)
+		{
+			var handle=handler.split(':');
+			if (handle.length==2)
+			{
+				switch (handle[0])
+				{
+					case 'controller':		handle=this.getController(handle[1]);		break;
+					case 'view':			handle=this;								break;	
+				}
+			}
+			else
+			{
+				handle=this.getController(handler);
+			}
+			$('body').on(event,selector,data,handle[method].bind(handle));
 			return this;
 		},
 		/**
