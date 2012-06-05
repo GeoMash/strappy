@@ -157,6 +157,76 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Removes a range of records from the store.
+		 * @param {int} start index of the range to be deleted.
+		 * @param {int} end index of the range to be deleted.
+		 * @return {framework.mvc.Model}
+		 */
+		removeByRange: function(startIndex,endIndex)
+		{
+			if(startIndex < 0 || startIndex > this.records.length)
+			{
+				console.log("StartIndex is out of range.");
+				return this;
+			}
+
+			if(endIndex < startIndex)
+			{
+				console.log("EndIndex is invalid.");
+				return this;
+			}
+
+			if(endIndex > this.records.length)
+			{
+				console.log("EndIndex is out of range.");
+				return this;
+			}
+			var sliced = this.records.splice(startIndex,endIndex);
+			this.fireEvent('onChange',this);
+			return this;
+		},
+		/**
+		 * Returns RecordIndex by key/value pair
+		 * @param {int} the property key.
+		 * @param {int} the property value.
+		 * @return {framework.mvc.Model}
+		 */
+		getRecordIndexByValue: function(key, value)
+		{
+			var index = -1;
+			this.each
+			(
+				function(model, i)
+				{
+					if (model.getRecord()[key]==value)
+					{
+						index=i;
+					}
+				}.bind(this)
+			);
+			return index;
+		},
+		/**
+		 * Return RecordIndex by record
+		 * @param {record} the record.
+		 * @return {framework.mvc.Model}
+		 */
+		getRecordIndex: function(record)
+		{
+			var index = -1;
+			this.each
+			(
+				function(model, i)
+				{
+					if (model.getRecord()===record)
+					{
+						index=i;
+					}
+				}.bind(this)
+			);
+			return index;
+		},
+		/**
 		 * Returns all attched model instances (records).
 		 * 
 		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
