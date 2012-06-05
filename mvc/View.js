@@ -189,6 +189,18 @@ $JSKK.Class.create
 		/**
 		 * 
 		 * @param {String} event The event to bind to.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {framework.mvc.View} this
+		 */
+		bindContainerEvent: function(event,handler,method,data)
+		{
+			return this.bindDOMEvent(event,null,handler,method,data);
+		},
+		/**
+		 * 
+		 * @param {String} event The event to bind to.
 		 * @param {String} selector A CSS selector, DOM element or jQuery object.
 		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
