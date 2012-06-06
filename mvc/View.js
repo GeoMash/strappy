@@ -63,15 +63,40 @@ $JSKK.Class.create
 		 */
 		fetchContent: function()
 		{
-			$.get
-			(
-				(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.$reflect('name').toLowerCase()+'.html',
-				function(response)
+			var requestPath	=(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.$reflect('name').toLowerCase()+'.html';
+			this.baseHTML	=requestPath;
+			if (!this.getViewCache().exists(requestPath))
+			{
+				if (this.getViewCache().isFetching(requestPath))
 				{
-					this.baseHTML=response;
-					this.fireEvent('onGotBaseHTML',this);
-				}.bind(this)
-			);
+					$PWT.when
+					(
+						function()
+						{
+							return this.getViewCache().isFetching(requestPath);
+						}.bind(this)
+					).isFalse
+					(
+						function()
+						{
+							this.fireEvent('onGotBaseHTML',this);
+						}.bind(this)
+					);
+				}
+				else
+				{
+					this.getViewCache().setFetching(requestPath);
+					$.get
+					(
+						requestPath,
+						function(response)
+						{
+							this.getViewCache().set(requestPath,response);
+							this.fireEvent('onGotBaseHTML',this);
+						}.bind(this)
+					);
+				}
+			}
 		},
 		/**
 		 * 
@@ -101,7 +126,7 @@ $JSKK.Class.create
 		 */
 		getBaseHTML: function()
 		{
-			return this.baseHTML;
+			return this.getViewCache().get(this.baseHTML);
 		},
 		/**
 		 * 
