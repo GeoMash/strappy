@@ -31,8 +31,9 @@ $JSKK.Class.create
 	{
 		events:
 		{
-			onChange:	true,
-			onReady:	true
+			onBeforeChange:	true,
+			onChange:		true,
+			onReady:		true
 		},
 		/**
 		 * @property {Boolean} ready A flag indicating that the component's state is ready.
@@ -60,6 +61,27 @@ $JSKK.Class.create
 		 * @private
 		 */
 		lockState:	'none',
+		
+		keys:		[],
+		
+		init: function()
+		{
+			for (var item in this.state)
+			{
+				this.keys.push(item);
+			}
+		},
+		/**
+		 * Checks to see if the passed in state item
+		 * can be managed by this store.
+		 * 
+		 * @param  {String} item The name of the state item to check against.
+		 * @return {Boolean} True if it can be managed by this store.
+		 */
+		canManageStateItem: function(item)
+		{
+			return this.keys.inArray(item);	
+		},
 		/**
 		 * Sets a state property with a new value.
 		 * 
@@ -79,7 +101,14 @@ $JSKK.Class.create
 				var changeSet	={};
 				changeSet[key]	=value;
 				
-				this.fireEvent('onChange',this);
+				if (this.fireEvent('onBeforeChange',this,key,value)!==false)
+				{
+					this.fireEvent('onChange',this,key,value);
+				}
+				else
+				{
+					return false;
+				}
 			}
 			else
 			{
@@ -90,11 +119,6 @@ $JSKK.Class.create
 		/**
 		 * This method will set the ready state of the component.
 		 * 
-		 * Sends signals:
-		 * 
-		 * * {@link framework.Signal.STATEFULSTORE_IS_READY}
-		 * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}
-		 * 
 		 * @param {Boolean} ready The ready state.
 		 * @return {framework.data.stateful.Store}
 		 */
@@ -103,7 +127,6 @@ $JSKK.Class.create
 			this.ready=ready;
 			if (ready)
 			{
-				this.fireEvent('onReady',this);
 				var globalState=this.getStateMgr().getState();
 				for (var globalItem in globalState)
 				{
@@ -116,8 +139,9 @@ $JSKK.Class.create
 						}
 					}
 				}
+				this.fireEvent('onReady',this);
 			}
-			this.fireEvent('onChange',this);
+			// this.fireEvent('onChange',this);
 			return this;
 		},
 		/**

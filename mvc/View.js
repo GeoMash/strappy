@@ -43,6 +43,7 @@ $JSKK.Class.create
         contentURL:		null,
 		baseHTML:		null,
 		element:		null,
+		stateStore:		null,
         // TODO: COMPOSITE PATTERN -> See bottom off this Class
         // children: [],
 
@@ -62,15 +63,40 @@ $JSKK.Class.create
 		 */
 		fetchContent: function()
 		{
-			$.get
-			(
-				(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.$reflect('name').toLowerCase()+'.html',
-				function(response)
+			var requestPath	=(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.$reflect('name').toLowerCase()+'.html';
+			this.baseHTML	=requestPath;
+			if (!this.getViewCache().exists(requestPath))
+			{
+				if (this.getViewCache().isFetching(requestPath))
 				{
-					this.baseHTML=response;
-					this.fireEvent('onGotBaseHTML',this);
-				}.bind(this)
-			);
+					$PWT.when
+					(
+						function()
+						{
+							return this.getViewCache().isFetching(requestPath);
+						}.bind(this)
+					).isFalse
+					(
+						function()
+						{
+							this.fireEvent('onGotBaseHTML',this);
+						}.bind(this)
+					);
+				}
+				else
+				{
+					this.getViewCache().setFetching(requestPath);
+					$.get
+					(
+						requestPath,
+						function(response)
+						{
+							this.getViewCache().set(requestPath,response);
+							this.fireEvent('onGotBaseHTML',this);
+						}.bind(this)
+					);
+				}
+			}
 		},
 		/**
 		 * 
@@ -83,6 +109,13 @@ $JSKK.Class.create
 			view.attr('id',this.getIID());
 			$(config.where)[config.how](view);
 			this.fireEvent('onInsertBaseHTML',this);
+			
+			//Bind the state stuff before firing the onReady event.
+			if ((this.stateStore=this.getStore('State')))
+			{
+				this.stateStore.observe('onChange',this.onStateChange.bind(this));
+			}
+			
 			this._ready=true;
 			this.fireEvent('onReady',this);
 			this.onReady();
@@ -93,7 +126,7 @@ $JSKK.Class.create
 		 */
 		getBaseHTML: function()
 		{
-			return this.baseHTML;
+			return this.getViewCache().get(this.baseHTML);
 		},
 		/**
 		 * 
@@ -282,29 +315,6 @@ $JSKK.Class.create
 			);
 			return this;
 		},
-		/**
-		 * 
-		 */
-		bindStateEvents: function(bindings)
-		{
-			for (var item in bindings)
-			{
-				if (Object.isFunction(this[bindings[item]]))
-				{
-					this._stateBindings[item]=this[bindings[item]].bind(this);
-				}
-				else
-				{
-					throw new Error('Unable to bind state change event for stateful property "'+item+'" because the method "'+bindings[item]+'" '
-									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
-				}
-			}
-//			for (var i=0,j=bindings.length; i<j; i++)
-//			{
-//				
-//			}
-			return this;
-		},
 //		bindStoreChange: function(store,bindings)
 //		{
 //			for (var item in bindings)
@@ -324,20 +334,37 @@ $JSKK.Class.create
 		/**
 		 * 
 		 */
-		onStateChange: function(signal)
+		bindStateChanges: function(bindings)
 		{
-			console.debug('onStateChange');
-			var changeSet=signal.getBody().change;
-			for (var item in changeSet)
+			for (var item in bindings)
 			{
-				if (Object.isFunction(this._stateBindings[item]))
+				if (Object.isFunction(this[bindings[item]]))
 				{
-					this._stateBindings[item](changeSet[item]);
+					this._stateBindings[item]=this[bindings[item]].bind(this);
+				}
+				else
+				{
+					throw new Error('Unable to bind state change event for stateful property "'+item+'" because the method "'+bindings[item]+'" '
+									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
 				}
 			}
+//			for (var i=0,j=bindings.length; i<j; i++)
+//			{
+//				
+//			}
+			return this;
+		},
+		/**
+		 * 
+		 */
+		onStateChange: function(store,key,value)
+		{
+			console.debug('onStateChange(view handler)',key,value);
+			if (Object.isFunction(this._stateBindings[key]))
+			{
+				this._stateBindings[key](value);
+			}
 		}
-		
-		
 		
 		
 		

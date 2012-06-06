@@ -60,6 +60,7 @@ $JSKK.Class.create
         contentURL:		null,
 		baseHTML:		null,
 		element:		null,
+		stateStore:		null,
         // TODO: COMPOSITE PATTERN -&gt; See bottom off this Class
         // children: [],
 
@@ -100,6 +101,13 @@ $JSKK.Class.create
 			view.attr('id',this.getIID());
 			$(config.where)[config.how](view);
 			this.fireEvent('onInsertBaseHTML',this);
+			
+			//Bind the state stuff before firing the onReady event.
+			if ((this.stateStore=this.getStore('State')))
+			{
+				this.stateStore.observe('onChange',this.onStateChange.bind(this));
+			}
+			
 			this._ready=true;
 			this.fireEvent('onReady',this);
 			this.onReady();
@@ -203,11 +211,23 @@ $JSKK.Class.create
 			this.fireEvent('onHide',this);
 			return this;
 		},
+<span id='framework-mvc-View-method-bindContainerEvent'>		/**
+</span>		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {framework.mvc.View} this
+		 */
+		bindContainerEvent: function(event,handler,method,data)
+		{
+			return this.bindDOMEvent(event,null,handler,method,data);
+		},
 <span id='framework-mvc-View-method-bindDOMEvent'>		/**
 </span>		 * 
 		 * @param {String} event The event to bind to.
 		 * @param {String} selector A CSS selector, DOM element or jQuery object.
-		 * @param {String} controller The controller which to attach the event to.
+		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
 		 * @return {framework.mvc.View} this
@@ -227,7 +247,41 @@ $JSKK.Class.create
 			{
 				handle=this.getController(handler);
 			}
-			this.getContainer().on(event,selector,data,handle[method].bind(handle));
+			if (!Object.isArray(selector))
+			{
+				this.getContainer().on(event,selector,data,handle[method].bind(handle));
+			}
+			else
+			{
+				$(selector[0],this.getContainer()).on(event,selector[1],data,handle[method].bind(handle));
+			}
+			return this;
+		},
+<span id='framework-mvc-View-method-bindBodyDOMEvent'>		/**
+</span>		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} selector A CSS selector, DOM element or jQuery object.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {framework.mvc.View} this
+		 */
+		bindBodyDOMEvent: function(event,selector,handler,method,data)
+		{
+			var handle=handler.split(':');
+			if (handle.length==2)
+			{
+				switch (handle[0])
+				{
+					case 'controller':		handle=this.getController(handle[1]);		break;
+					case 'view':			handle=this;								break;	
+				}
+			}
+			else
+			{
+				handle=this.getController(handler);
+			}
+			$('body').on(event,selector,data,handle[method].bind(handle));
 			return this;
 		},
 <span id='framework-mvc-View-method-bindStatefulLinks'>		/**
@@ -253,10 +307,26 @@ $JSKK.Class.create
 			);
 			return this;
 		},
-<span id='framework-mvc-View-method-bindStateEvents'>		/**
+//		bindStoreChange: function(store,bindings)
+//		{
+//			for (var item in bindings)
+//			{
+//				if (Object.isFunction(this[bindings[item]]))
+//				{
+//					this._storeBindings[item]=this[bindings[item]].bind(this);
+//				}
+//				else
+//				{
+//					throw new Error('Unable to bind store change event for property &quot;'+item+'&quot; because the method &quot;'+bindings[item]+'&quot; '
+//									+'has not been defined on view class &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
+//				}
+//			}
+//			return this;
+//		},
+<span id='framework-mvc-View-method-bindStateChanges'>		/**
 </span>		 * 
 		 */
-		bindStateEvents: function(bindings)
+		bindStateChanges: function(bindings)
 		{
 			for (var item in bindings)
 			{
@@ -276,39 +346,17 @@ $JSKK.Class.create
 //			}
 			return this;
 		},
-//		bindStoreChange: function(store,bindings)
-//		{
-//			for (var item in bindings)
-//			{
-//				if (Object.isFunction(this[bindings[item]]))
-//				{
-//					this._storeBindings[item]=this[bindings[item]].bind(this);
-//				}
-//				else
-//				{
-//					throw new Error('Unable to bind store change event for property &quot;'+item+'&quot; because the method &quot;'+bindings[item]+'&quot; '
-//									+'has not been defined on view class &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
-//				}
-//			}
-//			return this;
-//		},
 <span id='framework-mvc-View-method-onStateChange'>		/**
 </span>		 * 
 		 */
-		onStateChange: function(signal)
+		onStateChange: function(store,key,value)
 		{
-			console.debug('onStateChange');
-			var changeSet=signal.getBody().change;
-			for (var item in changeSet)
+			console.debug('onStateChange(view handler)',key,value);
+			if (Object.isFunction(this._stateBindings[key]))
 			{
-				if (Object.isFunction(this._stateBindings[item]))
-				{
-					this._stateBindings[item](changeSet[item]);
-				}
+				this._stateBindings[key](value);
 			}
 		}
-		
-		
 		
 		
 		

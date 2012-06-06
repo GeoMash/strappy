@@ -242,6 +242,11 @@ $JSKK.Class.create
 		 */
 		stateMgr:	null,
 		/**
+		 * @property viewCache A reference to the {@link framework.ViewCache View Cache}. 
+		 * @private
+		 */
+		viewCache:	null,
+		/**
 		 * @constructor
 		 * Sets up the component by initalizing all it's child components,
 		 * views, models and controllers.
@@ -278,6 +283,7 @@ $JSKK.Class.create
 			}
 			this.initRadioTower();
 			this.initStateMgr();
+			this.initViewCache();
 			this.initChildComponents();
 			this.initViews();
 			this.initStores();
@@ -294,6 +300,7 @@ $JSKK.Class.create
 		 * 
 		 * The Radio Tower enables signals to flow through this component.
 		 * 
+		 * @private
 		 * @return {void}
 		 */
 		initRadioTower: function()
@@ -308,6 +315,9 @@ $JSKK.Class.create
 		 * Initalizes the component's connection to the State Manager.
 		 * 
 		 * The State Manager
+		 * 
+		 * @private
+		 * @return {void}
 		 */
 		initStateMgr: function()
 		{
@@ -316,6 +326,29 @@ $JSKK.Class.create
 				window.framework.$stateMgr=new framework.StateMgr();
 			}
 			this.stateMgr=window.framework.$stateMgr;
+		},
+		/**
+		 * Initalizes the component's connection to the View Cache.
+		 * 
+		 * @private
+		 * @return {void}
+		 */
+		initViewCache: function()
+		{
+			if (Object.isUndefined(window.framework.$viewCache))
+			{
+				window.framework.$viewCache=new framework.mvc.ViewCache();
+			}
+			this.viewCache=window.framework.$viewCache;
+		},
+		/**
+		 * Fetches the view cache.
+		 * 
+		 * @return {framework.mvc.ViewCache}
+		 */
+		getViewCache: function()
+		{
+			return this.viewCache;
 		},
 		/**
 		 * Gets the browser info. Note that this is currently tied to jQuery.

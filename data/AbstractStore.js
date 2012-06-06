@@ -111,7 +111,7 @@ $JSKK.Class.create
 				function(model)
 				{
 					console.debug('MODEL CHANGED');
-					/**
+					/*
 					 * Check if the model is in a transaction.
 					 * 
 					 * If the model is not in a transaction, fire the
