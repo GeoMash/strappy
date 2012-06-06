@@ -80,7 +80,28 @@ $JSKK.Class.create
 	}
 )
 (
-	{},
+	{
+		initQueue: function()
+		{
+			var	queue	=$JSKK.toArray(arguments),
+				cmp		=null;
+			for (var i=0,j=queue.length; i<j; i++)
+			{
+				if (Object.isArray(queue[i]))
+				{
+					cmp=new queue[i][0]();
+					if (Object.isAssocArray(queue[i][1]))
+					{
+						cmp.configure(queue[i][1]);
+					}
+				}
+				else
+				{
+					new queue[i]();
+				}
+			}
+		}
+	},
 	{
 		events:
 		{
