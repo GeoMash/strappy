@@ -46,13 +46,18 @@ $JSKK.Class.create
 		 */
 		radioTower:		null,
 		/**
-		 * A flag which is set to true or false depending on weather
+		 * @property eventSupported A flag which is set to true or false depending on weather
 		 * or not the browser supports the "hashchange" event.
 		 * 
 		 * See {@link framework.RadioTower Radio Tower}.
 		 * @private
 		 */
 		eventSupported:	false,
+		/**
+		 * @property supressNext
+		 * @private
+		 */
+		supressNext:	false,
 		/**
 		 * @constructor
 		 * Sets up the state manager by linking it to the {@link framework.RadioTower Radio Tower},
@@ -153,6 +158,11 @@ $JSKK.Class.create
 		 */
 		onHashChange: function(event,supressSignal)
 		{
+			if (this.supressNext)
+			{
+				supressSignal	=true;
+				this.supressNext=false;
+			}
 			console.debug('onHashChange',(supressSignal)?'(supressed)':'');
 			this.stateString=window.location.hash.replace('#','');
 			if (!Object.isEmpty(this.stateString))
@@ -239,16 +249,16 @@ $JSKK.Class.create
 		 * This is a private method which wraps state change events bound with
 		 * {@link framework.StateMgr#registerStateChanger}. It parses the
 		 * new state and applies it to the hash address.
-		 * @private
 		 * @param {Object} A key valued state object.
 		 * @return {void}
 		 */
-		updateState: function(state)
+		updateState: function(state,supressed)
 		{
 			for (var node in state)
 			{
 				this.state[node]=state[node];
 			}
+			this.supressNext=supressed;
 			window.location.hash=this.parseStateObject(this.state);
 		},
 		/**
