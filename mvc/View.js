@@ -56,7 +56,7 @@ $JSKK.Class.create
 		{
 			this.generateInstanceID();
 			
-			this.fetchContent();
+			this.fetchContent();//TODO: This is being called before extended classes. = bad.
 		},
 		/**
 		 * 
@@ -96,6 +96,10 @@ $JSKK.Class.create
 						}.bind(this)
 					);
 				}
+			}
+			else
+			{
+				(function(){this.fireEvent('onGotBaseHTML',this)}.bind(this)).defer(100);
 			}
 		},
 		/**
