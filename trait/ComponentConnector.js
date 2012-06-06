@@ -129,6 +129,15 @@ $JSKK.Trait.create
 			return this.getParentComponent().getView(view);
 		},
 		/**
+		 * Fetches the View Cache.
+		 * 
+		 * @return {framework.mvc.ViewCache}
+		 */
+		getViewCache: function()
+		{
+				return this.getParentComponent().getViewCache();
+		},
+		/**
 		 * Gets the value of a config property.
 		 * @param {String} key The config property to get.
 		 * @return 
