@@ -81,10 +81,16 @@ $JSKK.Class.create
 )
 (
 	{
-		initQueue: function()
-		{
-			var	queue		=$JSKK.toArray(arguments),
-				index		=-1;
+		initQueue: function(queue)
+		{	
+			var	args		=$JSKK.toArray(arguments);
+			
+			if (Object.isDefined(args[1]))
+			{
+				queue=arguments;
+			}
+			
+			var	index		=-1;
 				length		=queue.length;
 				cmp			=null,
 				processNext	=function()
@@ -93,7 +99,15 @@ $JSKK.Class.create
 					if (Object.isUndefined(queue[index]))return;
 					if (Object.isArray(queue[index]))
 					{
-						cmp=new queue[index][0]();
+						console.debug('calling:',queue[index][0].$reflect);
+						if (!Object.isFunction(queue[index][0].$reflect))
+						{
+							cmp=new queue[index][0]();
+						}
+						else
+						{
+							cmp=queue[index][0];
+						}
 						cmp.configure(queue[index][1]);
 						if (Object.isAssocArray(queue[index][1]))
 						{
@@ -113,7 +127,10 @@ $JSKK.Class.create
 					}
 					else
 					{
-						new queue[index]();
+						if (!Object.isAssocArray(queue[index]))
+						{
+							new queue[index]();
+						}
 						processNext();
 					}
 				};
