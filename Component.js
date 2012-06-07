@@ -80,7 +80,46 @@ $JSKK.Class.create
 	}
 )
 (
-	{},
+	{
+		initQueue: function()
+		{
+			var	queue		=$JSKK.toArray(arguments),
+				index		=-1;
+				length		=queue.length;
+				cmp			=null,
+				processNext	=function()
+				{
+					index++;
+					if (Object.isUndefined(queue[index]))return;
+					if (Object.isArray(queue[index]))
+					{
+						cmp=new queue[index][0]();
+						cmp.configure(queue[index][1]);
+						if (Object.isAssocArray(queue[index][1]))
+						{
+							cmp.getController('State')	.observeOnce
+							(
+								'onReadyState',
+								function()
+								{
+									processNext();
+								}
+							);
+						}
+						else
+						{
+							processNext();
+						}
+					}
+					else
+					{
+						new queue[index]();
+						processNext();
+					}
+				};
+			processNext();
+		}
+	},
 	{
 		events:
 		{
