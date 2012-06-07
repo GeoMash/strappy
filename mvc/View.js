@@ -121,8 +121,13 @@ $JSKK.Class.create
 			}
 			
 			this._ready=true;
-			this.fireEvent('onReady',this);
+			/*
+			 * The following two lines need to be in this order so that
+			 * the view has a chance to set itself up before the state
+			 * controller flags the component as ready.
+			 */
 			this.onReady();
+			this.fireEvent('onReady',this);
 			return this;
 		},
 		/**
