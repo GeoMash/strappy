@@ -304,7 +304,7 @@ $JSKK.Class.create
 		/**
 		 * 
 		 */
-		bindStatefulLinks: function()
+		bindStatefulClick: function()
 		{
 			var links=$JSKK.toArray(arguments);
 			$JSKK.when(this,'_ready').isTrue
@@ -314,7 +314,14 @@ $JSKK.Class.create
 					var item=null;
 					for (var i=0,j=links.length; i<j; i++)
 					{
-						item=$(links[i][0],this.getContainer());
+						// check if the passed selector is in fact for the container
+						var container = this.getContainer();
+						var linkEl = $(links[i][0])
+						if (linkEl[0] == container[0]) {
+							item=linkEl;
+						} else {
+							item=$(links[i][0],container);
+						}
 						if (item.length)
 						{
 							this.getStateMgr().registerStateChanger(item,links[i][1]);
