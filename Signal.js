@@ -46,6 +46,13 @@ $JSKK.Class.create
 		 */
 		GLOBAL:						'global',
 		
+		//Component
+		/**
+		 * @property COMPONENT_IS_READY
+		 * @static
+		 */
+		COMPONENT_IS_READY:			'component.ready',
+		
 		//State
 		/**
 		 * @property STATE_CHANGE
@@ -60,123 +67,6 @@ $JSKK.Class.create
 		 */
 		CMP_DO_RECONFIGURE:			'component.do.reconfigure',
 		
-		//Views
-		/**
-		 * @property VIEW_IS_READY
-		 * @static
-		 */
-		VIEW_IS_READY:				'view.is.ready',
-		/**
-		 * @property VIEW_DONE_GOTBASEHTML
-		 * @static
-		 */
-		VIEW_DONE_GOTBASEHTML:		'view.done.gotBaseHTML',
-		/**
-		 * @property VIEW_DO_INSERTBASEHTML
-		 * @static
-		 */
-		VIEW_DO_INSERTBASEHTML:		'view.do.insertBaseHTML',
-		/**
-		 * @property VIEW_BEFORE_RENDER
-		 * @static
-		 */
-		VIEW_BEFORE_RENDER:			'view.before.render',
-		/**
-		 * @property VIEW_DONE_RENDER
-		 * @static
-		 */
-		VIEW_DONE_RENDER:			'view.done.render',
-		/**
-		 * @property VIEW_DO_SHOW
-		 * @static
-		 */
-		VIEW_DO_SHOW:				'view.do.show',
-		/**
-		 * @property VIEW_DO_HIDE
-		 * @static
-		 */
-		VIEW_DO_HIDE:				'view.do.hide',
-		/**
-		 * @property VIEW_DONE_SHOW
-		 * @static
-		 */
-		VIEW_DONE_SHOW:				'view.done.show',
-		/**
-		 * @property VIEW_DONE_HIDE
-		 * @static
-		 */
-		VIEW_DONE_HIDE:				'view.done.hide',
-		
-		//Controllers
-		/**
-		 * @property CONTROLLER_DO_INIT
-		 * @static
-		 */
-		CONTROLLER_DO_INIT:			'controller.do.init',
-		/**
-		 * @property CONTROLLER_DONE_INIT
-		 * @static
-		 */
-		CONTROLLER_DONE_INIT:		'controller.done.init',
-		/**
-		 * @property CONTROLLER_DO_DESTROY
-		 * @static
-		 */
-		CONTROLLER_DO_DESTROY:		'controller.do.destroy',
-		
-		//Stores
-		/**
-		 * @property STORE_DONE_CHANGE
-		 * @static
-		 */
-		STORE_DONE_CHANGE:			'store.done.change',
-		/**
-		 * @property STORE_DONE_SYNC
-		 * @static
-		 */
-		STORE_DONE_SYNC:			'store.done.sync',
-		/**
-		 * @property STORE_FAILED_SYNC
-		 * @static
-		 */
-		STORE_FAILED_SYNC:			'store.failed.sync',
-		/**
-		 * @property STATEFULSTORE_DONE_CHANGE
-		 * @static
-		 */
-		STATEFULSTORE_DONE_CHANGE:	'stateful.store.done.change',
-		/**
-		 * @property STATEFULSTORE_IS_READY
-		 * @static
-		 */
-		STATEFULSTORE_IS_READY:		'stateful.store.is.ready',
-		
-		//Models
-		/**
-		 * @property MODEL_DONE_CHANGE
-		 * @static
-		 */
-		MODEL_DONE_CHANGE:			'model.done.change',
-		/**
-		 * @property MODEL_DONE_SYNC
-		 * @static
-		 */
-		MODEL_DONE_SYNC:			'model.done.sync',
-		/**
-		 * @property MODEL_FAILED_SYNC
-		 * @static
-		 */
-		MODEL_FAILED_SYNC:			'model.failed.sync',
-		/**
-		 * @property MODEL_LOCK_CHANGE
-		 * @static
-		 */
-		MODEL_LOCK_CHANGE:			'model.lock.change',
-		/**
-		 * @property COMMAND_COMPLETE
-		 * @static
-		 */
-		COMMAND_COMPLETE:			'command.complete'
 		
 	},
 	{
