@@ -38,7 +38,8 @@ $JSKK.Class.create
 	{
 		events:
 		{
-			onReadyState:	true
+			onBeforeReadyState:	true,
+			onReadyState:		true
 		},
 		/**
 		 * @property {framework.data.stateful.Store} stateStore A reference to the
@@ -107,7 +108,10 @@ $JSKK.Class.create
 		setReady:		function()
 		{
 			this.stateStore.setReady(true);
-			this.fireEvent('onReadyState',this,true);
+			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
+			{
+				this.fireEvent('onReadyState',this,true);
+			}
 			return this;
 		},
 		/**
