@@ -57,7 +57,6 @@ $JSKK.Class.create
 		set: function()
 		{
 			this.record.set.apply(this.record,$JSKK.toArray(arguments));
-			this.fireEvent('onChange',this);
 			return this;
 		},
 		/**
