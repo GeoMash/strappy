@@ -81,13 +81,17 @@ $JSKK.Class.create
 )
 (
 	{
-		initQueue: function(queue)
+		initQueue: function(queue,callback)
 		{	
 			var	args		=$JSKK.toArray(arguments);
 			
 			if (Object.isDefined(args[1]))
 			{
-				queue=arguments;
+				if (Object.isFunction(args.last()))
+				{
+					callback=args.pop();
+				}
+				queue=args;
 			}
 			
 			var	index		=-1,
@@ -98,7 +102,11 @@ $JSKK.Class.create
 					console.info(index);
 
 					index++;
-					if (Object.isUndefined(queue[index]))return;
+					if (Object.isUndefined(queue[index]))
+					{
+						if (Object.isFunction(callback))callback();
+						return;
+					}
 					if (Object.isArray(queue[index]))
 					{
 						if (!Object.isFunction(queue[index][0].$reflect))
@@ -112,7 +120,7 @@ $JSKK.Class.create
 						cmp.configure(queue[index][1]);
 						if (Object.isAssocArray(queue[index][1]))
 						{
-							cmp.getController('State')	.observeOnce
+							cmp.getController('State').observeOnce
 							(
 								'onReadyState',
 								function()
@@ -303,6 +311,13 @@ $JSKK.Class.create
 		 * @private
 		 */
 		viewCache:	null,
+		
+		/**
+		 * [readyForConfig description]
+		 * @type {Boolean}
+		 */
+		readyForConfig:	false,
+		
 		/**
 		 * @constructor
 		 * Sets up the component by initalizing all it's child components,
@@ -350,7 +365,7 @@ $JSKK.Class.create
 			{
 				this.initCmp();
 			}
-			this.ready=true;
+			this.readyForConfig=true;
 		},
 		/**
 		 * Initalizes the component's conneciton to the Radio Tower.
@@ -574,6 +589,23 @@ $JSKK.Class.create
 					break;
 				}
 			}
+			var stateController=this.getController('State');
+			if (Object.isDefined(stateController))
+			{
+				stateController.observeOnce
+				(
+					'onBeforeReadyState',
+					function()
+					{
+						this.sendSignal(framework.Signal.COMPONENT_IS_READY,this);
+					}.bind(this)
+				);
+			}
+			else
+			{
+				throw new Error('The component "'+this.$reflect('name')+'" was not setup with a state controller. '
+								+'A state controller MUST be configured with a state component.');
+			}
 		},
 		/**
 		 * Returns an associated controller which is pre-defined in this
@@ -682,7 +714,7 @@ $JSKK.Class.create
 		 */
 		configure: function(newConfig)
 		{
-			$JSKK.when(this,'ready').isTrue
+			$JSKK.when(this,'readyForConfig').isTrue
 			(
 				function()
 				{
@@ -695,7 +727,7 @@ $JSKK.Class.create
 						this.config=newConfig;
 					}
 					this._configured=true;
-					this.fireEvent('onConfigured',this);
+					this.fireEvent('readyForConfig',this);
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
@@ -709,7 +741,7 @@ $JSKK.Class.create
 		 */
 		reconfigure: function()
 		{
-			$JSKK.when(this,'ready').isTrue
+			$JSKK.when(this,'readyForConfig').isTrue
 			(
 				function()
 				{
