@@ -107,7 +107,7 @@ $JSKK.Class.create
 		 */
 		insertBaseHTML: function(config)
 		{
-			console.debug('insertBaseHTML');
+//			console.debug('insertBaseHTML');
 			var	view=$(this.getBaseHTML());
 			
 			view.attr('id',this.getIID());
@@ -213,7 +213,7 @@ $JSKK.Class.create
 		 */
 		show: function()
 		{
-			console.debug('onShow');
+//			console.debug('onShow');
 			this.getContainer().fadeIn(500);
 			this.fireEvent('onShow',this);
 			return this;
@@ -223,7 +223,7 @@ $JSKK.Class.create
 		 */
 		hide: function()
 		{
-			console.debug('onHide');
+//			console.debug('onHide');
 			this.getContainer().fadeOut(500);
 			this.fireEvent('onHide',this);
 			return this;
@@ -304,7 +304,7 @@ $JSKK.Class.create
 		/**
 		 * 
 		 */
-		bindStatefulLinks: function()
+		bindStatefulClick: function()
 		{
 			var links=$JSKK.toArray(arguments);
 			$JSKK.when(this,'_ready').isTrue
@@ -314,7 +314,14 @@ $JSKK.Class.create
 					var item=null;
 					for (var i=0,j=links.length; i<j; i++)
 					{
-						item=$(links[i][0],this.getContainer());
+						// check if the passed selector is in fact for the container
+						var container = this.getContainer();
+						var linkEl = $(links[i][0])
+						if (linkEl[0] == container[0]) {
+							item=linkEl;
+						} else {
+							item=$(links[i][0],container);
+						}
 						if (item.length)
 						{
 							this.getStateMgr().registerStateChanger(item,links[i][1]);
@@ -368,7 +375,7 @@ $JSKK.Class.create
 		 */
 		onStateChange: function(store,key,value)
 		{
-			console.debug('onStateChange(view handler)',key,value);
+//			console.debug('onStateChange(view handler)',key,value);
 			if (Object.isFunction(this._stateBindings[key]))
 			{
 				this._stateBindings[key](value);

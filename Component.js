@@ -107,7 +107,6 @@ $JSKK.Class.create
 					}
 					if (Object.isArray(queue[index]))
 					{
-						console.debug('calling:',queue[index][0].$reflect);
 						if (!Object.isFunction(queue[index][0].$reflect))
 						{
 							cmp=new queue[index][0]();
@@ -800,7 +799,7 @@ $JSKK.Class.create
 		 */
 		sendSignal: function(name,body,type,filter)
 		{
-			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
+//			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
 			if (!Object.isEmpty(name))
 			{
 				$JSKK.when(this,'radioTower').isAssocArray
