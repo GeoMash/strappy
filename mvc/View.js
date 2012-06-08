@@ -107,7 +107,7 @@ $JSKK.Class.create
 		 */
 		insertBaseHTML: function(config)
 		{
-			console.debug('insertBaseHTML');
+//			console.debug('insertBaseHTML');
 			var	view=$(this.getBaseHTML());
 			
 			view.attr('id',this.getIID());
@@ -213,7 +213,7 @@ $JSKK.Class.create
 		 */
 		show: function()
 		{
-			console.debug('onShow');
+//			console.debug('onShow');
 			this.getContainer().fadeIn(500);
 			this.fireEvent('onShow',this);
 			return this;
@@ -223,7 +223,7 @@ $JSKK.Class.create
 		 */
 		hide: function()
 		{
-			console.debug('onHide');
+//			console.debug('onHide');
 			this.getContainer().fadeOut(500);
 			this.fireEvent('onHide',this);
 			return this;
@@ -375,7 +375,7 @@ $JSKK.Class.create
 		 */
 		onStateChange: function(store,key,value)
 		{
-			console.debug('onStateChange(view handler)',key,value);
+//			console.debug('onStateChange(view handler)',key,value);
 			if (Object.isFunction(this._stateBindings[key]))
 			{
 				this._stateBindings[key](value);

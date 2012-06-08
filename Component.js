@@ -99,8 +99,6 @@ $JSKK.Class.create
 				cmp			=null,
 				processNext	=function()
 				{
-					console.info(index);
-
 					index++;
 					if (Object.isUndefined(queue[index]))
 					{
@@ -801,7 +799,7 @@ $JSKK.Class.create
 		 */
 		sendSignal: function(name,body,type,filter)
 		{
-			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
+//			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
 			if (!Object.isEmpty(name))
 			{
 				$JSKK.when(this,'radioTower').isAssocArray
