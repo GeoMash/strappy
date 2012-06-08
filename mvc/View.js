@@ -11,6 +11,7 @@
  * @uses framework.trait.ComponentConnector
  * @uses framework.trait.signal.Receive
  * @uses framework.trait.signal.Send
+ * 
  */
 $JSKK.Class.create
 (
