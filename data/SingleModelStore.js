@@ -54,9 +54,9 @@ $JSKK.Class.create
 		 * @param {Mixed} value The value to be assigned to the field.
 		 * @return 
 		 */
-		set: function(field,value)
+		set: function()
 		{
-			this.record.set(field,value);
+			this.record.set.apply(this.record,$JSKK.toArray(arguments));
 			this.fireEvent('onChange',this);
 			return this;
 		},
