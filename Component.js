@@ -90,16 +90,17 @@ $JSKK.Class.create
 				queue=arguments;
 			}
 			
-			var	index		=-1;
-				length		=queue.length;
+			var	index		=-1,
+				length		=queue.length,
 				cmp			=null,
 				processNext	=function()
 				{
+					console.info(index);
+
 					index++;
 					if (Object.isUndefined(queue[index]))return;
 					if (Object.isArray(queue[index]))
 					{
-						console.debug('calling:',queue[index][0].$reflect);
 						if (!Object.isFunction(queue[index][0].$reflect))
 						{
 							cmp=new queue[index][0]();
