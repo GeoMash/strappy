@@ -316,7 +316,7 @@ $JSKK.Class.create
 		 */
 		readyForConfig:	false,
 		/**
-		 * [readyForConfig description]
+		 * [_iid description]
 		 * @type {Boolean}
 		 */
         _iid:			null,
@@ -374,10 +374,6 @@ $JSKK.Class.create
 					this.initControllers();
 				}.bind(this)
 			);
-			
-			
-			
-			
 			
 			if (Object.isFunction(this.initCmp))
 			{
@@ -789,7 +785,7 @@ $JSKK.Class.create
 						this.config=newConfig;
 					}
 					this._configured=true;
-					this.fireEvent('readyForConfig',this);
+					this.fireEvent('onConfigured',this);
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
