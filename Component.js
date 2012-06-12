@@ -315,6 +315,11 @@ $JSKK.Class.create
 		 * @type {Boolean}
 		 */
 		readyForConfig:	false,
+		/**
+		 * [readyForConfig description]
+		 * @type {Boolean}
+		 */
+        _iid:			null,
 		
 		/**
 		 * @constructor
@@ -351,13 +356,28 @@ $JSKK.Class.create
 			{
 				this.my.NSObject=this.my.NSObject[this.my.namespace[i]];
 			}
+			
 			this.initRadioTower();
 			this.initStateMgr();
 			this.initViewCache();
-			this.initChildComponents();
-			this.initViews();
-			this.initStores();
-			this.initControllers();
+			this.generateInstanceID();
+			
+			$JSKK.when(this.isConfigured.bind(this)).isTrue
+			(
+				function()
+				{
+					this.generateInstanceID();
+					this.insertBaseContainer();
+					this.initChildComponents();
+					this.initViews();
+					this.initStores();
+					this.initControllers();
+				}.bind(this)
+			);
+			
+			
+			
+			
 			
 			if (Object.isFunction(this.initCmp))
 			{
@@ -703,6 +723,38 @@ $JSKK.Class.create
 			{
 				throw new Error('Error - store "'+store+'" has not been initilized.');
 			}
+		},
+		insertBaseContainer: function()
+		{
+			$(this.getConfig('attachTo') || 'body')[this.getConfig('attachHow') || 'append']
+			(
+				[
+					'<div',
+					' class="'+this.$reflect('namespace').replace(/\./g,'-')+'-'+this.$reflect('name')+'-container"',
+					' id="'+this.getIID()+'"',
+					' style="display:none;">',
+					'</div>'
+				].join('')
+			);
+			
+		},
+		generateInstanceID: function()
+		{
+			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
+				iid		=[];
+			for (var i=0; i<8; i++)
+			{
+				iid.push(chars[Math.floor(Math.random()*25)]);
+			}
+			this._iid=this.getSafeID()+'-'+iid.join('');
+		},
+		getIID: function()
+		{
+			return this._iid;
+		},
+		getSafeID: function()
+		{
+			return (this.$reflect('namespace')+'.'+this.$reflect('name')).replace(/\./g,'-');
 		},
 		/**
 		 * Configures this component with new configuration properties.

@@ -82,7 +82,7 @@ $JSKK.Trait.create
 		 */
 		getSafeID: function()
 		{
-			return (this.$reflect('namespace')+'.'+this.$reflect('name')).replace(/\./g,'-');
+			return this.getParentComponent().getSafeID(cmp);
 		},
 		/**
 		 * Get's a child component of the associated parent component.
@@ -135,7 +135,7 @@ $JSKK.Trait.create
 		 */
 		getViewCache: function()
 		{
-				return this.getParentComponent().getViewCache();
+			return this.getParentComponent().getViewCache();
 		},
 		/**
 		 * Gets the value of a config property.
@@ -145,6 +145,14 @@ $JSKK.Trait.create
 		getConfig: function(key)
 		{
 			return this.getParentComponent().getConfig(key);
+		},
+		/**
+		 * Gets the instance ID (IID) of the component.
+		 * @return {String} The instance ID.
+		 */
+		getIID: function()
+		{
+			return this.getParentComponent().getIID();
 		}
 	}
 );
