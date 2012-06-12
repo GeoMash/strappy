@@ -613,7 +613,7 @@ $JSKK.Class.create
 					}
 					else
 					{
-						throw new Error('Error controller "'+this.controllers[i]+'" not loaded.');
+						throw new Error('Error controller "'+this.controllers[i]+'" not loaded on component "'+this.my.name+'".');
 						break;
 					}
 				}
@@ -640,7 +640,7 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Error('Error - controller "'+controller+'" has not been initilized.');
+				throw new Error('Error - controller "'+controller+'" has not been initilized on component "'+this.my.name+'".');
 			}
 		},
 		/**
@@ -659,7 +659,7 @@ $JSKK.Class.create
 				}
 				else
 				{
-					throw new Error('Error - view "'+this.views[i]+'" not loaded.');
+					throw new Error('Error - view "'+this.views[i]+'" not loaded on component "'+this.my.name+'".');
 					break;
 				}
 			}
@@ -680,7 +680,7 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Error('Error - view "'+view+'" has not been initilized.');
+				throw new Error('Error - view "'+view+'" has not been initilized on component "'+this.my.name+'".');
 			}
 		},
 		/**
