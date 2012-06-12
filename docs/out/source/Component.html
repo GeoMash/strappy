@@ -97,7 +97,70 @@ $JSKK.Class.create
 	}
 )
 (
-	{},
+	{
+		initQueue: function(queue,callback)
+		{	
+			var	args		=$JSKK.toArray(arguments);
+			
+			if (Object.isDefined(args[1]))
+			{
+				if (Object.isFunction(args.last()))
+				{
+					callback=args.pop();
+				}
+				queue=args;
+			}
+			
+			var	index		=-1,
+				length		=queue.length,
+				cmp			=null,
+				processNext	=function()
+				{
+					index++;
+					if (Object.isUndefined(queue[index]))
+					{
+						if (Object.isFunction(callback))callback();
+						return;
+					}
+					if (Object.isArray(queue[index]))
+					{
+						if (!Object.isFunction(queue[index][0].$reflect))
+						{
+							cmp=new queue[index][0]();
+						}
+						else
+						{
+							cmp=queue[index][0];
+						}
+						cmp.configure(queue[index][1]);
+						if (Object.isAssocArray(queue[index][1]))
+						{
+							cmp.getController('State').observeOnce
+							(
+								'onReadyState',
+								function()
+								{
+									processNext();
+								}
+							);
+						}
+						else
+						{
+							processNext();
+						}
+					}
+					else
+					{
+						if (!Object.isAssocArray(queue[index]))
+						{
+							new queue[index]();
+						}
+						processNext();
+					}
+				};
+			processNext();
+		}
+	},
 	{
 		events:
 		{
@@ -258,6 +321,23 @@ $JSKK.Class.create
 		 * @private
 		 */
 		stateMgr:	null,
+<span id='framework-Component-property-viewCache'>		/**
+</span>		 * @property viewCache A reference to the {@link framework.ViewCache View Cache}. 
+		 * @private
+		 */
+		viewCache:	null,
+		
+<span id='framework-Component-property-readyForConfig'>		/**
+</span>		 * [readyForConfig description]
+		 * @type {Boolean}
+		 */
+		readyForConfig:	false,
+<span id='framework-Component-property-_iid'>		/**
+</span>		 * [readyForConfig description]
+		 * @type {Boolean}
+		 */
+        _iid:			null,
+		
 <span id='framework-Component-method-constructor'>		/**
 </span>		 * @constructor
 		 * Sets up the component by initalizing all it's child components,
@@ -293,24 +373,41 @@ $JSKK.Class.create
 			{
 				this.my.NSObject=this.my.NSObject[this.my.namespace[i]];
 			}
+			
 			this.initRadioTower();
 			this.initStateMgr();
-			this.initChildComponents();
-			this.initViews();
-			this.initStores();
-			this.initControllers();
+			this.initViewCache();
+			this.generateInstanceID();
+			
+			$JSKK.when(this.isConfigured.bind(this)).isTrue
+			(
+				function()
+				{
+					this.generateInstanceID();
+					this.insertBaseContainer();
+					this.initChildComponents();
+					this.initViews();
+					this.initStores();
+					this.initControllers();
+				}.bind(this)
+			);
+			
+			
+			
+			
 			
 			if (Object.isFunction(this.initCmp))
 			{
 				this.initCmp();
 			}
-			this.ready=true;
+			this.readyForConfig=true;
 		},
 <span id='framework-Component-method-initRadioTower'>		/**
 </span>		 * Initalizes the component's conneciton to the Radio Tower.
 		 * 
 		 * The Radio Tower enables signals to flow through this component.
 		 * 
+		 * @private
 		 * @return {void}
 		 */
 		initRadioTower: function()
@@ -325,6 +422,9 @@ $JSKK.Class.create
 </span>		 * Initalizes the component's connection to the State Manager.
 		 * 
 		 * The State Manager
+		 * 
+		 * @private
+		 * @return {void}
 		 */
 		initStateMgr: function()
 		{
@@ -333,6 +433,29 @@ $JSKK.Class.create
 				window.framework.$stateMgr=new framework.StateMgr();
 			}
 			this.stateMgr=window.framework.$stateMgr;
+		},
+<span id='framework-Component-method-initViewCache'>		/**
+</span>		 * Initalizes the component's connection to the View Cache.
+		 * 
+		 * @private
+		 * @return {void}
+		 */
+		initViewCache: function()
+		{
+			if (Object.isUndefined(window.framework.$viewCache))
+			{
+				window.framework.$viewCache=new framework.mvc.ViewCache();
+			}
+			this.viewCache=window.framework.$viewCache;
+		},
+<span id='framework-Component-method-getViewCache'>		/**
+</span>		 * Fetches the view cache.
+		 * 
+		 * @return {framework.mvc.ViewCache}
+		 */
+		getViewCache: function()
+		{
+			return this.viewCache;
 		},
 <span id='framework-Component-method-getBrowser'>		/**
 </span>		 * Gets the browser info. Note that this is currently tied to jQuery.
@@ -501,6 +624,23 @@ $JSKK.Class.create
 					break;
 				}
 			}
+			var stateController=this.getController('State');
+			if (Object.isDefined(stateController))
+			{
+				stateController.observeOnce
+				(
+					'onBeforeReadyState',
+					function()
+					{
+						this.sendSignal(framework.Signal.COMPONENT_IS_READY,this);
+					}.bind(this)
+				);
+			}
+			else
+			{
+				throw new Error('The component &quot;'+this.$reflect('name')+'&quot; was not setup with a state controller. '
+								+'A state controller MUST be configured with a state component.');
+			}
 		},
 <span id='framework-Component-method-getController'>		/**
 </span>		 * Returns an associated controller which is pre-defined in this
@@ -601,6 +741,38 @@ $JSKK.Class.create
 				throw new Error('Error - store &quot;'+store+'&quot; has not been initilized.');
 			}
 		},
+		insertBaseContainer: function()
+		{
+			$(this.getConfig('attachTo') || 'body')[this.getConfig('attachHow') || 'append']
+			(
+				[
+					'&lt;div',
+					' class=&quot;'+this.$reflect('namespace').replace(/\./g,'-')+'-'+this.$reflect('name')+'-container&quot;',
+					' id=&quot;'+this.getIID()+'&quot;',
+					' style=&quot;display:none;&quot;&gt;',
+					'&lt;/div&gt;'
+				].join('')
+			);
+			
+		},
+		generateInstanceID: function()
+		{
+			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
+				iid		=[];
+			for (var i=0; i&lt;8; i++)
+			{
+				iid.push(chars[Math.floor(Math.random()*25)]);
+			}
+			this._iid=this.getSafeID()+'-'+iid.join('');
+		},
+		getIID: function()
+		{
+			return this._iid;
+		},
+		getSafeID: function()
+		{
+			return (this.$reflect('namespace')+'.'+this.$reflect('name')).replace(/\./g,'-');
+		},
 <span id='framework-Component-method-configure'>		/**
 </span>		 * Configures this component with new configuration properties.
 		 * 
@@ -609,7 +781,7 @@ $JSKK.Class.create
 		 */
 		configure: function(newConfig)
 		{
-			$JSKK.when(this,'ready').isTrue
+			$JSKK.when(this,'readyForConfig').isTrue
 			(
 				function()
 				{
@@ -622,7 +794,7 @@ $JSKK.Class.create
 						this.config=newConfig;
 					}
 					this._configured=true;
-					this.fireEvent('onConfigured',this);
+					this.fireEvent('readyForConfig',this);
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
@@ -636,7 +808,7 @@ $JSKK.Class.create
 		 */
 		reconfigure: function()
 		{
-			$JSKK.when(this,'ready').isTrue
+			$JSKK.when(this,'readyForConfig').isTrue
 			(
 				function()
 				{
@@ -696,7 +868,7 @@ $JSKK.Class.create
 		 */
 		sendSignal: function(name,body,type,filter)
 		{
-			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
+//			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
 			if (!Object.isEmpty(name))
 			{
 				$JSKK.when(this,'radioTower').isAssocArray

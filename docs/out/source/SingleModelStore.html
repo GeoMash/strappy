@@ -71,10 +71,9 @@ $JSKK.Class.create
 		 * @param {Mixed} value The value to be assigned to the field.
 		 * @return 
 		 */
-		set: function(field,value)
+		set: function()
 		{
-			this.record.set(field,value);
-			this.fireEvent('onChange',this);
+			this.record.set.apply(this.record,$JSKK.toArray(arguments));
 			return this;
 		},
 <span id='framework-data-SingleModelStore-method-sync'>		/**
