@@ -316,7 +316,7 @@ $JSKK.Class.create
 		 */
 		readyForConfig:	false,
 		/**
-		 * [readyForConfig description]
+		 * [_iid description]
 		 * @type {Boolean}
 		 */
         _iid:			null,
@@ -374,10 +374,6 @@ $JSKK.Class.create
 					this.initControllers();
 				}.bind(this)
 			);
-			
-			
-			
-			
 			
 			if (Object.isFunction(this.initCmp))
 			{
@@ -595,21 +591,11 @@ $JSKK.Class.create
 		 */
 		initControllers: function()
 		{
-			for (var i=0,j=this.controllers.length; i<j; i++)
+			var stateController=null;
+			console.debug(this.my.NSObject[this.my.name.lowerFirst()]);
+			if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller['State']))
 			{
-				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
-				{
-					this._controllers[this.controllers[i]]=new this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]](this);
-				}
-				else
-				{
-					throw new Error('Error controller "'+this.controllers[i]+'" not loaded.');
-					break;
-				}
-			}
-			var stateController=this.getController('State');
-			if (Object.isDefined(stateController))
-			{
+				stateController=this._controllers['State']=new this.my.NSObject[this.my.name.lowerFirst()].controller['State'](this);
 				stateController.observeOnce
 				(
 					'onBeforeReadyState',
@@ -618,11 +604,24 @@ $JSKK.Class.create
 						this.sendSignal(framework.Signal.COMPONENT_IS_READY,this);
 					}.bind(this)
 				);
+				
+				for (var i=0,j=this.controllers.length; i<j; i++)
+				{
+					if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
+					{
+						this._controllers[this.controllers[i]]=new this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]](this);
+					}
+					else
+					{
+						throw new Error('Error controller "'+this.controllers[i]+'" not loaded.');
+						break;
+					}
+				}
 			}
 			else
 			{
-				throw new Error('The component "'+this.$reflect('name')+'" was not setup with a state controller. '
-								+'A state controller MUST be configured with a state component.');
+				throw new Error('State controller has not been loaded for component "'+this.my.name+'". '
+								+'A component MUST have a state store and controller.');
 			}
 		},
 		/**
@@ -691,18 +690,27 @@ $JSKK.Class.create
 		 */
 		initStores: function()
 		{
-			for (var i=0,j=this.stores.length; i<j; i++)
+			if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store['State']))
 			{
-				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
-				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]]))
+				this._stores['State']=new this.my.NSObject[this.my.name.lowerFirst()].store['State'](this);
+				for (var i=0,j=this.stores.length; i<j; i++)
 				{
-					this._stores[this.stores[i]]=new this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]](this);
+					if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
+					&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]]))
+					{
+						this._stores[this.stores[i]]=new this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]](this);
+					}
+					else
+					{
+						throw new Error('Error - store "'+this.stores[i]+'" not loaded for component "'+this.my.name+'".');
+						break;
+					}
 				}
-				else
-				{
-					throw new Error('Error - store "'+this.stores[i]+'" not loaded for component "'+this.my.name+'".');
-					break;
-				}
+			}
+			else
+			{
+				throw new Error('State store has not been loaded for component "'+this.my.name+'". '
+								+'A component MUST have a state store and controller.');
 			}
 		},
 		/**
@@ -777,7 +785,7 @@ $JSKK.Class.create
 						this.config=newConfig;
 					}
 					this._configured=true;
-					this.fireEvent('readyForConfig',this);
+					this.fireEvent('onConfigured',this);
 					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
