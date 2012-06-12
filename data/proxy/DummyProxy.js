@@ -19,10 +19,18 @@ $JSKK.Class.create
 
 		resolver: $JSKK.emptyFunction,
 
+		/**
+		 * The default resolver tries to match a dataSet item with an id property to the request's id parameter
+		 */
+		defaultResolver: function(request, item)
+		{
+			return typeof request.data.id !== 'undefined' && typeof item.id !== 'undefined' && item.id == request.data.id;
+		},
+
 		init: function(dataSet, resolver)
 		{
-			this.dataSet = dataSet === null ?	[]	:	dataSet;
-			this.resolver = resolver === null ?	[]	:	resolver;
+			this.dataSet	= dataSet === null	?	[]						: dataSet;
+			this.resolver	= resolver === null	?	this.defaultResolver	: resolver;
 		},
 
 		/**
@@ -33,7 +41,7 @@ $JSKK.Class.create
 			config.url=this.config.url;
 			if (this.fireEvent('onBeforeRequest',this,config)!==false)
 			{
-				this.resolve
+				this.handleRequest
 				(
 					{
 						type:		config.method,
@@ -45,7 +53,7 @@ $JSKK.Class.create
 			}
 		},
 
-		resolve: function(request, successCallback)
+		handleRequest: function(request, successCallback)
 		{
 			var response = 
 			{
