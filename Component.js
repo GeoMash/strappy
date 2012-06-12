@@ -115,22 +115,31 @@ $JSKK.Class.create
 						{
 							cmp=queue[index][0];
 						}
-						cmp.configure(queue[index][1]);
 						if (Object.isAssocArray(queue[index][1]))
 						{
-							cmp.getController('State').observeOnce
+							cmp.observeOnce
 							(
-								'onReadyState',
-								function()
+								'onAfterInit',
+								function(index)
 								{
-									processNext();
-								}
+									cmp.getController('State').observeOnce
+									(
+										'onReadyState',
+										function()
+										{
+											processNext();
+										}
+									);
+								}.bind(this,index)
 							);
+							
 						}
 						else
 						{
 							processNext();
 						}
+						
+						cmp.configure(queue[index][1]);
 					}
 					else
 					{
@@ -147,7 +156,8 @@ $JSKK.Class.create
 	{
 		events:
 		{
-			onConfigured:	true
+			onConfigured:	true,
+			onAfterInit:	true
 		},
 		/**
 		 * @cfg attachTo The DOM element that this component will attach itself to. (required)
@@ -369,9 +379,11 @@ $JSKK.Class.create
 					this.generateInstanceID();
 					this.insertBaseContainer();
 					this.initChildComponents();
-					this.initViews();
 					this.initStores();
+					this.initViews();
 					this.initControllers();
+					
+					this.fireEvent('onAfterInit',this);
 				}.bind(this)
 			);
 			
@@ -592,7 +604,6 @@ $JSKK.Class.create
 		initControllers: function()
 		{
 			var stateController=null;
-			console.debug(this.my.NSObject[this.my.name.lowerFirst()]);
 			if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller['State']))
 			{
 				stateController=this._controllers['State']=new this.my.NSObject[this.my.name.lowerFirst()].controller['State'](this);
@@ -729,7 +740,7 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Error('Error - store "'+store+'" has not been initilized.');
+				throw new Error('Error - store "'+store+'" has not been initilized for component "'+this.my.name+'".');
 			}
 		},
 		insertBaseContainer: function()
