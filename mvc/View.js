@@ -37,7 +37,6 @@ $JSKK.Class.create
 			onHide:				true
 		},
 		
-        _iid:			null,
 		_ready:			false,
 		_stateBindings:	{},
 		templates:		{},
@@ -58,8 +57,6 @@ $JSKK.Class.create
 			(
 				function()
 				{
-					this.generateInstanceID();
-					this.insertBaseContainer();
 					this.fetchTemplateContent
 					(
 						function()
@@ -158,20 +155,6 @@ $JSKK.Class.create
 		{
 			return this.templates[template];
 		},
-		insertBaseContainer: function()
-		{
-			$(this.getConfig('attachTo') || 'body')[this.getConfig('attachHow') || 'append']
-			(
-				[
-					'<div',
-					' class="'+this.$reflect('namespace').replace(/\./g,'-')+'-container"',
-					' id="'+this.getIID()+'"',
-					' style="display:none;">',
-					'</div>'
-				].join('')
-			);
-			
-		},
 		/**
 		 * 
 		 * @abstract
@@ -205,26 +188,6 @@ $JSKK.Class.create
 		 * @return
 		 */
 		bindDOMEvents:		$JSKK.Class.ABSTRACT_METHOD,
-		/**
-		 * 
-		 */
-		generateInstanceID: function()
-		{
-			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
-				iid		=[];
-			for (var i=0; i<8; i++)
-			{
-				iid.push(chars[Math.floor(Math.random()*25)]);
-			}
-			this._iid=this.getSafeID()+'-'+iid.join('');
-		},
-		/**
-		 * 
-		 */
-		getIID: function()
-		{
-			return this._iid;
-		},
 //		bindEventToSignal: function()
 //		{
 //			// empty function
