@@ -31,8 +31,7 @@ $JSKK.Class.create
 	{
 		events:
 		{
-			onGotBaseHTML:		true,
-			onInsertBaseHTML:	true,
+			onTemplatesLoaded:	true,
 			onReady:			true,
 			onShow:				true,
 			onHide:				true
@@ -41,8 +40,7 @@ $JSKK.Class.create
         _iid:			null,
 		_ready:			false,
 		_stateBindings:	{},
-        contentURL:		null,
-		baseHTML:		null,
+		templates:		{},
 		element:		null,
 		stateStore:		null,
         // TODO: COMPOSITE PATTERN -> See bottom off this Class
@@ -55,88 +53,124 @@ $JSKK.Class.create
         */
 		init: function()
 		{
-			this.generateInstanceID();
-			
-			this.fetchContent();//TODO: This is being called before extended classes. = bad.
-		},
-		/**
-		 * 
-		 */
-		fetchContent: function()
-		{
-			var requestPath	=(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.$reflect('name').toLowerCase()+'.html';
-			this.baseHTML	=requestPath;
-			if (!this.getViewCache().exists(requestPath))
-			{
-				if (this.getViewCache().isFetching(requestPath))
+			var	cmp=this.getParentComponent();
+			$JSKK.when(cmp.isConfigured.bind(cmp)).isTrue
+			(
+				function()
 				{
-					$PWT.when
+					this.generateInstanceID();
+					this.insertBaseContainer();
+					this.fetchTemplateContent
 					(
 						function()
 						{
-							return this.getViewCache().isFetching(requestPath);
-						}.bind(this)
-					).isFalse
-					(
-						function()
-						{
-							this.fireEvent('onGotBaseHTML',this);
+							if ((this.stateStore=this.getStore('State')))
+							{
+								this.stateStore.observe('onChange',this.onStateChange.bind(this));
+							}
+							
+							this._ready=true;
+							/*
+							 * The following two lines need to be in this order so that
+							 * the view has a chance to set itself up before the state
+							 * controller flags the component as ready.
+							 */
+							this.onReady();
+							this.fireEvent('onReady',this);
 						}.bind(this)
 					);
+				}.bind(this)
+			);
+		},
+		fetchTemplateContent: function(onComplete)
+		{
+			var	numTemplates	=0,
+				doneTemplates	=0;
+			
+			for (var template in this.templates)
+			{
+				numTemplates++;
+			}
+			
+			for (var template in this.templates)
+			{
+				var requestPath	=(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.templates[template];
+				if (!this.getViewCache().exists(requestPath))
+				{
+					if (this.getViewCache().isFetching(requestPath))
+					{
+						$PWT.when
+						(
+							function()
+							{
+								this.getViewCache().isFetching(requestPath);
+							}.bind(this)
+						).isFalse
+						(
+							function(requestPath,template)
+							{
+								this.templates[template]=this.getViewCache().get(requestPath);
+								doneTemplates++;
+							}.bind(this,requestPath,template)
+						);
+					}
+					else
+					{
+						this.getViewCache().setFetching(requestPath);
+						$.get
+						(
+							requestPath,
+							function(requestPath,template,response)
+							{
+								this.getViewCache().set(requestPath,response);
+								this.templates[template]=response;
+								doneTemplates++;
+							}.bind(this,requestPath,template)
+						);
+					}
 				}
 				else
 				{
-					this.getViewCache().setFetching(requestPath);
-					$.get
-					(
-						requestPath,
-						function(response)
-						{
-							this.getViewCache().set(requestPath,response);
-							this.fireEvent('onGotBaseHTML',this);
-						}.bind(this)
-					);
+					(function()
+					{
+						this.templates[template]=this.getViewCache().get(requestPath);
+						doneTemplates++;
+					}.bind(this,requestPath,template)).defer(100);
 				}
 			}
-			else
-			{
-				(function(){this.fireEvent('onGotBaseHTML',this)}.bind(this)).defer(100);
-			}
+			
+			$JSKK.when
+			(
+				function()
+				{
+					return (numTemplates==doneTemplates);
+				}
+			).isTrue
+			(
+				function()
+				{
+					this.fireEvent('onTemplatesLoaded',this);
+					onComplete();
+				}.bind(this)
+			);
 		},
-		/**
-		 * 
-		 */
-		insertBaseHTML: function(config)
+		getTemplate: function(template)
 		{
-//			console.debug('insertBaseHTML');
-			var	view=$(this.getBaseHTML());
-			
-			view.attr('id',this.getIID());
-			$(config.where)[config.how](view);
-			this.fireEvent('onInsertBaseHTML',this);
-			
-			//Bind the state stuff before firing the onReady event.
-			if ((this.stateStore=this.getStore('State')))
-			{
-				this.stateStore.observe('onChange',this.onStateChange.bind(this));
-			}
-			
-			this._ready=true;
-			/*
-			 * The following two lines need to be in this order so that
-			 * the view has a chance to set itself up before the state
-			 * controller flags the component as ready.
-			 */
-			this.onReady();
-			this.fireEvent('onReady',this);
-			return this;
+			return this.templates[template];
 		},
-		/**
-		 * 
-		 */
-		getBaseHTML: function()
+		insertBaseContainer: function()
 		{
-			return this.getViewCache().get(this.baseHTML);
+			$(this.getConfig('attachTo') || 'body')[this.getConfig('attachHow') || 'append']
+			(
+				[
+					'<div',
+					' class="'+this.$reflect('namespace').replace(/\./g,'-')+'-container"',
+					' id="'+this.getIID()+'"',
+					' style="display:none;">',
+					'</div>'
+				].join('')
+			);
+			
 		},
 		/**
 		 * 
