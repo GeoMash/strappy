@@ -61,6 +61,7 @@ $JSKK.Class.create
 					(
 						function()
 						{
+							//Bind the state stuff before firing the onReady event.
 							if ((this.stateStore=this.getStore('State')))
 							{
 								this.stateStore.observe('onChange',this.onStateChange.bind(this));

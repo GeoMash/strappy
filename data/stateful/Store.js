@@ -15,15 +15,14 @@ $JSKK.Class.create
 	{
 		$namespace:	'framework.data.stateful',
 		$name:		'Store',
-		$uses:
-		[
-			framework.trait.ComponentConnector,
-			$JSKK.trait.Observable
-		]
+		$extends:	framework.data.SingleModelStore
 	}
 )
 (
 	{
+		ACCESS_PRIVATE:	'private',
+		ACCESS_PUBLIC:	'public',
+		
 		LOCK_NONE:		'none',
 		LOCK_READONLY:	'readonly',
 		LOCK_FULL:		'full'
@@ -51,10 +50,10 @@ $JSKK.Class.create
 		 */
 		readyViews:	[],
 		/**
-		 * @property {Object} state The state store.
+		 * @property {Object} stateMap A reference object for mapped private and public state properties.
 		 * @private
 		 */
-		state:		{},
+		stateMap:{},
 		/**
 		 * 
 		 * @property {String} lockState This property will block behaviours on this store depending on its state.
@@ -63,12 +62,29 @@ $JSKK.Class.create
 		lockState:	'none',
 		
 		keys:		[],
-		
 		init: function()
 		{
-			for (var item in this.state)
+			//Set the model.
+			this.model=framework.mvc.stateful.Model;
+			
+			// for (var item in this.state)
+			// {
+			// 	this.keys.push(item);
+			// }
+			
+			
+			
+			this.init.$parent();
+			var	self=this.$reflect('self'),
+				item=null;
+			
+			for (item in this.record.get(self.ACCESS_PRIVATE))
 			{
-				this.keys.push(item);
+				this.stateMap[item]=self.ACCESS_PRIVATE;
+			}
+			for (item in this.record.get(self.ACCESS_PUBLIC))
+			{
+				this.stateMap[item]=self.ACCESS_PUBLIC;
 			}
 		},
 		/**
@@ -80,7 +96,7 @@ $JSKK.Class.create
 		 */
 		canManageStateItem: function(item)
 		{
-			return this.keys.inArray(item);	
+			return this.stateMap[item]==this.$reflect('self').ACCESS_PUBLIC;
 		},
 		/**
 		 * Sets a state property with a new value.
@@ -97,9 +113,11 @@ $JSKK.Class.create
 		{
 			if (this.lockState==framework.data.stateful.Store.LOCK_NONE)
 			{
-				this.state[key]	=value;
-				var changeSet	={};
-				changeSet[key]	=value;
+				this.get.$parent(this.stateMap[key])[key]=value;
+				
+				// this.state[key]	=value;
+				// var changeSet	={};
+				// changeSet[key]	=value;
 				
 				if (this.fireEvent('onBeforeChange',this,key,value)!==false)
 				{
@@ -159,7 +177,7 @@ $JSKK.Class.create
 		 */
 		get: function(key)
 		{
-			return this.state[key];
+			return this.get.$parent(this.stateMap[key])[key];
 		},
 		/**
 		 * Stores the view name in a private store for ready views.

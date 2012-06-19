@@ -163,7 +163,6 @@ $JSKK.Class.create
 				supressSignal	=true;
 				this.supressNext=false;
 			}
-			console.debug('onHashChange',(supressSignal)?'(supressed)':'');
 			this.stateString=window.location.hash.replace('#','');
 			if (!Object.isEmpty(this.stateString))
 			{
@@ -243,7 +242,7 @@ $JSKK.Class.create
 		registerStateChanger: function(el,state)
 		{
 			state=this.parseStateString(state);
-			el.click(this.updateState.bind(this,state));
+			el.click(this.updateState.bind(this,state,false));
 		},
 		/**
 		 * This is a private method which wraps state change events bound with
@@ -252,7 +251,7 @@ $JSKK.Class.create
 		 * @param {Object} A key valued state object.
 		 * @return {void}
 		 */
-		updateState: function(state,supressed)
+		updateState: function(state,supressed,event)
 		{
 			for (var node in state)
 			{
