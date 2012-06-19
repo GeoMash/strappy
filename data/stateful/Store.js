@@ -113,7 +113,18 @@ $JSKK.Class.create
 		{
 			if (this.lockState==framework.data.stateful.Store.LOCK_NONE)
 			{
-				this.get.$parent(this.stateMap[key])[key]=value;
+				var mapping=this.stateMap[key];
+				this.get.$parent(mapping)[key]=value;
+				
+				if (mapping==this.$reflect('self').ACCESS_PUBLIC)
+				{
+					var newState={};
+					newState[key]=value;
+					this.getStateMgr().updateState(newState,true)
+				}
+					
+				
+				
 				
 				// this.state[key]	=value;
 				// var changeSet	={};
