@@ -6,11 +6,13 @@
  * Explanation & Examples.
  * 
  * @mixins framework.trait.ComponentConnector
+ * @mixins framework.trait.signal.Bindable
+ * @mixins $JSKK.trait.Observable
  * @abstract
  * 
  * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Receive
- * @uses framework.trait.signal.Send
+ * @uses framework.trait.signal.Bindable
+ * @uses $JSKK.trait.Observable
  * 
  */
 $JSKK.Class.create
@@ -22,6 +24,7 @@ $JSKK.Class.create
 		$uses:
 		[
 			framework.trait.ComponentConnector,
+			framework.trait.signal.Bindable,
 			$JSKK.trait.Observable
 		]
 	}
@@ -302,36 +305,6 @@ $JSKK.Class.create
 			$('body').on(event,selector,data,handle[method].bind(handle));
 			return this;
 		},
-		/**
-		 * 
-		 */
-		bindStatefulClick: function()
-		{
-			var links=$JSKK.toArray(arguments);
-			$JSKK.when(this,'_ready').isTrue
-			(
-				function()
-				{
-					var item=null;
-					for (var i=0,j=links.length; i<j; i++)
-					{
-						// check if the passed selector is in fact for the container
-						var container = this.getContainer();
-						var linkEl = $(links[i][0])
-						if (linkEl[0] == container[0]) {
-							item=linkEl;
-						} else {
-							item=$(links[i][0],container);
-						}
-						if (item.length)
-						{
-							this.getStateMgr().registerStateChanger(item,links[i][1]);
-						}
-					}
-				}.bind(this)
-			);
-			return this;
-		},
 //		bindStoreChange: function(store,bindings)
 //		{
 //			for (var item in bindings)
@@ -348,52 +321,6 @@ $JSKK.Class.create
 //			}
 //			return this;
 //		},
-		/**
-		 * 
-		 */
-		bindStateChanges: function(bindings)
-		{
-			for (var item in bindings)
-			{
-				if (Object.isFunction(this[bindings[item]]))
-				{
-					this._stateBindings[item]=this[bindings[item]].bind(this);
-				}
-				else
-				{
-					throw new Error('Unable to bind state change event for stateful property "'+item+'" because the method "'+bindings[item]+'" '
-									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
-				}
-			}
-//			for (var i=0,j=bindings.length; i<j; i++)
-//			{
-//				
-//			}
-			return this;
-		},
-		/**
-		 * 
-		 */
-		onStateChange: function(store,key,value)
-		{
-//			console.debug('onStateChange(view handler)',key,value);
-			if (Object.isFunction(this._stateBindings[key]))
-			{
-				this._stateBindings[key](value);
-			}
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		
