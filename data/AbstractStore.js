@@ -110,7 +110,6 @@ $JSKK.Class.create
 				'onChange',
 				function(model)
 				{
-					console.debug('MODEL CHANGED');
 					/*
 					 * Check if the model is in a transaction.
 					 * 
