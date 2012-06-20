@@ -1,5 +1,5 @@
 /**
- * @class framework.data.proxy.MemoryProxy
+ * @class framework.data.proxy.DummyProxy
  * 
  * 
  * 
@@ -15,27 +15,25 @@ $JSKK.Class.create
 (
 	{},
 	{
-		dataSet: [],
-
-		resolver: $JSKK.emptyFunction,
-
 		/**
-		 * The default resolver tries to match a dataSet item with an id property to the request's id parameter
-		 */
+		* The default resolver tries to match a dataSet item with an id property to the request's id parameter
+		*/
 		defaultResolver: function(request, item)
 		{
 			return typeof request.data.id !== 'undefined' && typeof item.id !== 'undefined' && item.id == request.data.id;
 		},
 
-		init: function(dataSet, resolver)
+		init: function()
 		{
-			this.dataSet	= dataSet === null	?	[]						: dataSet;
-			this.resolver	= resolver === null	?	this.defaultResolver	: resolver;
+			if(!this.config.resolver)
+			{
+				this.config.resolver = this.defaultResolver;
+			}
 		},
 
 		/**
-		 *
-		 */
+		*
+		*/
 		get: function(config)
 		{
 			config.url=this.config.url;
@@ -55,14 +53,15 @@ $JSKK.Class.create
 
 		handleRequest: function(request, successCallback)
 		{
-			var response = 
+			var response =
 			{
 				"success":	true,
 				"data":		[]
 			};
-			$.each(this.dataSet, function(idx, item)
+			
+			$.each(this.config.dataSet, function(idx, item)
 			{
-				if(this.resolver !== $JSKK.emptyFunction && this.resolver(request, item)) 
+				if(this.config.resolver(request, item))
 				{
 					response.data.push(item);
 				}
@@ -72,9 +71,9 @@ $JSKK.Class.create
 		},
 
 		/**
-		 * @private
-		 * @return {void}
-		 */
+		* @private
+		* @return {void}
+		*/
 		_onDone: function(config, response)
 		{
 			(config.onSuccess || $JSKK.emptyFunction)(response);
