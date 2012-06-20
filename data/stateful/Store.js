@@ -121,7 +121,7 @@ $JSKK.Class.create
 				{
 					var newState={};
 					newState[key]=value;
-					this.getStateMgr().updateState(newState,true)
+					this.getStateMgr().updateState(newState,true);
 				}
 					
 				
