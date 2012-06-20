@@ -7,7 +7,7 @@
  * 
  * Bound Signals:
  * 
- * * {@link framework.Signal.STATE_CHANGE}: {@link framework.mvc.stateful.Controller#_onStateChange}
+ * * {@link framework.Signal.STATE_CHANGE}: {@link framework.mvc.stateful.Controller#onStateChange}
  * * {@link framework.Signal.VIEW_IS_READY}: {@link framework.mvc.stateful.Controller#onViewReady}
  * 
  * @mixins framework.trait.ComponentConnector
@@ -24,6 +24,7 @@ $JSKK.Class.create
 	{
 		$namespace:	'framework.mvc.stateful',
 		$name:		'Controller',
+		$abstract:	true,
 		$uses:
 		[
 			framework.trait.ComponentConnector,
@@ -46,7 +47,17 @@ $JSKK.Class.create
 		 * associated state model.
 		 * @private
 		 */
-		stateStore:	null,
+		stateStore:			null,
+		/**
+		 * This method will be called whenever a state change signal
+		 * has been received.
+		 * 
+		 * Note that state change signals are blocked until the associated
+		 * {@link framework.mvc.stateful.Model State Model} is ready.
+		 * @abstract
+		 * @param {framework.Signal} The signal object.
+		 */
+		onBeforeChange:		$JSKK.Class.ABSTRACT_METHOD,
 		/**
 		 * @constructor
 		 * 
@@ -56,13 +67,14 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.registerSignals
-			(
-				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL]
+			( 
+				[framework.Signal.STATE_CHANGE,				'onStateChange',framework.Signal.GLOBAL]//,
 			);
 			if (!(this.stateStore=this.getStore('State')))
 			{
 				throw new Error('Unable to initialize "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" State Controller. Controller requires a state model.');
 			}
+			this.stateStore.observe('onBeforeChange',this.onBeforeChange.bind(this));
 		},
 		/**
 		 * A private method which wraps the functionality of
@@ -74,24 +86,28 @@ $JSKK.Class.create
 		 * @param {framework.Signal} The signal object.
 		 * @return {void}
 		 */
-		_onStateChange: function(signal)
+		onStateChange: function(signal)
 		{
 			//Ignore all state changes if the state model is not flagged as ready.
 			if (this.stateStore.isReady())
 			{
-				this.onStateChange(signal.getBody());
+				// this.onStateChange(signal.getBody());
+				var state=signal.getBody();
+				for (var item in state)
+				{
+					if (this.stateStore.canManageStateItem(item))
+					{
+						var oldValue=this.stateStore.get(item);
+						if (!this.stateStore.set(item,state[item]))
+						{
+							var restoredState	={};
+							restoredState[item]	=oldValue;
+							this.getStateMgr().updateState(restoredState,true);
+						}
+					}
+				}
 			}
 		},
-		/**
-		 * This method will be called whenever a state change signal
-		 * has been received.
-		 * 
-		 * Note that state change signals are blocked until the associated
-		 * {@link framework.mvc.stateful.Model State Model} is ready.
-		 * @abstract
-		 * @param {framework.Signal} The signal object.
-		 */
-		onStateChange:	$JSKK.emptyFunction,
 		/**
 		 * This method will be called when a view fires a {@link framework.Signal.VIEW_IS_READY ready}
 		 * signal.
@@ -111,6 +127,22 @@ $JSKK.Class.create
 			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
 			{
 				this.fireEvent('onReadyState',this,true);
+				
+				var state=this.getStateMgr().getState()
+				for (var item in state)
+				{
+					if (this.stateStore.canManageStateItem(item))
+					{
+						var oldValue=this.stateStore.get(item);
+						if (!this.stateStore.set(item,state[item]))
+						{
+							var restoredState	={};
+							restoredState[item]	=oldValue;
+							this.getStateMgr().updateState(restoredState,true);
+						}
+					}
+				}
+				
 			}
 			return this;
 		},
