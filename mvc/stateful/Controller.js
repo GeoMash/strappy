@@ -13,11 +13,13 @@
  * @mixins framework.trait.ComponentConnector
  * @mixins framework.trait.signal.Receive
  * @mixins framework.trait.signal.Send
+ * @mixins framework.trait.signal.Bindable
  * @abstract
  * 
  * @uses framework.trait.ComponentConnector
  * @uses framework.trait.signal.Receive
  * @uses framework.trait.signal.Send
+ * @uses framework.trait.signal.Bindable
  */
 $JSKK.Class.create
 (
@@ -30,6 +32,7 @@ $JSKK.Class.create
 			framework.trait.ComponentConnector,
 			framework.trait.signal.Receive,
 			framework.trait.signal.Send,
+			framework.trait.signal.Bindable,
 			$JSKK.trait.Observable
 		]
 	}
