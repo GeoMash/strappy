@@ -68,7 +68,7 @@ $JSKK.Class.create
 		{
 			this.registerSignals
 			( 
-				[framework.Signal.STATE_CHANGE,				'onStateChange',framework.Signal.GLOBAL]//,
+				[framework.Signal.STATE_CHANGE,'onStateChange',framework.Signal.GLOBAL]//,
 			);
 			if (!(this.stateStore=this.getStore('State')))
 			{
