@@ -664,6 +664,7 @@ $JSKK.Class.create
 			for (var i=0,j=this.views.length; i<j; i++)
 			{
 				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
+				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view)
 				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]]))
 				{
 					this._views[this.views[i]]=new this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]](this);
