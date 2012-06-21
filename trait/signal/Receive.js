@@ -94,7 +94,7 @@
 					}
 				}
 				else
-				{console.trace();
+				{
 					throw new Error('Attempt to bind signal to undefined callback "'+callback+'".');
 				}
 			}
