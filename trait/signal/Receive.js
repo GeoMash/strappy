@@ -53,38 +53,49 @@
 		 * @param {Array} signals The signals to register.
 		 * @throws Error if the callback to bind to does not exist.
 		 */
-		registerSignals: function()
+		registerSignals: function(registrations)
 		{
-			var	signals=$JSKK.toArray(arguments);
-			if (!Object.isArray(signals))signals=[signals];
-			for (var i=0,j=signals.length; i<j; i++)
+			for (var callback in registrations)
 			{
-				if (Object.isFunction(this[signals[i][1]]))
+				if (Object.isFunction(this[callback]))
 				{
-					if (signals[i][2]!=framework.Signal.GLOBAL)
+					if (Object.isAssocArray(registrations[callback]))
 					{
-						this.getRadioTower().observe
-						(
-							signals[i][0],
-							function(i,signal)
+						if (Object.isDefined(registrations[callback].signal))
+						{
+							if (Object.isDefined(registrations[callback].filter)
+							|| Object.isDefined(registrations[callback].type))
 							{
-								var body=signal.getBody();
-								if (body.id==this.getID()
-								|| body.component==this.getCmpName())
-								{
-									return this[signals[i][1]](signal);
-								}
-							}.bind(this,i)
-						);
+								this.getRadioTower().observe
+								(
+									registrations[callback].signal,
+									function(callback,signal)
+									{
+										if (signal.isForMe((registrations[callback].type || null),(registrations[callback].filter || null)))
+										{
+											return this[callback](signal);
+										}
+									}.bind(this,callback)
+								);
+							}
+							else
+							{
+								this.getRadioTower().observe(registrations[callback].signal,this[callback].bind(this));
+							}
+						}
+						else
+						{
+							throw new Error('Signal not defined for registerSignals.');
+						}
 					}
 					else
 					{
-						this.getRadioTower().observe(signals[i][0],this[signals[i][1]].bind(this));
+						this.getRadioTower().observe(registrations[callback],this[callback].bind(this));
 					}
 				}
 				else
-				{
-					throw new Error('Attempt to bind signal to undefined callback "'+signals[i][1]+'".');
+				{console.trace();
+					throw new Error('Attempt to bind signal to undefined callback "'+callback+'".');
 				}
 			}
 		},

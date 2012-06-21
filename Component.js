@@ -612,7 +612,7 @@ $JSKK.Class.create
 					'onBeforeReadyState',
 					function()
 					{
-						this.sendSignal(framework.Signal.COMPONENT_IS_READY,this);
+						this.sendSignal(framework.Signal.COMPONENT_IS_READY,'component',{origin:this.getIID()},this);
 					}.bind(this)
 				);
 				
@@ -869,7 +869,7 @@ $JSKK.Class.create
 		 * See {@link framework.trait.signal.Send#sendSignal}
 		 * @private
 		 */
-		sendSignal: function(name,body,type,filter)
+		sendSignal: function(name,type,filter,body)
 		{
 //			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
 			if (!Object.isEmpty(name))

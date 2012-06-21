@@ -165,9 +165,28 @@ $JSKK.Class.create
 		 * 
 		 * NOTE: NOT IMPLEMENTED
 		 */
-		forMe: function(type,filter)
+		isForMe: function(type,filter)
 		{
-			// Placeholder
+			if (!Object.isNull(type))
+			{
+				if (this.getType()!=type)
+				{
+					return false;
+				}
+			}
+			if (!Object.isNull(filter))
+			{
+				var localFilter=this.getFilter();
+				for (var item in filter)
+				{
+					if (Object.isUndefined(localFilter[item])
+					|| filter[item]!=localFilter[item])
+					{
+						return false;
+					}
+				}
+			}
+			return true;
 		}
 	}
 );
