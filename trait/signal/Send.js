@@ -20,17 +20,19 @@
 		 * it will be emitted for other components and component entities to receive.
 		 * 
 		 * @param {String} name The name of the signal.
-		 * @param {Object} body The body of the signal. This can contain any kind of data.
 		 * @param {String} type The type of the signal. Used for further filtering by type.
 		 * @param {Object} filter An extra filter parameter used to filter more abstractly.
+		 * @param {Object} body The body of the signal. This can contain any kind of data.
 		 * @throws Error if the signal name is empty.
 		 * @return {Boolean} True if the signal was successfully sent.
 		 */
-		sendSignal: function(name,body,type,filter)
+		sendSignal: function(name,type,filter,body)
 		{
 			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(trait) :: ',name);
 			if (!Object.isEmpty(name))
 			{
+				if (Object.isUndefined(filter))filter={};
+				filter.origin=this.getIID();
 				return this.getRadioTower().fireEvent
 				(
 					name,
