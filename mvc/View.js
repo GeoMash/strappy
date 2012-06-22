@@ -104,7 +104,7 @@ $JSKK.Class.create
 						(
 							function()
 							{
-								this.getViewCache().isFetching(requestPath);
+								return this.getViewCache().isFetching(requestPath);
 							}.bind(this)
 						).isFalse
 						(
@@ -132,11 +132,8 @@ $JSKK.Class.create
 				}
 				else
 				{
-					(function()
-					{
-						this.templates[template]=this.getViewCache().get(requestPath);
-						doneTemplates++;
-					}.bind(this,requestPath,template)).defer(100);
+					this.templates[template]=this.getViewCache().get(requestPath);
+					doneTemplates++;
 				}
 			}
 			
