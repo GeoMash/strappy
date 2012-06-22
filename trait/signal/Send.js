@@ -32,7 +32,14 @@
 			if (!Object.isEmpty(name))
 			{
 				if (Object.isUndefined(filter))filter={};
-				filter.origin=this.getIID();
+				if (Object.isFunction(this.getIID))
+				{
+					filter.origin=this.getIID();
+				}
+				else
+				{
+					filter.origin=this.$reflect('namespace')+'.'+this.$reflect('name');
+				}
 				return this.getRadioTower().fireEvent
 				(
 					name,
