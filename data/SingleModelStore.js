@@ -98,6 +98,39 @@ $JSKK.Class.create
 			}
 			return this;
 		},
+		/**
+		 * This method simply request a new model through the proxy.
+		 * 
+		 * @return {framework.data.SingleModelStore}
+		 */
+		load: function(filter)
+		{
+			if (this.proxy && Object.isFunction(this.proxy.get))
+			{
+				this.proxy.get
+				(
+					{
+						filter: filter,
+						onSuccess:	function(response)
+						{
+							this.record=this.newRecord(response.data[0]);
+							this.fireEvent('onChange',this,response);
+							this.fireEvent('onLoad',this,response);
+						}.bind(this),
+						onFailure: function(response)
+						{
+							this.fireEvent('onLoadFailed',this,response);
+						}.bind(this)
+					}
+				);
+			}
+			else
+			{
+				throw new Exception('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
+			}
+			return this;
+		},
+
 		isDirty: function()
 		{
 			return this.record.isDirty();
