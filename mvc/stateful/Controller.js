@@ -72,7 +72,7 @@ $JSKK.Class.create
 			this.registerSignals
 			( 
 				{
-					onStateChange:	framework.Signal.STATE_CHANGE
+					onStateChangeFromStateMgr:	framework.Signal.STATE_CHANGE
 				}
 			);
 			if (!(this.stateStore=this.getStore('State')))
@@ -93,7 +93,7 @@ $JSKK.Class.create
 		 * @param {framework.Signal} The signal object.
 		 * @return {void}
 		 */
-		onStateChange: function(signal)
+		onStateChangeFromStateMgr: function(signal)
 		{
 			//Ignore all state changes if the state model is not flagged as ready.
 			if (this.stateStore.isReady())
