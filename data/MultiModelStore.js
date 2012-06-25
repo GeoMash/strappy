@@ -158,8 +158,8 @@ $JSKK.Class.create
 		},
 		/**
 		 * Removes a range of records from the store.
-		 * @param {int} start index of the range to be deleted.
-		 * @param {int} end index of the range to be deleted.
+		 * @param {Number} start index of the range to be deleted.
+		 * @param {Number} end index of the range to be deleted.
 		 * @return {framework.mvc.Model}
 		 */
 		removeByRange: function(startIndex,endIndex)
@@ -187,8 +187,8 @@ $JSKK.Class.create
 		},
 		/**
 		 * Returns RecordIndex by key/value pair
-		 * @param {int} the property key.
-		 * @param {int} the property value.
+		 * @param {Number} key the property key.
+		 * @param {Number} value the property value.
 		 * @return {framework.mvc.Model}
 		 */
 		getRecordIndexByValue: function(key, value)
@@ -208,7 +208,7 @@ $JSKK.Class.create
 		},
 		/**
 		 * Return RecordIndex by record
-		 * @param {record} the record.
+		 * @param {Object} record the record.
 		 * @return {framework.mvc.Model}
 		 */
 		getRecordIndex: function(record)

@@ -169,7 +169,7 @@ $JSKK.Class.create
 		{
 			return this.config.filter;
 		},
-<span id='framework-Signal-method-forMe'>		/**
+<span id='framework-Signal-method-isForMe'>		/**
 </span>		 * This method will check the signals type and filter against
 		 * the provided type and filter to see if they match.
 		 * 
@@ -182,9 +182,28 @@ $JSKK.Class.create
 		 * 
 		 * NOTE: NOT IMPLEMENTED
 		 */
-		forMe: function(type,filter)
+		isForMe: function(type,filter)
 		{
-			// Placeholder
+			if (!Object.isNull(type))
+			{
+				if (this.getType()!=type)
+				{
+					return false;
+				}
+			}
+			if (!Object.isNull(filter))
+			{
+				var localFilter=this.getFilter();
+				for (var item in filter)
+				{
+					if (Object.isUndefined(localFilter[item])
+					|| filter[item]!=localFilter[item])
+					{
+						return false;
+					}
+				}
+			}
+			return true;
 		}
 	}
 );</pre>
