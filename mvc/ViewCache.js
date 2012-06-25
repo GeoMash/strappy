@@ -1,9 +1,8 @@
 /**
  * @class framework.mvc.ViewCache
  * 
- * TODO:
- * 
- * Explanation & Examples.
+ * This is a private, internally used class.
+ * You should not need to use this class directly.
  * 
  */
 $JSKK.Class.create
