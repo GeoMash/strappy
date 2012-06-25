@@ -153,6 +153,10 @@ $JSKK.Trait.create
 		getIID: function()
 		{
 			return this.getParentComponent().getIID();
+		},
+		makeAttachPoint: function(attachTo)
+		{
+			return [this.getConfig('attachTo'), attachTo].join(' ');
 		}
 	}
 );
