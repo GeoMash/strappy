@@ -79,7 +79,9 @@ $JSKK.Class.create
 			{
 				throw new Error('Unable to initialize "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" State Controller. Controller requires a state model.');
 			}
-			this.stateStore.observe('onBeforeChange',this.onBeforeChange.bind(this));
+			//Bind the state stuff before firing the onReady event.
+			this.stateStore.observe('onBeforeChange',	this.onBeforeChange.bind(this));
+			this.stateStore.observe('onChange',			this.onStateChange.bind(this));
 		},
 		/**
 		 * A private method which wraps the functionality of
