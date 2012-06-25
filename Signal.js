@@ -162,8 +162,6 @@ $JSKK.Class.create
 		 * @param type {String} The signal type to be tested against as a string.
 		 * @param filter {Object} The signal filter to be tested against as an object.
 		 * @return {Boolean} True if the filter is a match.
-		 * 
-		 * NOTE: NOT IMPLEMENTED
 		 */
 		isForMe: function(type,filter)
 		{
