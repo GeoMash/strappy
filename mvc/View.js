@@ -103,7 +103,7 @@ $JSKK.Class.create
 					console.debug('IS FETCHING "'+this.$reflect('namespace')+'"."'+template+'"?:',this.getViewCache().isFetching(requestPath));
 					if (this.getViewCache().isFetching(requestPath))
 					{
-						$PWT.when
+						$JSKK.when
 						(
 							function()
 							{
