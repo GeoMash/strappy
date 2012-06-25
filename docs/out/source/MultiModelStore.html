@@ -175,8 +175,8 @@ $JSKK.Class.create
 		},
 <span id='framework-data-MultiModelStore-method-removeByRange'>		/**
 </span>		 * Removes a range of records from the store.
-		 * @param {int} start index of the range to be deleted.
-		 * @param {int} end index of the range to be deleted.
+		 * @param {Number} start index of the range to be deleted.
+		 * @param {Number} end index of the range to be deleted.
 		 * @return {framework.mvc.Model}
 		 */
 		removeByRange: function(startIndex,endIndex)
@@ -204,8 +204,8 @@ $JSKK.Class.create
 		},
 <span id='framework-data-MultiModelStore-method-getRecordIndexByValue'>		/**
 </span>		 * Returns RecordIndex by key/value pair
-		 * @param {int} the property key.
-		 * @param {int} the property value.
+		 * @param {Number} key the property key.
+		 * @param {Number} value the property value.
 		 * @return {framework.mvc.Model}
 		 */
 		getRecordIndexByValue: function(key, value)
@@ -225,7 +225,7 @@ $JSKK.Class.create
 		},
 <span id='framework-data-MultiModelStore-method-getRecordIndex'>		/**
 </span>		 * Return RecordIndex by record
-		 * @param {record} the record.
+		 * @param {Object} record the record.
 		 * @return {framework.mvc.Model}
 		 */
 		getRecordIndex: function(record)

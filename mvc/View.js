@@ -13,6 +13,7 @@
  * @uses framework.trait.ComponentConnector
  * @uses framework.trait.signal.Bindable
  * @uses $JSKK.trait.Observable
+ * @uses framework.mvc.ViewCache
  * 
  */
 $JSKK.Class.create

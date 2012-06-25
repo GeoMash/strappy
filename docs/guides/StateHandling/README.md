@@ -20,8 +20,11 @@ The State Manager will emit signals whenever the state changes. The signal will 
 <br>
 Every component has a State Controller and a State Store. The controller listens for state change signals.
 <br>
-Upon receipt of a state change, if the signal contains any state properties that the controller's store is interested in, the controller calls an internal private method "_onStateChange". Every state controller must implement its own "onStateChange" method, this is called by "_onStateChange", if and only if the store has been flagged as ready.
+Upon receipt of a state change, if the signal contains any state properties that the controller's store is interested in, the controller calls an internal private method "onBeforeStateChange". Every state controller must implement its own "onBeforeStateChange" method, this is called by "onStateChange", if and only if the store has been flagged as ready.
 <br>
+By using onBeforeStateChange, your state controller can intercept the change and decide weather or not to accept or reject the change. If the onBeforeStateChange method returns true, the state is accepted. However, if it returns false, the state will revert back to the previous state.
+<br>
+Note that onBeforeStateChange is by property. Meaning it is called for each property in the state that is changing. This allows you to accept some state changes and reject others.
 <br>
 
 Flow:<br>
@@ -39,9 +42,8 @@ framework.mcv.View<br>
 <br>
 
 
-
 1. State controller receives signal.
-2. State controller calls _onStateChange method.
+2. State controller calls onStateChange method.
 3. State controller tests if its state store cares about any of the changes.
 4. State controller SETS items on its state store.
 5. State store fires onBeforeChange event.
@@ -49,10 +51,6 @@ framework.mcv.View<br>
 7. State store fires onChange event.
 <br>
 <br>
-* If the state store returns false for onBeforeChange, the state change will be rejected and the state will return to its previous state.
-
-
-
 
 
 
@@ -100,7 +98,6 @@ A typical example of flagging a store as ready:
 <br>
 <br>
 Example State Store:
-
 	$JSKK.Class.create
 	(
 		{
@@ -112,15 +109,25 @@ Example State Store:
 	(
 		{},
 		{
-			state:
+			data:
 			{
-				section:	false
+				public:
+				{
+					section:	false
+				},
+				private:
+				{
+					textColor:	'red'
+				}
 			}
 		}
 	);
 <br>
 <br>
-Views can very easily hook into the changes for the store.
+In the above example, the public state property "section" can be changed through the hash URL, however the private state propery "textColor" would be ingnored, instead only accepting changes internally.
+<br>
+<br>
+Views and controllers can very easily hook into the changes for the store.
 
 	this.bindStateChanges
 	(

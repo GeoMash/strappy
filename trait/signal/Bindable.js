@@ -1,8 +1,5 @@
 /**
- * @class framework.trait.signal.Receive
- * This trait enables a {@link framework.mvc.Model model},
- * {@link framework.mvc.View view} or {@link framework.mvc.Controller controller}
- * with the ability to register and receive signals.
+ * @class framework.trait.signal.Bindable
  * 
  * @abstract
  */
