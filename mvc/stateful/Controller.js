@@ -157,9 +157,10 @@ $JSKK.Class.create
 		 * @param {Mixed} value The new value.
 		 * @return {framework.mvc.stateful.Controller}
 		 */
-		updateState:	function(key,value)
+		updateState:	function()
 		{
 			this.stateStore.set(key,value);
+			this.stateStore.set.apply(this.stateStore,$JSKK.toArray(arguments));
 			return this;
 		},
 		/**
