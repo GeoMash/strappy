@@ -18,8 +18,8 @@ $JSKK.Class.create
 	{
 		fields:
 		{
-			private:	{},
-			public:		{}
+			'private':	{},
+			'public':	{}
 		}
 	}
 );

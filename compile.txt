@@ -1,12 +1,18 @@
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\trait\ComponentConnector.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\trait\signal\Send.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\trait\signal\Receive.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\StateMgr.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\Signal.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\mvc\Model.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\mvc\View.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\mvc\Controller.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\mvc\stateful\Controller.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\mvc\stateful\Model.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\RadioTower.js
-D:\DEVELOPMENT\work\web\coates-ui\public\js\thirdparty\framework\Component.js
+{
+	"files":
+	[
+		"..\trait\ComponentConnector.js",
+		"..\trait\signal\Send.js",
+		"..\trait\signal\Receive.js",
+		"..\trait\signal\Bindable.js",
+		"..\StateMgr.js",
+		"..\Signal.js",
+		"..\mvc\Model.js,
+		"..\mvc\View.js",
+		"..\mvc\Controller.js",
+		"..\mvc\stateful\Controller.js",
+		"..\mvc\stateful\Model.js",
+		"..\RadioTower.js",
+		"..\Component.js",
+	]
+}

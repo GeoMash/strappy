@@ -271,7 +271,7 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 			delete this.models;
-			delete this;
+			return this;
 		},
 		/**
 		 * Rolls back the transaction, effectively trashing all
@@ -293,7 +293,7 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 			delete this.models;
-			delete this;
+			return this;
 		},
 		/**
 		 * Applies a full lock to the associated models.
@@ -310,7 +310,6 @@ $JSKK.Class.create
 					model.lock('full');
 				}
 			);
-			return this;
 			return this;
 		},
 		/**

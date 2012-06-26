@@ -303,7 +303,7 @@ $JSKK.Class.create
 			}
 			$('body').on(event,selector,data,handle[method].bind(handle));
 			return this;
-		},
+		}
 //		bindStoreChange: function(store,bindings)
 //		{
 //			for (var item in bindings)
