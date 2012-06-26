@@ -133,8 +133,6 @@ $JSKK.Class.create
 			this.stateStore.setReady(true);
 			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
 			{
-				this.fireEvent('onReadyState',this,true);
-				
 				var state=this.getStateMgr().getState()
 				for (var item in state)
 				{
@@ -149,7 +147,7 @@ $JSKK.Class.create
 						}
 					}
 				}
-				
+				this.fireEvent('onReadyState',this,true);
 			}
 			return this;
 		},

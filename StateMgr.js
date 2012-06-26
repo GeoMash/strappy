@@ -257,7 +257,7 @@ $JSKK.Class.create
 			{
 				this.state[node]=state[node];
 			}
-			this.supressNext=supressed;
+			// this.supressNext=supressed;
 			window.location.hash=this.parseStateObject(this.state);
 		},
 		/**

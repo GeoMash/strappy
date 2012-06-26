@@ -100,7 +100,6 @@ $JSKK.Class.create
 				if (!this.getViewCache().exists(requestPath)
 				|| this.getViewCache().isFetching(requestPath))
 				{
-					console.debug('IS FETCHING "'+this.$reflect('namespace')+'"."'+template+'"?:',this.getViewCache().isFetching(requestPath));
 					if (this.getViewCache().isFetching(requestPath))
 					{
 						$JSKK.when
