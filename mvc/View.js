@@ -102,7 +102,7 @@ $JSKK.Class.create
 				{
 					if (this.getViewCache().isFetching(requestPath))
 					{
-						$PWT.when
+						$JSKK.when
 						(
 							function()
 							{

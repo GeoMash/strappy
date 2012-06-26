@@ -110,33 +110,43 @@ $JSKK.Class.create
 		 * @param {Mixed} value The new value.
 		 * @return {framework.data.stateful.Store}
 		 */
-		set: function(key,value)
+		set: function()
 		{
 			if (this.lockState==framework.data.stateful.Store.LOCK_NONE)
 			{
-				var mapping=this.stateMap[key];
-				this.record.get(mapping)[key]=value;
-				if (mapping==this.$reflect('self').ACCESS_PUBLIC)
+				var	args		=$JSKK.toArray(arguments),
+					keyVals		={},
+					mapping		=null,
+					updateState	=false,
+					newState	={};
+				if (Object.isDefined(args[1]))
 				{
-					var newState={};
-					newState[key]=value;
-					this.getStateMgr().updateState(newState,true);
-				}
-					
-				
-				
-				
-				// this.state[key]	=value;
-				// var changeSet	={};
-				// changeSet[key]	=value;
-				
-				if (this.fireEvent('onBeforeChange',this,key,value)!==false)
-				{
-					this.fireEvent('onChange',this,key,value);
+					keyVals[args.shift()]=args.shift();
 				}
 				else
 				{
-					return false;
+					keyVals=args.shift();
+				}
+				for (var key in keyVals)
+				{
+					mapping=this.stateMap[key];
+					//Ignore if the value is the same.
+					if (this.record.get(mapping)[key]===keyVals[key])continue;
+					//Keep going otherwise...
+					if (this.fireEvent('onBeforeChange',this,key,keyVals[key])!==false)
+					{
+						this.record.get(mapping)[key]=keyVals[key];
+						if (mapping==this.$reflect('self').ACCESS_PUBLIC)
+						{
+							updateState		=true;
+							newState[key]	=keyVals[key];
+						}
+						this.fireEvent('onChange',this,key,keyVals[key]);
+					}
+				}
+				if (updateState)
+				{
+					this.getStateMgr().updateState(newState,true);
 				}
 			}
 			else
