@@ -174,7 +174,7 @@ $JSKK.Class.create
 			}
 			if (!supressSignal)
 			{
-				this.sendSignal(framework.Signal.STATE_CHANGE,this.state);
+				this.sendSignal(framework.Signal.STATE_CHANGE,'state',{},this.state);
 			}
 		},
 		/**
