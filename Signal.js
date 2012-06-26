@@ -65,7 +65,7 @@ $JSKK.Class.create
 		 * @property CMP_DO_RECONFIGURE
 		 * @static
 		 */
-		CMP_DO_RECONFIGURE:			'component.do.reconfigure',
+		CMP_DO_RECONFIGURE:			'component.do.reconfigure'
 		
 		
 	},
