@@ -1,5 +1,5 @@
 /**
- * @class framework.mvc.stateful.Controller
+ * @class strappy.mvc.stateful.Controller
  * 
  * TODO:
  * 
@@ -7,32 +7,32 @@
  * 
  * Bound Signals:
  * 
- * * {@link framework.Signal.STATE_CHANGE}: {@link framework.mvc.stateful.Controller#onStateChange}
- * * {@link framework.Signal.VIEW_IS_READY}: {@link framework.mvc.stateful.Controller#onViewReady}
+ * * {@link strappy.Signal.STATE_CHANGE}: {@link strappy.mvc.stateful.Controller#onStateChange}
+ * * {@link strappy.Signal.VIEW_IS_READY}: {@link strappy.mvc.stateful.Controller#onViewReady}
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Receive
- * @mixins framework.trait.signal.Send
- * @mixins framework.trait.signal.Bindable
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Receive
+ * @mixins strappy.trait.signal.Send
+ * @mixins strappy.trait.signal.Bindable
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Receive
- * @uses framework.trait.signal.Send
- * @uses framework.trait.signal.Bindable
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Receive
+ * @uses strappy.trait.signal.Send
+ * @uses strappy.trait.signal.Bindable
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.mvc.stateful',
+		$namespace:	'strappy.mvc.stateful',
 		$name:		'Controller',
 		$abstract:	true,
 		$uses:
 		[
-			framework.trait.ComponentConnector,
-			framework.trait.signal.Receive,
-			framework.trait.signal.Send,
-			framework.trait.signal.Bindable,
+			strappy.trait.ComponentConnector,
+			strappy.trait.signal.Receive,
+			strappy.trait.signal.Send,
+			strappy.trait.signal.Bindable,
 			$JSKK.trait.Observable
 		]
 	}
@@ -46,7 +46,7 @@ $JSKK.Class.create
 			onReadyState:		true
 		},
 		/**
-		 * @property {framework.data.stateful.Store} stateStore A reference to the
+		 * @property {strappy.data.stateful.Store} stateStore A reference to the
 		 * associated state model.
 		 * @private
 		 */
@@ -56,9 +56,9 @@ $JSKK.Class.create
 		 * has been received.
 		 * 
 		 * Note that state change signals are blocked until the associated
-		 * {@link framework.mvc.stateful.Model State Model} is ready.
+		 * {@link strappy.mvc.stateful.Model State Model} is ready.
 		 * @abstract
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 */
 		onBeforeChange:		$JSKK.Class.ABSTRACT_METHOD,
 		/**
@@ -72,7 +72,7 @@ $JSKK.Class.create
 			this.registerSignals
 			( 
 				{
-					onStateChangeFromStateMgr:	framework.Signal.STATE_CHANGE
+					onStateChangeFromStateMgr:	strappy.Signal.STATE_CHANGE
 				}
 			);
 			if (!(this.stateStore=this.getStore('State')))
@@ -85,12 +85,12 @@ $JSKK.Class.create
 		},
 		/**
 		 * A private method which wraps the functionality of
-		 * {@link framework.mvc.stateful.Controller#onStateChange} and blocks
-		 * all signals until the associated {@link framework.mvc.stateful.Model State Model}
+		 * {@link strappy.mvc.stateful.Controller#onStateChange} and blocks
+		 * all signals until the associated {@link strappy.mvc.stateful.Model State Model}
 		 * is ready.
 		 * 
 		 * @private
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 * @return {void}
 		 */
 		onStateChangeFromStateMgr: function(signal)
@@ -116,17 +116,17 @@ $JSKK.Class.create
 			}
 		},
 		/**
-		 * This method will be called when a view fires a {@link framework.Signal.VIEW_IS_READY ready}
+		 * This method will be called when a view fires a {@link strappy.Signal.VIEW_IS_READY ready}
 		 * signal.
 		 * @abstract
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 */
 		onViewReady:	$JSKK.emptyFunction,
 		/**
-		 * Flags the {@link framework.mvc.stateful.Model State Model}
+		 * Flags the {@link strappy.mvc.stateful.Model State Model}
 		 * as ready.
 		 * 
-		 * @return {framework.mvc.stateful.Controller}
+		 * @return {strappy.mvc.stateful.Controller}
 		 */
 		setReady:		function()
 		{
@@ -152,10 +152,10 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
-		 * Updates a stateful property in the {@link framework.mvc.stateful.Model State Model}.
+		 * Updates a stateful property in the {@link strappy.mvc.stateful.Model State Model}.
 		 * @param {String} key The name of the state property to update.
 		 * @param {Mixed} value The new value.
-		 * @return {framework.mvc.stateful.Controller}
+		 * @return {strappy.mvc.stateful.Controller}
 		 */
 		updateState:	function()
 		{
@@ -166,7 +166,7 @@ $JSKK.Class.create
 		/**
 		 * Flags a view as ready.
 		 * @param {String} view The name of the view to flag as ready.
-		 * @return {framework.mvc.stateful.Controller}
+		 * @return {strappy.mvc.stateful.Controller}
 		 */
 		setViewReadyState: function(view)
 		{

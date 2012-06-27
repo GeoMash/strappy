@@ -1,15 +1,15 @@
 /**
- * @class framework.data.proxy.Ajax
- * @extends framework.data.proxy.AbstractProxy
+ * @class strappy.data.proxy.Ajax
+ * @extends strappy.data.proxy.AbstractProxy
  * 
  * 
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.data.proxy',
+		$namespace:	'strappy.data.proxy',
 		$name:		'Ajax',
-		$extends:	framework.data.proxy.AbstractProxy
+		$extends:	strappy.data.proxy.AbstractProxy
 	}
 )
 (
