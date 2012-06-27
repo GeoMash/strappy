@@ -78,7 +78,7 @@ parser.add_argument('--output',		help='Specify a file where the result will be o
 
 args=parser.parse_args()
 if(args.action=='strappy'):
-	compressor=Compress();
+	compressor=Compress()
 	compressor.compressStrappy(
 		configFile=args.config,
 		outputFile=args.output
