@@ -191,7 +191,7 @@ $JSKK.Class.create
 			}
 			if (!supressSignal)
 			{
-				this.sendSignal(framework.Signal.STATE_CHANGE,this.state);
+				this.sendSignal(framework.Signal.STATE_CHANGE,'state',{},this.state);
 			}
 		},
 <span id='framework-StateMgr-method-registerStateChanger'>		/**
@@ -274,7 +274,7 @@ $JSKK.Class.create
 			{
 				this.state[node]=state[node];
 			}
-			this.supressNext=supressed;
+			// this.supressNext=supressed;
 			window.location.hash=this.parseStateObject(this.state);
 		},
 <span id='framework-StateMgr-method-getState'>		/**

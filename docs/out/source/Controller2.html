@@ -89,16 +89,18 @@ $JSKK.Class.create
 			this.registerSignals
 			( 
 				{
-					onStateChange:	framework.Signal.STATE_CHANGE
+					onStateChangeFromStateMgr:	framework.Signal.STATE_CHANGE
 				}
 			);
 			if (!(this.stateStore=this.getStore('State')))
 			{
 				throw new Error('Unable to initialize &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; State Controller. Controller requires a state model.');
 			}
-			this.stateStore.observe('onBeforeChange',this.onBeforeChange.bind(this));
+			//Bind the state stuff before firing the onReady event.
+			this.stateStore.observe('onBeforeChange',	this.onBeforeChange.bind(this));
+			this.stateStore.observe('onChange',			this.onStateChange.bind(this));
 		},
-<span id='framework-mvc-stateful-Controller-method-onStateChange'>		/**
+<span id='framework-mvc-stateful-Controller-method-onStateChangeFromStateMgr'>		/**
 </span>		 * A private method which wraps the functionality of
 		 * {@link framework.mvc.stateful.Controller#onStateChange} and blocks
 		 * all signals until the associated {@link framework.mvc.stateful.Model State Model}
@@ -108,7 +110,7 @@ $JSKK.Class.create
 		 * @param {framework.Signal} The signal object.
 		 * @return {void}
 		 */
-		onStateChange: function(signal)
+		onStateChangeFromStateMgr: function(signal)
 		{
 			//Ignore all state changes if the state model is not flagged as ready.
 			if (this.stateStore.isReady())
@@ -148,8 +150,6 @@ $JSKK.Class.create
 			this.stateStore.setReady(true);
 			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
 			{
-				this.fireEvent('onReadyState',this,true);
-				
 				var state=this.getStateMgr().getState()
 				for (var item in state)
 				{
@@ -164,7 +164,7 @@ $JSKK.Class.create
 						}
 					}
 				}
-				
+				this.fireEvent('onReadyState',this,true);
 			}
 			return this;
 		},
