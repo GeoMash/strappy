@@ -73,8 +73,8 @@ class Compress:
 
 parser = argparse.ArgumentParser()
 parser.add_argument('action',		help='Possible actions are "strappy" ?')
-parser.add_argument('--config',	help='Specify a config file.')
-parser.add_argument('--output',	help='Specify a file where the result will be output.')
+parser.add_argument('--config',		help='Specify a config file.')
+parser.add_argument('--output',		help='Specify a file where the result will be output.')
 
 args=parser.parse_args()
 if(args.action=='strappy'):
