@@ -1,5 +1,5 @@
 /**
- * @class framework.mvc.Controller
+ * @class strappy.mvc.Controller
  * 
  * TODO:
  * 
@@ -7,30 +7,30 @@
  * 
  * Bound Signals:
  * 
- * * {@link framework.Signal.CMP_DO_RECONFIGURE}: {@link framework.mvc.Controller#onReconfigure}
- * * {@link framework.Signal.VIEW_IS_READY}: {@link framework.mvc.Controller#onViewReady}
- * * {@link framework.Signal.VIEW_DONE_GOTBASEHTML}: {@link framework.mvc.Controller#onGotBaseHTML}
- * * {@link framework.Signal.STATEFULMODEL_IS_READY}: {@link framework.mvc.Controller#onReadyState}
+ * * {@link strappy.Signal.CMP_DO_RECONFIGURE}: {@link strappy.mvc.Controller#onReconfigure}
+ * * {@link strappy.Signal.VIEW_IS_READY}: {@link strappy.mvc.Controller#onViewReady}
+ * * {@link strappy.Signal.VIEW_DONE_GOTBASEHTML}: {@link strappy.mvc.Controller#onGotBaseHTML}
+ * * {@link strappy.Signal.STATEFULMODEL_IS_READY}: {@link strappy.mvc.Controller#onReadyState}
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Receive
- * @mixins framework.trait.signal.Send
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Receive
+ * @mixins strappy.trait.signal.Send
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Receive
- * @uses framework.trait.signal.Send
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Receive
+ * @uses strappy.trait.signal.Send
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.mvc',
+		$namespace:	'strappy.mvc',
 		$name:		'Controller',
 		$uses:
 		[
-			framework.trait.ComponentConnector,
-			framework.trait.signal.Receive,
-			framework.trait.signal.Send,
+			strappy.trait.ComponentConnector,
+			strappy.trait.signal.Receive,
+			strappy.trait.signal.Send,
 			$JSKK.trait.Observable
 		]
 	}
@@ -52,31 +52,31 @@ $JSKK.Class.create
 			
 		},
 		/**
-		 * This method will be called when a component fires a {@link framework.Signal.CMP_DO_RECONFIGURE Do Reconfigure}
+		 * This method will be called when a component fires a {@link strappy.Signal.CMP_DO_RECONFIGURE Do Reconfigure}
 		 * signal.
 		 * @abstract
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 */
 		onReconfigure:	$JSKK.emptyFunction,
 		/**
-		 * This method will be called when a view fires a {@link framework.Signal.VIEW_IS_READY ready}
+		 * This method will be called when a view fires a {@link strappy.Signal.VIEW_IS_READY ready}
 		 * signal.
 		 * @abstract
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 */
 		onViewReady:	$JSKK.emptyFunction,
 		/**
-		 * This method will be called when a view fires a {@link framework.Signal.VIEW_DONE_GOTBASEHTML Got Base HTML}
+		 * This method will be called when a view fires a {@link strappy.Signal.VIEW_DONE_GOTBASEHTML Got Base HTML}
 		 * signal.
 		 * @abstract
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 */
 		onGotBaseHTML: 	$JSKK.emptyFunction,
 		/**
-		 * This method will be called when a state model fires a {@link framework.Signal.STATEFULMODEL_IS_READY Stateful Model is Ready}
+		 * This method will be called when a state model fires a {@link strappy.Signal.STATEFULMODEL_IS_READY Stateful Model is Ready}
 		 * signal.
 		 * @abstract
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 */
 		onReadyState:	$JSKK.emptyFunction
 	}

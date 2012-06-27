@@ -1,12 +1,12 @@
 /**
- * @class framework.trait.signal.Bindable
+ * @class strappy.trait.signal.Bindable
  * 
  * @abstract
  */
  $JSKK.Trait.create
 (
 	{
-		$namespace:	'framework.trait.signal',
+		$namespace:	'strappy.trait.signal',
 		$name:		'Bindable'
 	}
 )

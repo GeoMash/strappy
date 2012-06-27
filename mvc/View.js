@@ -1,31 +1,31 @@
 /**
- * @class framework.mvc.View
+ * @class strappy.mvc.View
  * 
  * TODO:
  * 
  * Explanation & Examples.
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Bindable
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Bindable
  * @mixins $JSKK.trait.Observable
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Bindable
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Bindable
  * @uses $JSKK.trait.Observable
- * @uses framework.mvc.ViewCache
+ * @uses strappy.mvc.ViewCache
  * 
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.mvc',
+		$namespace:		'strappy.mvc',
 		$name:			'View',
 		$abstract:		true,
 		$uses:
 		[
-			framework.trait.ComponentConnector,
-			framework.trait.signal.Bindable,
+			strappy.trait.ComponentConnector,
+			strappy.trait.signal.Bindable,
 			$JSKK.trait.Observable
 		]
 	}
@@ -186,7 +186,7 @@ $JSKK.Class.create
 		 * An abstract method to be implemented by extending classes.
 		 * 
 		 * This method should be used to make calls to
-		 * {@link framework.mvc.View.bindDOMEvent bindDOMEvent}.
+		 * {@link strappy.mvc.View.bindDOMEvent bindDOMEvent}.
 		 * 
 		 * @return
 		 */
@@ -237,7 +237,7 @@ $JSKK.Class.create
 		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
-		 * @return {framework.mvc.View} this
+		 * @return {strappy.mvc.View} this
 		 */
 		bindContainerEvent: function(event,handler,method,data)
 		{
@@ -250,7 +250,7 @@ $JSKK.Class.create
 		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
-		 * @return {framework.mvc.View} this
+		 * @return {strappy.mvc.View} this
 		 */
 		bindDOMEvent: function(event,selector,handler,method,data)
 		{
@@ -284,7 +284,7 @@ $JSKK.Class.create
 		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
-		 * @return {framework.mvc.View} this
+		 * @return {strappy.mvc.View} this
 		 */
 		bindBodyDOMEvent: function(event,selector,handler,method,data)
 		{

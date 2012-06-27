@@ -1,6 +1,6 @@
 /**
- * @class framework.data.SingleModelStore
- * @extends framework.data.AbstractStore
+ * @class strappy.data.SingleModelStore
+ * @extends strappy.data.AbstractStore
  * @abstract
  * 
  * 
@@ -8,9 +8,9 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'SingleModelStore',
-		$extends:		framework.data.AbstractStore,
+		$extends:		strappy.data.AbstractStore,
 		$abstract:		true
 	}
 )
@@ -21,7 +21,7 @@ $JSKK.Class.create
 		 * @constructor
 		 * Sets up and validates the store.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		init: function()
 		{
@@ -64,7 +64,7 @@ $JSKK.Class.create
 		 * it will send it to the server. Otherwise it will ignore the model
 		 * and simply request a new one.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		sync: function()
 		{
@@ -101,7 +101,7 @@ $JSKK.Class.create
 		/**
 		 * This method simply request a new model through the proxy.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		load: function(filter)
 		{

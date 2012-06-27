@@ -1,5 +1,5 @@
 /**
- * @class framework.mvc.stateful.Model
+ * @class strappy.mvc.stateful.Model
  * 
  * 
  * @abstract
@@ -8,9 +8,9 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.mvc.stateful',
+		$namespace:	'strappy.mvc.stateful',
 		$name:		'Model',
-		$extends:	framework.mvc.Model
+		$extends:	strappy.mvc.Model
 	}
 )
 (

@@ -1,8 +1,8 @@
 /**
- * @class framework.trait.ComponentConnector
+ * @class strappy.trait.ComponentConnector
  * 
- * This trait is designed to be used with {@link framework.mvc.Model models},
- * {@link framework.mvc.View views} and {@link framework.mvc.Controller controllers}.
+ * This trait is designed to be used with {@link strappy.mvc.Model models},
+ * {@link strappy.mvc.View views} and {@link strappy.mvc.Controller controllers}.
  * 
  * This trait will expose a set of useful functionality to the class that
  * is using it, including all the hooks required to access parts of the component.
@@ -12,7 +12,7 @@
 $JSKK.Trait.create
 (
 	{
-		$namespace:	'framework.trait',
+		$namespace:	'strappy.trait',
 		$name:		'ComponentConnector'
 	}
 )
@@ -22,7 +22,7 @@ $JSKK.Trait.create
 		 * @constructor
 		 * This method binds the component to whatever uses this trait.
 		 * 
-		 * @param {framework.Component} component The component to connect.
+		 * @param {strappy.Component} component The component to connect.
 		 */
 		init: function(component)
 		{
@@ -31,7 +31,7 @@ $JSKK.Trait.create
 		/**
 		 * Returns the parent component associated with the class using this trait.
 		 * 
-		 * @return {framework.Component} the parent component.
+		 * @return {strappy.Component} the parent component.
 		 */
 		getParentComponent: function()
 		{
@@ -50,7 +50,7 @@ $JSKK.Trait.create
 		/**
 		 * Returns the Radio Tower singleton.
 		 * 
-		 * @return {framework.RadioTower}
+		 * @return {strappy.RadioTower}
 		 */
 		getRadioTower: function()
 		{
@@ -59,7 +59,7 @@ $JSKK.Trait.create
 		/**
 		 * Returns the State Manager singleton.
 		 * 
-		 * @return {framework.StateMgr}
+		 * @return {strappy.StateMgr}
 		 */
 		getStateMgr: function()
 		{
@@ -88,11 +88,11 @@ $JSKK.Trait.create
 		 * Get's a child component of the associated parent component.
 		 * 
 		 * NOTE: As a convention, you should only ever call this if you want
-		 * to {@link framework.Component#configure configure/reconfigure} the
+		 * to {@link strappy.Component#configure configure/reconfigure} the
 		 * component.
 		 * @param {String} cmp The reference name of the component as defined in
 		 * the parent component.
-		 * @return {framework.Component} The child component.
+		 * @return {strappy.Component} The child component.
 		 */
 		getCmp: function(cmp)
 		{
@@ -102,7 +102,7 @@ $JSKK.Trait.create
 		 * Fetches a model from the parent component.
 		 * 
 		 * @param {String} model The name of the model.
-		 * @return {framework.mvc.Model} The Model instance.
+		 * @return {strappy.mvc.Model} The Model instance.
 		 */
 		getStore: function(store)
 		{
@@ -112,7 +112,7 @@ $JSKK.Trait.create
 		 * Fetches a controller from the parent component.
 		 * 
 		 * @param {String} controller The name of the controller.
-		 * @return {framework.mvc.Controller} The Controller instance.
+		 * @return {strappy.mvc.Controller} The Controller instance.
 		 */
 		getController: function(controller)
 		{
@@ -122,7 +122,7 @@ $JSKK.Trait.create
 		 * Fetches a view from the parent component.
 		 * 
 		 * @param {String} view The name of the view.
-		 * @return {framework.mvc.View} The View instance.
+		 * @return {strappy.mvc.View} The View instance.
 		 */
 		getView: function(view)
 		{
@@ -131,7 +131,7 @@ $JSKK.Trait.create
 		/**
 		 * Fetches the View Cache.
 		 * 
-		 * @return {framework.mvc.ViewCache}
+		 * @return {strappy.mvc.ViewCache}
 		 */
 		getViewCache: function()
 		{

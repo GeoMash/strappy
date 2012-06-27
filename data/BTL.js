@@ -1,5 +1,5 @@
 /**
- * @class framework.data.BTL
+ * @class strappy.data.BTL
  * 
  * Batchable Transmission Layer
  * 
@@ -11,7 +11,7 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.data',
+		$namespace:	'strappy.data',
 		$name:		'BTL',
 		$uses:
 		[
@@ -44,7 +44,7 @@ $JSKK.Class.create
 		config:
 		{
 			url:	'',
-			proxy:	framework.data.proxy.BTL
+			proxy:	strappy.data.proxy.BTL
 		},
 		ready:			false,
 		proxy:			null,
@@ -105,7 +105,7 @@ $JSKK.Class.create
 		},
 		startQueue: function()
 		{
-			this.queue=new framework.data.Queue();
+			this.queue=new strappy.data.Queue();
 			this.queue.attachProxy(this.proxy);
 			return this;
 		},
@@ -116,7 +116,7 @@ $JSKK.Class.create
 		}
 //		startTransaction: function()
 //		{
-//			this.transaction=new framework.data.Transaction();
+//			this.transaction=new strappy.data.Transaction();
 //			this.transaction.start();
 //		},
 //		executeTransaction: function()
@@ -137,7 +137,7 @@ $JSKK.Class.create
 
 //var	args		=$JSKK.toArray(arguments),
 //	keyVals		={},
-//	transaction	=new framework.data.Transaction();
+//	transaction	=new strappy.data.Transaction();
 //if (Object.isDefined(args[1]))
 //{
 //	keyVals[args.shift()]=args.shift();

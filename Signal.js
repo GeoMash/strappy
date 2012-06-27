@@ -1,15 +1,15 @@
 /**
- * @class framework.Signal
+ * @class strappy.Signal
  * This is the signal class. It is used as a factory by the
- * {@link framework.trait.signal.Send} trait.
+ * {@link strappy.trait.signal.Send} trait.
  * 
  * This class also contains constants for every framework level
- * signal that is emitted by the base {@link framework.Component component class},
- * {@link framework.mvc.Model models}, {@link framework.mvc.View views} and
- * {@link framework.mvc.Controller controllers}.
+ * signal that is emitted by the base {@link strappy.Component component class},
+ * {@link strappy.mvc.Model models}, {@link strappy.mvc.View views} and
+ * {@link strappy.mvc.Controller controllers}.
  * 
  * An instance of this class is generated for every signal
- * that is invoked by the framework.
+ * that is invoked by the strappy.
  * 
  * Every signal contains at least a name and a body. A signal may
  * optionally contain a type property and a filter. The latter two
@@ -22,7 +22,7 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework',
+		$namespace:		'strappy',
 		$name:			'Signal'//,
 //		$uses:
 //		[
@@ -114,7 +114,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'Default',
-			$extends:	framework.mvc.Controller
+			$extends:	strappy.mvc.Controller
 		}
 	)
 	(

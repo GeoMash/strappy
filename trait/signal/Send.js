@@ -1,7 +1,7 @@
 /**
- * @class framework.trait.signal.Send
- * This trait enables a {@link framework.mvc.Model model},
- * {@link framework.mvc.View view} or {@link framework.mvc.Controller controller}
+ * @class strappy.trait.signal.Send
+ * This trait enables a {@link strappy.mvc.Model model},
+ * {@link strappy.mvc.View view} or {@link strappy.mvc.Controller controller}
  * with the ability to send signals.
  * 
  * @abstract
@@ -9,14 +9,14 @@
  $JSKK.Trait.create
 (
 	{
-		$namespace:	'framework.trait.signal',
+		$namespace:	'strappy.trait.signal',
 		$name:		'Send'
 	}
 )
 (
 	{
 		/**
-		 * This will send a signal to the {@link framework.SignalTower Signal Tower} where
+		 * This will send a signal to the {@link strappy.SignalTower Signal Tower} where
 		 * it will be emitted for other components and component entities to receive.
 		 * 
 		 * @param {String} name The name of the signal.
@@ -43,7 +43,7 @@
 				return this.getRadioTower().fireEvent
 				(
 					name,
-					new framework.Signal
+					new strappy.Signal
 					(
 						{
 							name:	name,

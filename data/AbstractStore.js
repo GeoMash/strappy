@@ -1,26 +1,26 @@
 /**
- * @class framework.data.AbstractStore
+ * @class strappy.data.AbstractStore
  * @abstract
  * 
  * This is the base store of which all other stores extend from.
  * 
  * You should never use this store directly.
  * 
- * @mixins framework.trait.ComponentConnector
+ * @mixins strappy.trait.ComponentConnector
  * @mixins $JSKK.trait.Observable
  * 
- * @uses framework.trait.ComponentConnector
+ * @uses strappy.trait.ComponentConnector
  * @uses $JSKK.trait.Observable
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'AbstractStore',
 		$abstract:		true,
 		$uses:
 		[
-			framework.trait.ComponentConnector,
+			strappy.trait.ComponentConnector,
 			$JSKK.trait.Observable
 		]
 	}
@@ -45,12 +45,12 @@ $JSKK.Class.create
 			onModelLockChange:	true
 		},
 		/**
-		 * @property {framework.data.proxy.AbstractProxy} proxy
+		 * @property {strappy.data.proxy.AbstractProxy} proxy
 		 * @private
 		 */
 		proxy:			null,
 		/**
-		 * @property {framework.mvc.Model} model A model object which new models will be created from
+		 * @property {strappy.mvc.Model} model A model object which new models will be created from
 		 * @private
 		 */
 		model:			null,
@@ -60,7 +60,7 @@ $JSKK.Class.create
 		 */
 		data:			{},
 		/**
-		 * @property {framework.mvc.Model} record Represents the model instance.
+		 * @property {strappy.mvc.Model} record Represents the model instance.
 		 * @private
 		 */
 		record:			null,
@@ -71,13 +71,13 @@ $JSKK.Class.create
 		 * @constructor
 		 * Sets up and validates the store.
 		 * 
-		 * @return {framework.data.AbstractStore}
+		 * @return {strappy.data.AbstractStore}
 		 */
 		init: function()
 		{
 			if (Object.isNull(this.proxy))
 			{
-				this.proxy=new framework.data.proxy.MemoryProxy();
+				this.proxy=new strappy.data.proxy.MemoryProxy();
 			}
 		},
 		/**
@@ -88,7 +88,7 @@ $JSKK.Class.create
 		 * model lock change events to the store's onModelLockChange event.
 		 * 
 		 * @param {Object} record an object representing the model.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		newRecord: function(record)
 		{
@@ -172,7 +172,7 @@ $JSKK.Class.create
 		/**
 		 * Returns the attached model (not an instance of it).
 		 * 
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		getModel: function()
 		{
@@ -187,7 +187,7 @@ $JSKK.Class.create
 		/**
 		 * Generic setter.
 		 * 
-		 * @return  {framework.data.AbstractStore} this
+		 * @return  {strappy.data.AbstractStore} this
 		 */
 		set: $JSKK.Class.ABSTRACT_METHOD,
 		/**
@@ -195,13 +195,13 @@ $JSKK.Class.create
 		 * it will send it to the server. Otherwise it will ignore the model
 		 * and simply request a new one.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		sync: $JSKK.Class.ABSTRACT_METHOD,
 		/**
 		 * Sets a new proxy on the store.
 		 * 
-		 * @return {framework.data.AbstractStore} this
+		 * @return {strappy.data.AbstractStore} this
 		 */
 		setProxy: function(proxy)
 		{
@@ -211,7 +211,7 @@ $JSKK.Class.create
 		/**
 		 * Returns the attached proxy.
 		 * 
-		 * @return {framework.data.proxy.AbstractProxy} The attached proxy.
+		 * @return {strappy.data.proxy.AbstractProxy} The attached proxy.
 		 */
 		getProxy: function()
 		{

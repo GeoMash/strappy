@@ -1,12 +1,12 @@
 /**
- * @class framework.Component
+ * @class strappy.Component
  * The core class which all components extend from.
  * 
- * Components are the heart of the framework. Each component is in itself a core,
+ * Components are the heart of the strappy. Each component is in itself a core,
  * which means that each component is stand-alone and not dependant on any other
  * component to operate.
  * 
- * This is the core goal of the framework. If a component is not able to conform
+ * This is the core goal of the strappy. If a component is not able to conform
  * to this pattern, then something is wrong with how the component has been built.
  * 
  * This class is designed to be extended from. You should never need to add any
@@ -26,7 +26,7 @@
 		{
 			$namespace:	'Application.component',
 			$name:		'MyComponent',
-			$extends:	framework.Component
+			$extends:	strappy.Component
 		}
 	)
 	(
@@ -65,13 +65,13 @@
  * @abstract
  * 
  * @uses $JSKK.trait.Observable
- * @uses framework.RadioTower
- * @uses framework.StateMgr
+ * @uses strappy.RadioTower
+ * @uses strappy.StateMgr
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework',
+		$namespace:	'strappy',
 		$name:		'Component',
 		$uses:
 		[
@@ -185,7 +185,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component',
 			$name:		'MyComponent',
-			$extends:	framework.Component
+			$extends:	strappy.Component
 		}
 	)
 	(
@@ -210,7 +210,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component',
 			$name:		'MyComponent',
-			$extends:	framework.Component
+			$extends:	strappy.Component
 		}
 	)
 	(
@@ -233,7 +233,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component',
 			$name:		'MyComponent',
-			$extends:	framework.Component
+			$extends:	strappy.Component
 		}
 	)
 	(
@@ -255,7 +255,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component',
 			$name:		'MyComponent',
-			$extends:	framework.Component
+			$extends:	strappy.Component
 		}
 	)
 	(
@@ -294,7 +294,7 @@ $JSKK.Class.create
 		 * @property my A special object containing information relevant to this class.
 		 * @property my.name The name of this class.
 		 * @property my.index The position this component lives in within the stack of 
-		 * components registered against the framework.
+		 * components registered against the strappy.
 		 * @property my.NSObject The namespace in an object format of this class.
 		 * @readonly
 		 */
@@ -305,17 +305,17 @@ $JSKK.Class.create
 			NSObject:	null
 		},
 		/**
-		 * @property radioTower A reference to the {@link framework.RadioTower Radio Tower}. 
+		 * @property radioTower A reference to the {@link strappy.RadioTower Radio Tower}. 
 		 * @private
 		 */
 		radioTower: null,
 		/**
-		 * @property stateMgr A reference to the {@link framework.StateMgr State Manager}. 
+		 * @property stateMgr A reference to the {@link strappy.StateMgr State Manager}. 
 		 * @private
 		 */
 		stateMgr:	null,
 		/**
-		 * @property viewCache A reference to the {@link framework.ViewCache View Cache}. 
+		 * @property viewCache A reference to the {@link strappy.ViewCache View Cache}. 
 		 * @private
 		 */
 		viewCache:	null,
@@ -340,26 +340,26 @@ $JSKK.Class.create
 		 * enabling signals, and the State Manager, enabling state to be
 		 * captured/restored.
 		 * 
-		 * Note: The constructor automatically calls {@link framework.Component#reconfigure reconfigure}
+		 * Note: The constructor automatically calls {@link strappy.Component#reconfigure reconfigure}
 		 * when it is done.
 		 * 
-		 * @return {framework.Component}
+		 * @return {strappy.Component}
 		 */
         init: function()
 		{
 			this.my.name		=this.$reflect('name');
 			this.my.namespace	=this.$reflect('namespace').split('.');
 			
-			if (Object.isUndefined(window.framework.$components))
+			if (Object.isUndefined(window.strappy.$components))
             {
-				window.framework.$components={};
+				window.strappy.$components={};
 			}
-            if (Object.isUndefined(window.framework.$components[this.my.name]))
+            if (Object.isUndefined(window.strappy.$components[this.my.name]))
             {
-            	window.framework.$components[this.my.name]=[];
+            	window.strappy.$components[this.my.name]=[];
             }
 			
-			this.my.index		=window.framework.$components[this.my.name].push(this);
+			this.my.index		=window.strappy.$components[this.my.name].push(this);
 			this.my.NSObject	=window;
 			
 			for (var i=0,j=this.my.namespace.length; i<j; i++)
@@ -403,11 +403,11 @@ $JSKK.Class.create
 		 */
 		initRadioTower: function()
 		{
-			if (Object.isUndefined(window.framework.$radioTower))
+			if (Object.isUndefined(window.strappy.$radioTower))
 			{
-				window.framework.$radioTower=new framework.RadioTower();
+				window.strappy.$radioTower=new strappy.RadioTower();
 			}
-			this.radioTower=window.framework.$radioTower;
+			this.radioTower=window.strappy.$radioTower;
 		},
 		/**
 		 * Initalizes the component's connection to the State Manager.
@@ -419,11 +419,11 @@ $JSKK.Class.create
 		 */
 		initStateMgr: function()
 		{
-			if (Object.isUndefined(window.framework.$stateMgr))
+			if (Object.isUndefined(window.strappy.$stateMgr))
 			{
-				window.framework.$stateMgr=new framework.StateMgr();
+				window.strappy.$stateMgr=new strappy.StateMgr();
 			}
-			this.stateMgr=window.framework.$stateMgr;
+			this.stateMgr=window.strappy.$stateMgr;
 		},
 		/**
 		 * Initalizes the component's connection to the View Cache.
@@ -433,16 +433,16 @@ $JSKK.Class.create
 		 */
 		initViewCache: function()
 		{
-			if (Object.isUndefined(window.framework.$viewCache))
+			if (Object.isUndefined(window.strappy.$viewCache))
 			{
-				window.framework.$viewCache=new framework.mvc.ViewCache();
+				window.strappy.$viewCache=new strappy.mvc.ViewCache();
 			}
-			this.viewCache=window.framework.$viewCache;
+			this.viewCache=window.strappy.$viewCache;
 		},
 		/**
 		 * Fetches the view cache.
 		 * 
-		 * @return {framework.mvc.ViewCache}
+		 * @return {strappy.mvc.ViewCache}
 		 */
 		getViewCache: function()
 		{
@@ -524,7 +524,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'Default',
-			$extends:	framework.mvc.Controller
+			$extends:	strappy.mvc.Controller
 		}
 	)
 	(
@@ -583,7 +583,7 @@ $JSKK.Class.create
 		 * @param {String} cmpName The reference name of the component to get as
 		 * defined by this component.
 		 * @throws Error If the component is not registered.
-		 * @return {framework.Component} the requested component.
+		 * @return {strappy.Component} the requested component.
 		 */
 		getCmp: function(cmpName)
 		{
@@ -612,7 +612,7 @@ $JSKK.Class.create
 					'onBeforeReadyState',
 					function()
 					{
-						this.sendSignal(framework.Signal.COMPONENT_IS_READY,'component',{origin:this.getIID()},this);
+						this.sendSignal(strappy.Signal.COMPONENT_IS_READY,'component',{origin:this.getIID()},this);
 					}.bind(this)
 				);
 				
@@ -641,7 +641,7 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} controller The name of the controller to get.
 		 * @throws Error if the controller has not been initilized.
-		 * @return {framework.mvc.View} The requested controller if it has been defined.
+		 * @return {strappy.mvc.View} The requested controller if it has been defined.
 		 */
 		getController: function(controller)
 		{
@@ -682,7 +682,7 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} view The name of the view to get.
 		 * @throws Error if the view has not been initilized.
-		 * @return {framework.mvc.View} The requested view if it has been defined.
+		 * @return {strappy.mvc.View} The requested view if it has been defined.
 		 */
 		getView: function(view)
 		{
@@ -731,7 +731,7 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} store The name of the store to get.
 		 * @throws 
-		 * @return {framework.mvc.Model} The requested store if it has been defined.
+		 * @return {strappy.mvc.Model} The requested store if it has been defined.
 		 */
 		getStore: function(store)
 		{
@@ -798,7 +798,7 @@ $JSKK.Class.create
 					}
 					this._configured=true;
 					this.fireEvent('onConfigured',this);
-					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
+					this.sendSignal(strappy.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
 		},
@@ -816,7 +816,7 @@ $JSKK.Class.create
 				function()
 				{
 					this.configure(this.config);
-//					this.sendSignal(framework.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
+//					this.sendSignal(strappy.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
 				}.bind(this)
 			);
 		},
@@ -866,7 +866,7 @@ $JSKK.Class.create
 			return id.join('.');
 		},
 		/**
-		 * See {@link framework.trait.signal.Send#sendSignal}
+		 * See {@link strappy.trait.signal.Send#sendSignal}
 		 * @private
 		 */
 		sendSignal: function(name,type,filter,body)
@@ -881,7 +881,7 @@ $JSKK.Class.create
 						this.radioTower.fireEvent
 						(
 							name,
-							new framework.Signal
+							new strappy.Signal
 							(
 								{
 									name:	name,
