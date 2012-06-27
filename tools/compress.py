@@ -17,7 +17,7 @@ class Compress:
 	
 	
 	def compressStrappy(self,configFile=None,outputFile=None):
-		print 'locating files...'
+		#print 'locating files...'
 		
 		filelist	=[]
 		workingPath	=os.path.abspath(DIR_STRAPPY)
@@ -62,6 +62,8 @@ class Compress:
 		if outputFile!=None:
 			file=open(outputFile,'w');
 			file.write(process.communicate()[0])
+			print 'Successfully compressed and combined files...'
+			print 'Result written to "'+os.path.abspath(outputFile)+'"'
 		else:
 			print process.communicate()[0]
 
@@ -75,7 +77,6 @@ parser.add_argument('--config',	help='Specify a config file.')
 parser.add_argument('--output',	help='Specify a file where the result will be output.')
 
 args=parser.parse_args()
-print args.config
 if(args.action=='strappy'):
 	compressor=Compress();
 	compressor.compressStrappy(
