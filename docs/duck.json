@@ -21,6 +21,8 @@
         "../trait/ComponentConnector.js",
         "../trait/signal/Send.js",
         "../trait/signal/Receive.js",
+        "../trait/signal/Bindable.js",
+        "../mvc/ViewCache.js",
         "../mvc/Model.js",
         "../mvc/View.js",
         "../mvc/Controller.js",

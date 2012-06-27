@@ -1,15 +1,15 @@
 /**
- * @class framework.Signal
+ * @class strappy.Signal
  * This is the signal class. It is used as a factory by the
- * {@link framework.trait.signal.Send} trait.
+ * {@link strappy.trait.signal.Send} trait.
  * 
  * This class also contains constants for every framework level
- * signal that is emitted by the base {@link framework.Component component class},
- * {@link framework.mvc.Model models}, {@link framework.mvc.View views} and
- * {@link framework.mvc.Controller controllers}.
+ * signal that is emitted by the base {@link strappy.Component component class},
+ * {@link strappy.mvc.Model models}, {@link strappy.mvc.View views} and
+ * {@link strappy.mvc.Controller controllers}.
  * 
  * An instance of this class is generated for every signal
- * that is invoked by the framework.
+ * that is invoked by the strappy.
  * 
  * Every signal contains at least a name and a body. A signal may
  * optionally contain a type property and a filter. The latter two
@@ -22,7 +22,7 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework',
+		$namespace:		'strappy',
 		$name:			'Signal'//,
 //		$uses:
 //		[
@@ -46,6 +46,13 @@ $JSKK.Class.create
 		 */
 		GLOBAL:						'global',
 		
+		//Component
+		/**
+		 * @property COMPONENT_IS_READY
+		 * @static
+		 */
+		COMPONENT_IS_READY:			'component.ready',
+		
 		//State
 		/**
 		 * @property STATE_CHANGE
@@ -58,125 +65,8 @@ $JSKK.Class.create
 		 * @property CMP_DO_RECONFIGURE
 		 * @static
 		 */
-		CMP_DO_RECONFIGURE:			'component.do.reconfigure',
+		CMP_DO_RECONFIGURE:			'component.do.reconfigure'
 		
-		//Views
-		/**
-		 * @property VIEW_IS_READY
-		 * @static
-		 */
-		VIEW_IS_READY:				'view.is.ready',
-		/**
-		 * @property VIEW_DONE_GOTBASEHTML
-		 * @static
-		 */
-		VIEW_DONE_GOTBASEHTML:		'view.done.gotBaseHTML',
-		/**
-		 * @property VIEW_DO_INSERTBASEHTML
-		 * @static
-		 */
-		VIEW_DO_INSERTBASEHTML:		'view.do.insertBaseHTML',
-		/**
-		 * @property VIEW_BEFORE_RENDER
-		 * @static
-		 */
-		VIEW_BEFORE_RENDER:			'view.before.render',
-		/**
-		 * @property VIEW_DONE_RENDER
-		 * @static
-		 */
-		VIEW_DONE_RENDER:			'view.done.render',
-		/**
-		 * @property VIEW_DO_SHOW
-		 * @static
-		 */
-		VIEW_DO_SHOW:				'view.do.show',
-		/**
-		 * @property VIEW_DO_HIDE
-		 * @static
-		 */
-		VIEW_DO_HIDE:				'view.do.hide',
-		/**
-		 * @property VIEW_DONE_SHOW
-		 * @static
-		 */
-		VIEW_DONE_SHOW:				'view.done.show',
-		/**
-		 * @property VIEW_DONE_HIDE
-		 * @static
-		 */
-		VIEW_DONE_HIDE:				'view.done.hide',
-		
-		//Controllers
-		/**
-		 * @property CONTROLLER_DO_INIT
-		 * @static
-		 */
-		CONTROLLER_DO_INIT:			'controller.do.init',
-		/**
-		 * @property CONTROLLER_DONE_INIT
-		 * @static
-		 */
-		CONTROLLER_DONE_INIT:		'controller.done.init',
-		/**
-		 * @property CONTROLLER_DO_DESTROY
-		 * @static
-		 */
-		CONTROLLER_DO_DESTROY:		'controller.do.destroy',
-		
-		//Stores
-		/**
-		 * @property STORE_DONE_CHANGE
-		 * @static
-		 */
-		STORE_DONE_CHANGE:			'store.done.change',
-		/**
-		 * @property STORE_DONE_SYNC
-		 * @static
-		 */
-		STORE_DONE_SYNC:			'store.done.sync',
-		/**
-		 * @property STORE_FAILED_SYNC
-		 * @static
-		 */
-		STORE_FAILED_SYNC:			'store.failed.sync',
-		/**
-		 * @property STATEFULSTORE_DONE_CHANGE
-		 * @static
-		 */
-		STATEFULSTORE_DONE_CHANGE:	'stateful.store.done.change',
-		/**
-		 * @property STATEFULSTORE_IS_READY
-		 * @static
-		 */
-		STATEFULSTORE_IS_READY:		'stateful.store.is.ready',
-		
-		//Models
-		/**
-		 * @property MODEL_DONE_CHANGE
-		 * @static
-		 */
-		MODEL_DONE_CHANGE:			'model.done.change',
-		/**
-		 * @property MODEL_DONE_SYNC
-		 * @static
-		 */
-		MODEL_DONE_SYNC:			'model.done.sync',
-		/**
-		 * @property MODEL_FAILED_SYNC
-		 * @static
-		 */
-		MODEL_FAILED_SYNC:			'model.failed.sync',
-		/**
-		 * @property MODEL_LOCK_CHANGE
-		 * @static
-		 */
-		MODEL_LOCK_CHANGE:			'model.lock.change',
-		/**
-		 * @property COMMAND_COMPLETE
-		 * @static
-		 */
-		COMMAND_COMPLETE:			'command.complete'
 		
 	},
 	{
@@ -224,7 +114,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'Default',
-			$extends:	framework.mvc.Controller
+			$extends:	strappy.mvc.Controller
 		}
 	)
 	(
@@ -272,12 +162,29 @@ $JSKK.Class.create
 		 * @param type {String} The signal type to be tested against as a string.
 		 * @param filter {Object} The signal filter to be tested against as an object.
 		 * @return {Boolean} True if the filter is a match.
-		 * 
-		 * NOTE: NOT IMPLEMENTED
 		 */
-		forMe: function(type,filter)
+		isForMe: function(type,filter)
 		{
-			// Placeholder
+			if (!Object.isNull(type))
+			{
+				if (this.getType()!=type)
+				{
+					return false;
+				}
+			}
+			if (!Object.isNull(filter))
+			{
+				var localFilter=this.getFilter();
+				for (var item in filter)
+				{
+					if (Object.isUndefined(localFilter[item])
+					|| filter[item]!=localFilter[item])
+					{
+						return false;
+					}
+				}
+			}
+			return true;
 		}
 	}
 );

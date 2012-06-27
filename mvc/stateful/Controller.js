@@ -1,5 +1,5 @@
 /**
- * @class framework.mvc.stateful.Controller
+ * @class strappy.mvc.stateful.Controller
  * 
  * TODO:
  * 
@@ -7,28 +7,32 @@
  * 
  * Bound Signals:
  * 
- * * {@link framework.Signal.STATE_CHANGE}: {@link framework.mvc.stateful.Controller#_onStateChange}
- * * {@link framework.Signal.VIEW_IS_READY}: {@link framework.mvc.stateful.Controller#onViewReady}
+ * * {@link strappy.Signal.STATE_CHANGE}: {@link strappy.mvc.stateful.Controller#onStateChange}
+ * * {@link strappy.Signal.VIEW_IS_READY}: {@link strappy.mvc.stateful.Controller#onViewReady}
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Receive
- * @mixins framework.trait.signal.Send
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Receive
+ * @mixins strappy.trait.signal.Send
+ * @mixins strappy.trait.signal.Bindable
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Receive
- * @uses framework.trait.signal.Send
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Receive
+ * @uses strappy.trait.signal.Send
+ * @uses strappy.trait.signal.Bindable
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.mvc.stateful',
+		$namespace:	'strappy.mvc.stateful',
 		$name:		'Controller',
+		$abstract:	true,
 		$uses:
 		[
-			framework.trait.ComponentConnector,
-			framework.trait.signal.Receive,
-			framework.trait.signal.Send,
+			strappy.trait.ComponentConnector,
+			strappy.trait.signal.Receive,
+			strappy.trait.signal.Send,
+			strappy.trait.signal.Bindable,
 			$JSKK.trait.Observable
 		]
 	}
@@ -38,14 +42,25 @@ $JSKK.Class.create
 	{
 		events:
 		{
-			onReadyState:	true
+			onBeforeReadyState:	true,
+			onReadyState:		true
 		},
 		/**
-		 * @property {framework.data.stateful.Store} stateStore A reference to the
+		 * @property {strappy.data.stateful.Store} stateStore A reference to the
 		 * associated state model.
 		 * @private
 		 */
-		stateStore:	null,
+		stateStore:			null,
+		/**
+		 * This method will be called whenever a state change signal
+		 * has been received.
+		 * 
+		 * Note that state change signals are blocked until the associated
+		 * {@link strappy.mvc.stateful.Model State Model} is ready.
+		 * @abstract
+		 * @param {strappy.Signal} The signal object.
+		 */
+		onBeforeChange:		$JSKK.Class.ABSTRACT_METHOD,
 		/**
 		 * @constructor
 		 * 
@@ -55,86 +70,103 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.registerSignals
-			(
-				[framework.Signal.STATE_CHANGE,				'_onStateChange',framework.Signal.GLOBAL]//,
-//				[framework.Signal.VIEW_IS_READY,			'onViewReady']
+			( 
+				{
+					onStateChangeFromStateMgr:	strappy.Signal.STATE_CHANGE
+				}
 			);
 			if (!(this.stateStore=this.getStore('State')))
 			{
 				throw new Error('Unable to initialize "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" State Controller. Controller requires a state model.');
 			}
-//			(this.$reflect('uses') || []).each
-//			(
-//				function(trait)
-//				{
-//					console.debug(trait.toString());
-////					console.debug(trait.$reflect('name'));
-//				}
-//			);
-//			console.debug('USES: ',this.$reflect('uses'));
+			//Bind the state stuff before firing the onReady event.
+			this.stateStore.observe('onBeforeChange',	this.onBeforeChange.bind(this));
+			this.stateStore.observe('onChange',			this.onStateChange.bind(this));
 		},
 		/**
 		 * A private method which wraps the functionality of
-		 * {@link framework.mvc.stateful.Controller#onStateChange} and blocks
-		 * all signals until the associated {@link framework.mvc.stateful.Model State Model}
+		 * {@link strappy.mvc.stateful.Controller#onStateChange} and blocks
+		 * all signals until the associated {@link strappy.mvc.stateful.Model State Model}
 		 * is ready.
 		 * 
 		 * @private
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 * @return {void}
 		 */
-		_onStateChange: function(signal)
+		onStateChangeFromStateMgr: function(signal)
 		{
 			//Ignore all state changes if the state model is not flagged as ready.
 			if (this.stateStore.isReady())
 			{
-				this.onStateChange(signal.getBody());
+				// this.onStateChange(signal.getBody());
+				var state=signal.getBody();
+				for (var item in state)
+				{
+					if (this.stateStore.canManageStateItem(item))
+					{
+						var oldValue=this.stateStore.get(item);
+						if (!this.stateStore.set(item,state[item]))
+						{
+							var restoredState	={};
+							restoredState[item]	=oldValue;
+							this.getStateMgr().updateState(restoredState,true);
+						}
+					}
+				}
 			}
 		},
 		/**
-		 * This method will be called whenever a state change signal
-		 * has been received.
-		 * 
-		 * Note that state change signals are blocked until the associated
-		 * {@link framework.mvc.stateful.Model State Model} is ready.
-		 * @abstract
-		 * @param {framework.Signal} The signal object.
-		 */
-		onStateChange:	$JSKK.emptyFunction,
-		/**
-		 * This method will be called when a view fires a {@link framework.Signal.VIEW_IS_READY ready}
+		 * This method will be called when a view fires a {@link strappy.Signal.VIEW_IS_READY ready}
 		 * signal.
 		 * @abstract
-		 * @param {framework.Signal} The signal object.
+		 * @param {strappy.Signal} The signal object.
 		 */
 		onViewReady:	$JSKK.emptyFunction,
 		/**
-		 * Flags the {@link framework.mvc.stateful.Model State Model}
+		 * Flags the {@link strappy.mvc.stateful.Model State Model}
 		 * as ready.
 		 * 
-		 * @return {framework.mvc.stateful.Controller}
+		 * @return {strappy.mvc.stateful.Controller}
 		 */
 		setReady:		function()
 		{
 			this.stateStore.setReady(true);
-			this.fireEvent('onReadyState',this,true);
+			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
+			{
+				var state=this.getStateMgr().getState()
+				for (var item in state)
+				{
+					if (this.stateStore.canManageStateItem(item))
+					{
+						var oldValue=this.stateStore.get(item);
+						if (!this.stateStore.set(item,state[item]))
+						{
+							var restoredState	={};
+							restoredState[item]	=oldValue;
+							this.getStateMgr().updateState(restoredState,true);
+						}
+					}
+				}
+				this.fireEvent('onReadyState',this,true);
+			}
 			return this;
 		},
 		/**
-		 * Updates a stateful property in the {@link framework.mvc.stateful.Model State Model}.
+		 * Updates a stateful property in the {@link strappy.mvc.stateful.Model State Model}.
 		 * @param {String} key The name of the state property to update.
 		 * @param {Mixed} value The new value.
-		 * @return {framework.mvc.stateful.Controller}
+		 * @return {strappy.mvc.stateful.Controller}
 		 */
-		updateState:	function(key,value)
+		updateState:	function()
 		{
 			this.stateStore.set(key,value);
+			this.stateStore.set.apply(this.stateStore,$JSKK.toArray(arguments));
 			return this;
 		},
 		/**
 		 * Flags a view as ready.
 		 * @param {String} view The name of the view to flag as ready.
-		 * @return {framework.mvc.stateful.Controller}
+		 * @return {strappy.mvc.stateful.Controller}
 		 */
 		setViewReadyState: function(view)
 		{

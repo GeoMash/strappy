@@ -1,6 +1,6 @@
 /**
- * @class framework.data.SingleModelStore
- * @extends framework.data.AbstractStore
+ * @class strappy.data.SingleModelStore
+ * @extends strappy.data.AbstractStore
  * @abstract
  * 
  * 
@@ -8,9 +8,9 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'SingleModelStore',
-		$extends:		framework.data.AbstractStore,
+		$extends:		strappy.data.AbstractStore,
 		$abstract:		true
 	}
 )
@@ -21,7 +21,7 @@ $JSKK.Class.create
 		 * @constructor
 		 * Sets up and validates the store.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		init: function()
 		{
@@ -54,10 +54,9 @@ $JSKK.Class.create
 		 * @param {Mixed} value The value to be assigned to the field.
 		 * @return 
 		 */
-		set: function(field,value)
+		set: function()
 		{
-			this.record.set(field,value);
-			this.fireEvent('onChange',this);
+			this.record.set.apply(this.record,$JSKK.toArray(arguments));
 			return this;
 		},
 		/**
@@ -65,7 +64,7 @@ $JSKK.Class.create
 		 * it will send it to the server. Otherwise it will ignore the model
 		 * and simply request a new one.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		sync: function()
 		{
@@ -99,6 +98,39 @@ $JSKK.Class.create
 			}
 			return this;
 		},
+		/**
+		 * This method simply request a new model through the proxy.
+		 * 
+		 * @return {strappy.data.SingleModelStore}
+		 */
+		load: function(filter)
+		{
+			if (this.proxy && Object.isFunction(this.proxy.get))
+			{
+				this.proxy.get
+				(
+					{
+						filter: filter,
+						onSuccess:	function(response)
+						{
+							this.record=this.newRecord(response.data[0]);
+							this.fireEvent('onChange',this,response);
+							this.fireEvent('onLoad',this,response);
+						}.bind(this),
+						onFailure: function(response)
+						{
+							this.fireEvent('onLoadFailed',this,response);
+						}.bind(this)
+					}
+				);
+			}
+			else
+			{
+				throw new Exception('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
+			}
+			return this;
+		},
+
 		isDirty: function()
 		{
 			return this.record.isDirty();

@@ -1,15 +1,15 @@
 /**
- * @class framework.data.Queue
+ * @class strappy.data.Queue
  * 
  * This class is used by other data communication classes
  * to provide a means to queue up requests via proxies.
  * 
- * @uses framework.mvc.Model
+ * @uses strappy.mvc.Model
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'Queue'
 	}
 )
@@ -39,9 +39,9 @@ $JSKK.Class.create
 		/**
 		 * This method attaches a proxy to the queue object. Any request
 		 * the proxy makes will be intercepted and stored in the request queue
-		 * until the {@link framework.data.Queue.execute() execute} method is called.
-		 * @param {framework.data.proxy.AbstractProxy} proxy 
-		 * @return {framework.data.Queue} this
+		 * until the {@link strappy.data.Queue.execute() execute} method is called.
+		 * @param {strappy.data.proxy.AbstractProxy} proxy 
+		 * @return {strappy.data.Queue} this
 		 */
 		attachProxy: function(proxy)
 		{
@@ -80,7 +80,7 @@ $JSKK.Class.create
 		/**
 		 * Executes the queue, running all queued requests as a single batched request.
 		 * 
-		 * @return {framework.data.Queue} this
+		 * @return {strappy.data.Queue} this
 		 */
 		execute: function()
 		{
@@ -142,7 +142,7 @@ $JSKK.Class.create
 		 * @param {Object} request A raw request object. Note that this must
 		 * also include a "url" property.
 		 * 
-		 * @return {framework.data.Queue} this
+		 * @return {strappy.data.Queue} this
 		 */
 		push: function(request)
 		{

@@ -17,6 +17,11 @@
 				"name": "StyleGuide",
 				"title": "Style Guide",
 				"description": "A guide for Spinifex software."
+			},
+			{
+				"name": "StateHandling",
+				"title": "State Handling",
+				"description": "A guide for State Handling."
 			}
 		]
 	}

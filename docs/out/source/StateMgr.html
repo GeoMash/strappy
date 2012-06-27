@@ -63,13 +63,18 @@ $JSKK.Class.create
 		 */
 		radioTower:		null,
 <span id='framework-StateMgr-property-eventSupported'>		/**
-</span>		 * A flag which is set to true or false depending on weather
+</span>		 * @property eventSupported A flag which is set to true or false depending on weather
 		 * or not the browser supports the &quot;hashchange&quot; event.
 		 * 
 		 * See {@link framework.RadioTower Radio Tower}.
 		 * @private
 		 */
 		eventSupported:	false,
+<span id='framework-StateMgr-property-supressNext'>		/**
+</span>		 * @property supressNext
+		 * @private
+		 */
+		supressNext:	false,
 <span id='framework-StateMgr-method-constructor'>		/**
 </span>		 * @constructor
 		 * Sets up the state manager by linking it to the {@link framework.RadioTower Radio Tower},
@@ -170,7 +175,11 @@ $JSKK.Class.create
 		 */
 		onHashChange: function(event,supressSignal)
 		{
-			console.debug('onHashChange',(supressSignal)?'(supressed)':'');
+			if (this.supressNext)
+			{
+				supressSignal	=true;
+				this.supressNext=false;
+			}
 			this.stateString=window.location.hash.replace('#','');
 			if (!Object.isEmpty(this.stateString))
 			{
@@ -182,7 +191,7 @@ $JSKK.Class.create
 			}
 			if (!supressSignal)
 			{
-				this.sendSignal(framework.Signal.STATE_CHANGE,this.state);
+				this.sendSignal(framework.Signal.STATE_CHANGE,'state',{},this.state);
 			}
 		},
 <span id='framework-StateMgr-method-registerStateChanger'>		/**
@@ -250,22 +259,22 @@ $JSKK.Class.create
 		registerStateChanger: function(el,state)
 		{
 			state=this.parseStateString(state);
-			el.click(this.updateState.bind(this,state));
+			el.click(this.updateState.bind(this,state,false));
 		},
 <span id='framework-StateMgr-method-updateState'>		/**
 </span>		 * This is a private method which wraps state change events bound with
 		 * {@link framework.StateMgr#registerStateChanger}. It parses the
 		 * new state and applies it to the hash address.
-		 * @private
 		 * @param {Object} A key valued state object.
 		 * @return {void}
 		 */
-		updateState: function(state)
+		updateState: function(state,supressed,event)
 		{
 			for (var node in state)
 			{
 				this.state[node]=state[node];
 			}
+			// this.supressNext=supressed;
 			window.location.hash=this.parseStateObject(this.state);
 		},
 <span id='framework-StateMgr-method-getState'>		/**

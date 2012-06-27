@@ -1,6 +1,6 @@
 /**
- * @class framework.data.MultiModelStore
- * @extends framework.data.AbstractStore
+ * @class strappy.data.MultiModelStore
+ * @extends strappy.data.AbstractStore
  * 
  * 
  * @abstract
@@ -9,9 +9,9 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'MultiModelStore',
-		$extends:		framework.data.AbstractStore,
+		$extends:		strappy.data.AbstractStore,
 		$abstract:		true
 	}
 )
@@ -29,7 +29,7 @@ $JSKK.Class.create
 		data:		[],
 		/**
 		 * @property {Array} records Represent an array of
-		 * {@link framework.mvc.Model model} instances.
+		 * {@link strappy.mvc.Model model} instances.
 		 * @private
 		 */
 		records:	[],
@@ -37,7 +37,7 @@ $JSKK.Class.create
 		 * @constructor
 		 * Sets up and validates the store.
 		 * 
-		 * @return {framework.data.MultiModelStore}
+		 * @return {strappy.data.MultiModelStore}
 		 */
 		init: function()
 		{
@@ -65,7 +65,7 @@ $JSKK.Class.create
 		 * onModelLockChange event.
 		 * 
 		 * @param {Object} record an object representing the model.
-		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		newRecord: function(records)
 		{
@@ -92,7 +92,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'Default',
-			$extends:	framework.mvc.Controller
+			$extends:	strappy.mvc.Controller
 		}
 	)
 	(
@@ -115,7 +115,7 @@ $JSKK.Class.create
 	);
 		 * @param {Function} callback A closure which will be called at each iteration.
 		 * The first parameter of the closure will be the data item.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		each: function(callback)
 		{
@@ -128,7 +128,7 @@ $JSKK.Class.create
 		 * Note: The record will be flagged as dirty when it is added to the store.
 		 * 
 		 * @param {Mixed} record The record to be added to the store.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		add: function(record)
 		{
@@ -140,7 +140,7 @@ $JSKK.Class.create
 		/**
 		 * Removes a record from the store.
 		 * @param {Mixed} record The record to be removed from the store.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		remove: function(record)
 		{
@@ -157,9 +157,79 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Removes a range of records from the store.
+		 * @param {Number} start index of the range to be deleted.
+		 * @param {Number} end index of the range to be deleted.
+		 * @return {strappy.mvc.Model}
+		 */
+		removeByRange: function(startIndex,endIndex)
+		{
+			if(startIndex < 0 || startIndex > this.records.length)
+			{
+				console.log("StartIndex is out of range.");
+				return this;
+			}
+
+			if(endIndex < startIndex)
+			{
+				console.log("EndIndex is invalid.");
+				return this;
+			}
+
+			if(endIndex > this.records.length)
+			{
+				console.log("EndIndex is out of range.");
+				return this;
+			}
+			var sliced = this.records.splice(startIndex,endIndex);
+			this.fireEvent('onChange',this);
+			return this;
+		},
+		/**
+		 * Returns RecordIndex by key/value pair
+		 * @param {Number} key the property key.
+		 * @param {Number} value the property value.
+		 * @return {strappy.mvc.Model}
+		 */
+		getRecordIndexByValue: function(key, value)
+		{
+			var index = -1;
+			this.each
+			(
+				function(model, i)
+				{
+					if (model.getRecord()[key]==value)
+					{
+						index=i;
+					}
+				}.bind(this)
+			);
+			return index;
+		},
+		/**
+		 * Return RecordIndex by record
+		 * @param {Object} record the record.
+		 * @return {strappy.mvc.Model}
+		 */
+		getRecordIndex: function(record)
+		{
+			var index = -1;
+			this.each
+			(
+				function(model, i)
+				{
+					if (model.getRecord()===record)
+					{
+						index=i;
+					}
+				}.bind(this)
+			);
+			return index;
+		},
+		/**
 		 * Returns all attched model instances (records).
 		 * 
-		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		getAll: function()
 		{
@@ -177,7 +247,7 @@ $JSKK.Class.create
 		/**
 		 * Returns the first attached model.
 		 * 
-		 * @return {framework.mvc.Model} The model.
+		 * @return {strappy.mvc.Model} The model.
 		 */
 		first: function()
 		{
@@ -186,7 +256,7 @@ $JSKK.Class.create
 		/**
 		 * Returns the last attached model.
 		 * 
-		 * @return {framework.mvc.Model} The model.
+		 * @return {strappy.mvc.Model} The model.
 		 */
 		last: function()
 		{
@@ -237,7 +307,7 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} key The key to search against.
 		 * @param {Mixed} value The value to search for.
-		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		find: function()
 		{
@@ -288,7 +358,7 @@ $JSKK.Class.create
 	);
 		 * 
 		 * @param {Function} callback A function to call for each record.
-		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		findBy: function(callback)
 		{
@@ -312,7 +382,7 @@ $JSKK.Class.create
 		{
 			var	args		=$JSKK.toArray(arguments),
 				keyVals		={},
-				transaction	=new framework.data.Transaction();
+				transaction	=new strappy.data.Transaction();
 			if (Object.isDefined(args[1]))
 			{
 				keyVals[args.shift()]=args.shift();
@@ -464,7 +534,7 @@ $JSKK.Class.create
 		/**
 		 * 
 		 * 
-		 * @see framework.data.BTL
+		 * @see strappy.data.BTL
 		 */
 		configureBTL: function(config)
 		{

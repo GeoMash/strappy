@@ -1,5 +1,5 @@
 /**
- * @class framework.data.proxy.AbstractProxy
+ * @class strappy.data.proxy.AbstractProxy
  * 
  * 
  * 
@@ -11,7 +11,7 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.data.proxy',
+		$namespace:	'strappy.data.proxy',
 		$name:		'AbstractProxy',
 		$abstract:	true,
 		$uses:

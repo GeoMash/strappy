@@ -1,6 +1,6 @@
 /**
- * @class framework.data.proxy.BTL
- * @extends framework.data.proxy.AbstractProxy
+ * @class strappy.data.proxy.BTL
+ * @extends strappy.data.proxy.AbstractProxy
  * 
  * Batchable Transmission Layer Proxy
  * 
@@ -9,9 +9,9 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.data.proxy',
+		$namespace:	'strappy.data.proxy',
 		$name:		'BTL',
-		$extends:	framework.data.proxy.AbstractProxy
+		$extends:	strappy.data.proxy.AbstractProxy
 	}
 )
 (
@@ -23,7 +23,7 @@ $JSKK.Class.create
 		 * @param config.url The url to send the request to.
 		 * @param config.data The data which will be converted to a JSON string and sent
 		 * with the request.
-		 * @return {framework.data.proxy.BTL} this
+		 * @return {strappy.data.proxy.BTL} this
 		 */
 		raw: function(config)
 		{

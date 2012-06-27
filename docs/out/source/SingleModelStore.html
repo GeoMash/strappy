@@ -42,6 +42,7 @@ $JSKK.Class.create
 		 */
 		init: function()
 		{
+			this.init.$parent();
 			if (!Object.isNull(this.model) &amp;&amp; Object.isDefined(this.model))
 			{
 				this.record=this.newRecord(this.data);
@@ -70,10 +71,9 @@ $JSKK.Class.create
 		 * @param {Mixed} value The value to be assigned to the field.
 		 * @return 
 		 */
-		set: function(field,value)
+		set: function()
 		{
-			this.record.set(field,value);
-			this.fireEvent('onChange',this);
+			this.record.set.apply(this.record,$JSKK.toArray(arguments));
 			return this;
 		},
 <span id='framework-data-SingleModelStore-method-sync'>		/**
@@ -115,6 +115,39 @@ $JSKK.Class.create
 			}
 			return this;
 		},
+<span id='framework-data-SingleModelStore-method-load'>		/**
+</span>		 * This method simply request a new model through the proxy.
+		 * 
+		 * @return {framework.data.SingleModelStore}
+		 */
+		load: function(filter)
+		{
+			if (this.proxy &amp;&amp; Object.isFunction(this.proxy.get))
+			{
+				this.proxy.get
+				(
+					{
+						filter: filter,
+						onSuccess:	function(response)
+						{
+							this.record=this.newRecord(response.data[0]);
+							this.fireEvent('onChange',this,response);
+							this.fireEvent('onLoad',this,response);
+						}.bind(this),
+						onFailure: function(response)
+						{
+							this.fireEvent('onLoadFailed',this,response);
+						}.bind(this)
+					}
+				);
+			}
+			else
+			{
+				throw new Exception('The store &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; cannot be synced as it does not have a syncable proxy attached.');
+			}
+			return this;
+		},
+
 		isDirty: function()
 		{
 			return this.record.isDirty();

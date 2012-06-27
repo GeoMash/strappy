@@ -1,26 +1,31 @@
 /**
- * @class framework.mvc.View
+ * @class strappy.mvc.View
  * 
  * TODO:
  * 
  * Explanation & Examples.
  * 
- * @mixins framework.trait.ComponentConnector
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Bindable
+ * @mixins $JSKK.trait.Observable
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Receive
- * @uses framework.trait.signal.Send
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Bindable
+ * @uses $JSKK.trait.Observable
+ * @uses strappy.mvc.ViewCache
+ * 
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.mvc',
+		$namespace:		'strappy.mvc',
 		$name:			'View',
 		$abstract:		true,
 		$uses:
 		[
-			framework.trait.ComponentConnector,
+			strappy.trait.ComponentConnector,
+			strappy.trait.signal.Bindable,
 			$JSKK.trait.Observable
 		]
 	}
@@ -30,19 +35,17 @@ $JSKK.Class.create
 	{
 		events:
 		{
-			onGotBaseHTML:		true,
-			onInsertBaseHTML:	true,
+			onTemplatesLoaded:	true,
 			onReady:			true,
 			onShow:				true,
 			onHide:				true
 		},
 		
-        _iid:			null,
 		_ready:			false,
 		_stateBindings:	{},
-        contentURL:		null,
-		baseHTML:		null,
+		templates:		{},
 		element:		null,
+		stateStore:		null,
         // TODO: COMPOSITE PATTERN -> See bottom off this Class
         // children: [],
 
@@ -53,47 +56,107 @@ $JSKK.Class.create
         */
 		init: function()
 		{
-			this.generateInstanceID();
-			
-			this.fetchContent();
-		},
-		/**
-		 * 
-		 */
-		fetchContent: function()
-		{
-			$.get
+			var	cmp=this.getParentComponent();
+			$JSKK.when(cmp.isConfigured.bind(cmp)).isTrue
 			(
-				(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.$reflect('name').toLowerCase()+'.html',
-				function(response)
+				function()
 				{
-					this.baseHTML=response;
-					this.fireEvent('onGotBaseHTML',this);
+					this.fetchTemplateContent
+					(
+						function()
+						{
+							//Bind the state stuff before firing the onReady event.
+							if ((this.stateStore=this.getStore('State')))
+							{
+								this.stateStore.observe('onChange',this.onStateChange.bind(this));
+							}
+							
+							this._ready=true;
+							/*
+							 * The following two lines need to be in this order so that
+							 * the view has a chance to set itself up before the state
+							 * controller flags the component as ready.
+							 */
+							this.onReady();
+							this.fireEvent('onReady',this);
+						}.bind(this)
+					);
 				}.bind(this)
 			);
 		},
-		/**
-		 * 
-		 */
-		insertBaseHTML: function(config)
+		fetchTemplateContent: function(onComplete)
 		{
-			console.debug('insertBaseHTML');
-			var	view=$(this.getBaseHTML());
+			var	numTemplates	=0,
+				doneTemplates	=0;
 			
-			view.attr('id',this.getIID());
-			$(config.where)[config.how](view);
-			this.fireEvent('onInsertBaseHTML',this);
-			this._ready=true;
-			this.fireEvent('onReady',this);
-			this.onReady();
-			return this;
+			for (var template in this.templates)
+			{
+				numTemplates++;
+			}
+			
+			for (var template in this.templates)
+			{
+				var requestPath	=(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.templates[template];
+				if (!this.getViewCache().exists(requestPath)
+				|| this.getViewCache().isFetching(requestPath))
+				{
+					if (this.getViewCache().isFetching(requestPath))
+					{
+						$JSKK.when
+						(
+							function()
+							{
+								return this.getViewCache().isFetching(requestPath);
+							}.bind(this)
+						).isFalse
+						(
+							function(requestPath,template)
+							{
+								this.templates[template]=this.getViewCache().get(requestPath);
+								doneTemplates++;
+							}.bind(this,requestPath,template)
+						);
+					}
+					else
+					{
+						this.getViewCache().setFetching(requestPath);
+						$.get
+						(
+							requestPath,
+							function(requestPath,template,response)
+							{
+								this.getViewCache().set(requestPath,response);
+								this.templates[template]=response;
+								doneTemplates++;
+							}.bind(this,requestPath,template)
+						);
+					}
+				}
+				else
+				{
+					this.templates[template]=this.getViewCache().get(requestPath);
+					doneTemplates++;
+				}
+			}
+			
+			$JSKK.when
+			(
+				function()
+				{
+					return (numTemplates==doneTemplates);
+				}
+			).isTrue
+			(
+				function()
+				{
+					this.fireEvent('onTemplatesLoaded',this);
+					onComplete();
+				}.bind(this)
+			);
 		},
-		/**
-		 * 
-		 */
-		getBaseHTML: function()
+		getTemplate: function(template)
 		{
-			return this.baseHTML;
+			return this.templates[template];
 		},
 		/**
 		 * 
@@ -123,31 +186,11 @@ $JSKK.Class.create
 		 * An abstract method to be implemented by extending classes.
 		 * 
 		 * This method should be used to make calls to
-		 * {@link framework.mvc.View.bindDOMEvent bindDOMEvent}.
+		 * {@link strappy.mvc.View.bindDOMEvent bindDOMEvent}.
 		 * 
 		 * @return
 		 */
 		bindDOMEvents:		$JSKK.Class.ABSTRACT_METHOD,
-		/**
-		 * 
-		 */
-		generateInstanceID: function()
-		{
-			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
-				iid		=[];
-			for (var i=0; i<8; i++)
-			{
-				iid.push(chars[Math.floor(Math.random()*25)]);
-			}
-			this._iid=this.getSafeID()+'-'+iid.join('');
-		},
-		/**
-		 * 
-		 */
-		getIID: function()
-		{
-			return this._iid;
-		},
 //		bindEventToSignal: function()
 //		{
 //			// empty function
@@ -171,8 +214,9 @@ $JSKK.Class.create
 		 */
 		show: function()
 		{
-			console.debug('onShow');
-			this.getContainer().fadeIn(500);
+//			console.debug('onShow');
+			// this.getContainer().fadeIn(500);
+			this.getContainer().show();
 			this.fireEvent('onShow',this);
 			return this;
 		},
@@ -181,19 +225,32 @@ $JSKK.Class.create
 		 */
 		hide: function()
 		{
-			console.debug('onHide');
-			this.getContainer().fadeOut(500);
+//			console.debug('onHide');
+			// this.getContainer().fadeOut(500);
+			this.getContainer().hide();
 			this.fireEvent('onHide',this);
 			return this;
 		},
 		/**
 		 * 
 		 * @param {String} event The event to bind to.
-		 * @param {String} selector A CSS selector, DOM element or jQuery object.
-		 * @param {String} controller The controller which to attach the event to.
+		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
-		 * @return {framework.mvc.View} this
+		 * @return {strappy.mvc.View} this
+		 */
+		bindContainerEvent: function(event,handler,method,data)
+		{
+			return this.bindDOMEvent(event,null,handler,method,data);
+		},
+		/**
+		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} selector A CSS selector, DOM element or jQuery object.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {strappy.mvc.View} this
 		 */
 		bindDOMEvent: function(event,selector,handler,method,data)
 		{
@@ -210,55 +267,43 @@ $JSKK.Class.create
 			{
 				handle=this.getController(handler);
 			}
-			this.getContainer().on(event,selector,data,handle[method].bind(handle));
-			return this;
-		},
-		/**
-		 * 
-		 */
-		bindStatefulLinks: function()
-		{
-			var links=$JSKK.toArray(arguments);
-			$JSKK.when(this,'_ready').isTrue
-			(
-				function()
-				{
-					var item=null;
-					for (var i=0,j=links.length; i<j; i++)
-					{
-						item=$(links[i][0],this.getContainer());
-						if (item.length)
-						{
-							this.getStateMgr().registerStateChanger(item,links[i][1]);
-						}
-					}
-				}.bind(this)
-			);
-			return this;
-		},
-		/**
-		 * 
-		 */
-		bindStateEvents: function(bindings)
-		{
-			for (var item in bindings)
+			if (!Object.isArray(selector))
 			{
-				if (Object.isFunction(this[bindings[item]]))
+				this.getContainer().on(event,selector,data,handle[method].bind(handle));
+			}
+			else
+			{
+				$(selector[0],this.getContainer()).on(event,selector[1],data,handle[method].bind(handle));
+			}
+			return this;
+		},
+		/**
+		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} selector A CSS selector, DOM element or jQuery object.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {strappy.mvc.View} this
+		 */
+		bindBodyDOMEvent: function(event,selector,handler,method,data)
+		{
+			var handle=handler.split(':');
+			if (handle.length==2)
+			{
+				switch (handle[0])
 				{
-					this._stateBindings[item]=this[bindings[item]].bind(this);
-				}
-				else
-				{
-					throw new Error('Unable to bind state change event for stateful property "'+item+'" because the method "'+bindings[item]+'" '
-									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
+					case 'controller':		handle=this.getController(handle[1]);		break;
+					case 'view':			handle=this;								break;	
 				}
 			}
-//			for (var i=0,j=bindings.length; i<j; i++)
-//			{
-//				
-//			}
+			else
+			{
+				handle=this.getController(handler);
+			}
+			$('body').on(event,selector,data,handle[method].bind(handle));
 			return this;
-		},
+		}
 //		bindStoreChange: function(store,bindings)
 //		{
 //			for (var item in bindings)
@@ -275,35 +320,6 @@ $JSKK.Class.create
 //			}
 //			return this;
 //		},
-		/**
-		 * 
-		 */
-		onStateChange: function(signal)
-		{
-			console.debug('onStateChange');
-			var changeSet=signal.getBody().change;
-			for (var item in changeSet)
-			{
-				if (Object.isFunction(this._stateBindings[item]))
-				{
-					this._stateBindings[item](changeSet[item]);
-				}
-			}
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		

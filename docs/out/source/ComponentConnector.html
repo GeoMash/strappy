@@ -99,7 +99,7 @@ $JSKK.Trait.create
 		 */
 		getSafeID: function()
 		{
-			return (this.$reflect('namespace')+'.'+this.$reflect('name')).replace(/\./g,'-');
+			return this.getParentComponent().getSafeID(cmp);
 		},
 <span id='framework-trait-ComponentConnector-method-getCmp'>		/**
 </span>		 * Get's a child component of the associated parent component.
@@ -145,6 +145,15 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getView(view);
 		},
+<span id='framework-trait-ComponentConnector-method-getViewCache'>		/**
+</span>		 * Fetches the View Cache.
+		 * 
+		 * @return {framework.mvc.ViewCache}
+		 */
+		getViewCache: function()
+		{
+			return this.getParentComponent().getViewCache();
+		},
 <span id='framework-trait-ComponentConnector-method-getConfig'>		/**
 </span>		 * Gets the value of a config property.
 		 * @param {String} key The config property to get.
@@ -153,6 +162,18 @@ $JSKK.Trait.create
 		getConfig: function(key)
 		{
 			return this.getParentComponent().getConfig(key);
+		},
+<span id='framework-trait-ComponentConnector-method-getIID'>		/**
+</span>		 * Gets the instance ID (IID) of the component.
+		 * @return {String} The instance ID.
+		 */
+		getIID: function()
+		{
+			return this.getParentComponent().getIID();
+		},
+		makeAttachPoint: function(attachTo)
+		{
+			return [this.getConfig('attachTo'), attachTo].join(' ');
 		}
 	}
 );</pre>

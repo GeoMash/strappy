@@ -1,29 +1,28 @@
 /**
- * @class framework.data.stateful.Store
+ * @class strappy.data.stateful.Store
  * 
  * 
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Send
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Send
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Send
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Send
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.data.stateful',
+		$namespace:	'strappy.data.stateful',
 		$name:		'Store',
-		$uses:
-		[
-			framework.trait.ComponentConnector,
-			$JSKK.trait.Observable
-		]
+		$extends:	strappy.data.SingleModelStore
 	}
 )
 (
 	{
+		ACCESS_PRIVATE:	'private',
+		ACCESS_PUBLIC:	'public',
+		
 		LOCK_NONE:		'none',
 		LOCK_READONLY:	'readonly',
 		LOCK_FULL:		'full'
@@ -31,8 +30,9 @@ $JSKK.Class.create
 	{
 		events:
 		{
-			onChange:	true,
-			onReady:	true
+			onBeforeChange:	true,
+			onChange:		true,
+			onReady:		true
 		},
 		/**
 		 * @property {Boolean} ready A flag indicating that the component's state is ready.
@@ -43,43 +43,111 @@ $JSKK.Class.create
 		 * @property {Array} readyViews A container filled with views which a controller has
 		 * flagged as ready.
 		 * 
-		 * See {@link framework.data.stateful.Store#setViewReady} and
-		 * {@link framework.data.stateful.Store#getReadyViews} for more information and
+		 * See {@link strappy.data.stateful.Store#setViewReady} and
+		 * {@link strappy.data.stateful.Store#getReadyViews} for more information and
 		 * examples of how to use this.
 		 * @private
 		 */
 		readyViews:	[],
 		/**
-		 * @property {Object} state The state store.
+		 * @property {Object} stateMap A reference object for mapped private and public state properties.
 		 * @private
 		 */
-		state:		{},
+		stateMap:{},
 		/**
 		 * 
 		 * @property {String} lockState This property will block behaviours on this store depending on its state.
 		 * @private
 		 */
 		lockState:	'none',
+		
+		keys:		[],
+		init: function()
+		{
+			//Set the model.
+			this.model=strappy.mvc.stateful.Model;
+			
+			// for (var item in this.state)
+			// {
+			// 	this.keys.push(item);
+			// }
+			
+			
+			
+			this.init.$parent();
+			var	self=this.$reflect('self'),
+				item=null;
+			
+			for (item in this.record.get(self.ACCESS_PRIVATE))
+			{
+				this.stateMap[item]=self.ACCESS_PRIVATE;
+			}
+			for (item in this.record.get(self.ACCESS_PUBLIC))
+			{
+				this.stateMap[item]=self.ACCESS_PUBLIC;
+			}
+		},
+		/**
+		 * Checks to see if the passed in state item
+		 * can be managed by this store.
+		 * 
+		 * @param  {String} item The name of the state item to check against.
+		 * @return {Boolean} True if it can be managed by this store.
+		 */
+		canManageStateItem: function(item)
+		{
+			return this.stateMap[item]==this.$reflect('self').ACCESS_PUBLIC;
+		},
+		
 		/**
 		 * Sets a state property with a new value.
 		 * 
 		 * Sends signal:
 		 * 
-		 * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}
+		 * * {@link strappy.Signal.STATEFULSTORE_DONE_CHANGE}
 		 * 
 		 * @param {String} key The property to set.
 		 * @param {Mixed} value The new value.
-		 * @return {framework.data.stateful.Store}
+		 * @return {strappy.data.stateful.Store}
 		 */
-		set: function(key,value)
+		set: function()
 		{
-			if (this.lockState==framework.data.stateful.Store.LOCK_NONE)
+			if (this.lockState==strappy.data.stateful.Store.LOCK_NONE)
 			{
-				this.state[key]	=value;
-				var changeSet	={};
-				changeSet[key]	=value;
-				
-				this.fireEvent('onChange',this);
+				var	args		=$JSKK.toArray(arguments),
+					keyVals		={},
+					mapping		=null,
+					updateState	=false,
+					newState	={};
+				if (Object.isDefined(args[1]))
+				{
+					keyVals[args.shift()]=args.shift();
+				}
+				else
+				{
+					keyVals=args.shift();
+				}
+				for (var key in keyVals)
+				{
+					mapping=this.stateMap[key];
+					//Ignore if the value is the same.
+					if (this.record.get(mapping)[key]==keyVals[key])continue;
+					//Keep going otherwise...
+					if (this.fireEvent('onBeforeChange',this,key,keyVals[key])!==false)
+					{
+						this.record.get(mapping)[key]=keyVals[key];
+						if (mapping==this.$reflect('self').ACCESS_PUBLIC)
+						{
+							updateState		=true;
+							newState[key]	=keyVals[key];
+						}
+						this.fireEvent('onChange',this,key,keyVals[key]);
+					}
+				}
+				if (updateState)
+				{
+					this.getStateMgr().updateState(newState,true);
+				}
 			}
 			else
 			{
@@ -90,20 +158,14 @@ $JSKK.Class.create
 		/**
 		 * This method will set the ready state of the component.
 		 * 
-		 * Sends signals:
-		 * 
-		 * * {@link framework.Signal.STATEFULSTORE_IS_READY}
-		 * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}
-		 * 
 		 * @param {Boolean} ready The ready state.
-		 * @return {framework.data.stateful.Store}
+		 * @return {strappy.data.stateful.Store}
 		 */
 		setReady: function(ready)
 		{
 			this.ready=ready;
 			if (ready)
 			{
-				this.fireEvent('onReady',this);
 				var globalState=this.getStateMgr().getState();
 				for (var globalItem in globalState)
 				{
@@ -116,8 +178,9 @@ $JSKK.Class.create
 						}
 					}
 				}
+				this.fireEvent('onReady',this);
 			}
-			this.fireEvent('onChange',this);
+			// this.fireEvent('onChange',this);
 			return this;
 		},
 		/**
@@ -135,7 +198,7 @@ $JSKK.Class.create
 		 */
 		get: function(key)
 		{
-			return this.state[key];
+			return this.get.$parent(this.stateMap[key])[key];
 		},
 		/**
 		 * Stores the view name in a private store for ready views.
@@ -146,7 +209,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'State',
-			$extends:	framework.mvc.stateful.Controller
+			$extends:	strappy.mvc.stateful.Controller
 		}
 	)
 	(
@@ -159,7 +222,7 @@ $JSKK.Class.create
 		}
 	);
 		 * @param {String} view The name of the view.
-		 * @return {framework.data.stateful.Store}
+		 * @return {strappy.data.stateful.Store}
 		 */
 		setViewReady: function(view)
 		{
@@ -175,7 +238,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'State',
-			$extends:	framework.mvc.stateful.Controller
+			$extends:	strappy.mvc.stateful.Controller
 		}
 	)
 	(
@@ -203,11 +266,11 @@ $JSKK.Class.create
 		/**
 		 * Locks the model based on the type of lock given to this method.
 		 * @param {String} lockType The type of lock. Valid lock types are:
-		 * * {@link framework.data.stateful.Store#LOCK_NONE}
-		 * * {@link framework.data.stateful.Store#LOCK_READONLY}
-		 * * {@link framework.data.stateful.Store#LOCK_FULL}
+		 * * {@link strappy.data.stateful.Store#LOCK_NONE}
+		 * * {@link strappy.data.stateful.Store#LOCK_READONLY}
+		 * * {@link strappy.data.stateful.Store#LOCK_FULL}
 		 * 
-		 * @retrun {framework.data.stateful.Store}
+		 * @retrun {strappy.data.stateful.Store}
 		 */
 		lock: function(lockType)
 		{
