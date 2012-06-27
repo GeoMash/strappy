@@ -25,6 +25,7 @@
 		"../mvc/stateful/Controller.js",
 		"../mvc/stateful/Model.js",
 		"../RadioTower.js",
-		"../Component.js"
+		"../Component.js",
+		"../Strappy.js"
 	]
 }
