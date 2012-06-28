@@ -9,6 +9,7 @@ import json
 
 DIR_STRAPPY		='..\\'
 IGNORE_FOLDERS	=['.git','docs','tools']
+IGNORE_FILES	=['min.js']
 
 """ Main Compression Class """
 
@@ -16,6 +17,8 @@ class Compress:
 	Name="Compress"
 	
 	def compressfileList(self,fileList):
+		print 'Compressing the following files:'
+		print fileList
 		scripts='--js="'+'" --js="'.join(fileList)+'"'
 		process=subprocess.Popen(
 			'java '+
@@ -29,32 +32,51 @@ class Compress:
 	
 	def dirIterator(self, arg, dirname, fnames ):
 		for file in fnames:
-				thisFile	=os.path.join(dirname, file)
-				fileParts	=os.path.splitext(thisFile)
-				dirParts	=fileParts[0].split('\\')
-				doContinue	=False
-				for dir in dirParts:
-					if dir in IGNORE_FOLDERS:
+			thisFile	=os.path.join(dirname, file)
+			fileParts	=os.path.splitext(thisFile)
+			dirParts	=fileParts[0].split('\\')
+			doContinue	=False
+			for dir in dirParts:
+				for ignoreFile in IGNORE_FILES:
+					if file.find(ignoreFile)!=-1:
 						doContinue=True
 						break
 				
 				if doContinue:
-					doContinue=False
-					continue;
+					break
 				
-				if (fileParts[1]=='.js'):
-					arg.append(thisFile)
+				if dir in IGNORE_FOLDERS:
+					doContinue=True
+					break
+				
+				
+					
+			if doContinue:
+				doContinue=False
+				continue;
+			
+			if (fileParts[1]=='.js'):
+				arg.append(thisFile)
 	
 	
-	def compressStrappy(self,configFile=None,outputFile=None):
-		#print 'locating files...'
-		
+	def compressStrappy(self,configFile=None,targetDir=None):
 		fileList	=[]
-		workingPath	=os.path.abspath(DIR_STRAPPY)
 		
 		if configFile==None:
-			
-			os.path.walk(workingPath,self.dirIterator,fileList)
+			if targetDir:
+				targetDir	=os.path.abspath(targetDir)
+				configFile	=os.path.join(targetDir,'compress.json')
+				if os.path.isfile(configFile):
+					print 'Found compress.json file. Using that instead.'
+					file	=open(configFile, 'r')
+					config	=json.loads(file.read())
+					for file in config['files']:
+						fileList.append(os.path.abspath(file))
+				else:
+					print 'Could not find compress.json file.'
+					os.path.walk(os.path.abspath(DIR_STRAPPY),self.dirIterator,fileList)
+			else:
+				os.path.walk(os.path.abspath(DIR_STRAPPY),self.dirIterator,fileList)
 		else:
 			file	=open(configFile, 'r')
 			config	=json.loads(file.read())
@@ -64,7 +86,7 @@ class Compress:
 		return self.compressfileList(fileList)
 		
 	
-	def compressComponent(self,componentDir,outputFile=None):
+	def compressComponent(self,componentDir):
 		fullPath		=os.path.abspath(componentDir)
 		componentName	=fullPath.split('\\')[-1:][0]
 		fileList		=[]
@@ -96,6 +118,7 @@ class Compress:
 			
 			file=open(os.path.join(fullPath,'compile.json'),'w')
 			file.write(json.dumps({"files":fileList}))
+			file.close()
 		else:
 			raise NameError('Main component class not found!')
 		
@@ -107,15 +130,16 @@ class Compress:
 		
 		
 		
-	def writeResult(self,result,outputDir=None,outputFile=None):
-		if outputDir==None:
-			outputDir=os.path.abspath('.')
+	def writeResult(self,result,targetDir=None,outputFile=None):
+		if targetDir==None:
+			targetDir=os.path.abspath('.')
 		else:
-			outputDir=os.path.abspath(outputDir)
+			targetDir=os.path.abspath(targetDir)
 		if outputFile!=None:
-				filePath=os.path.join(outputDir,outputFile)
-				file=open(filePath,'w');
+				filePath=os.path.join(targetDir,outputFile)
+				file=open(filePath,'w')
 				file.write(result)
+				file.close()
 				print 'Successfully compressed and combined files...'
 				print 'Result written to "'+os.path.abspath(filePath)+'"'
 		else:
@@ -139,11 +163,14 @@ args=parser.parse_args()
 result=''
 
 if args.strappy:
+	print "Compressing Strappy Framework..."
 	compressor=Compress()
 	result+=compressor.compressStrappy(
-		configFile=args.config
+		configFile	=args.config,
+		targetDir	=args.dir
 	)
 if args.component:
+	print 'Compressing component "'+args.component+'"...'
 	compressor=Compress()
 	result+=compressor.compressComponent(args.dir)
 
