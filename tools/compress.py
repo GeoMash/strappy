@@ -41,7 +41,6 @@ class Compress:
 					print '--------------------'
 					print thisError
 					print '--------------------'
-			#exit()
 			return ''
 		else:
 			return result[0]
@@ -82,15 +81,15 @@ class Compress:
 		if configFile==None:
 			if targetDir:
 				targetDir	=os.path.abspath(targetDir)
-				configFile	=os.path.join(targetDir,'compress.json')
+				configFile	=os.path.join(targetDir,'compile.json')
 				if os.path.isfile(configFile):
-					print 'Found compress.json file. Using that instead.'
+					print 'Found compile.json file. Using that instead.'
 					file	=open(configFile, 'r')
 					config	=json.loads(file.read())
 					for file in config['files']:
 						fileList.append(os.path.abspath(file))
 				else:
-					print 'Could not find compress.json file.'
+					print 'Could not find compile.json file.'
 					os.path.walk(os.path.abspath(DIR_STRAPPY),self.dirIterator,fileList)
 			else:
 				os.path.walk(os.path.abspath(DIR_STRAPPY),self.dirIterator,fileList)
@@ -102,19 +101,19 @@ class Compress:
 		
 		return self.compressfileList(fileList)
 	
-	
-	
 	def compressComponent(self,componentDir):
 		fullPath		=os.path.abspath(componentDir)
 		componentName	=fullPath.split('\\')[-1:][0]
 		componentName	=componentName[0].upper()+componentName[1:]
 		fileList		=[]
 		
-		if os.path.isfile(os.path.join(fullPath,'compress.json')):
-			file=open(os.path.join(fullPath,'compress.json'),'r')
+		if os.path.isfile(os.path.join(fullPath,'compile.json')):
+			file=open(os.path.join(fullPath,'compile.json'),'r')
 			config	=json.loads(file.read())
 			for file in config['files']:
-				fileList.append(os.path.abspath(file))
+				fileList.append(os.path.join(componentDir,file))
+			
+			self.writeFileList(fileList,baseDir=componentDir)
 			
 		elif os.path.isfile(os.path.join(fullPath,componentName+'.js')):
 			fileList.append(os.path.join(fullPath,componentName+'.js'))
@@ -134,10 +133,9 @@ class Compress:
 			#Stores
 			if os.path.isdir(storeDir):
 				os.path.walk(storeDir,self.dirIterator,fileList)
+			print 'COMPONENT DIR:'+componentDir
 			
-			file=open(os.path.join(fullPath,'compile.json'),'w')
-			file.write(json.dumps({"files":fileList}))
-			file.close()
+			self.writeFileList(fileList,baseDir=componentDir)
 		else:
 			raise NameError('Main component class not found!')
 		
@@ -152,6 +150,20 @@ class Compress:
 		return result
 	
 	
+	
+	def writeFileList(self,fileList,baseDir):
+		print 'Writing file list...'
+		print baseDir
+		newList=[]
+		for file in fileList:
+			thisFile=file.replace(baseDir,'')
+			if thisFile[:1]=='\\' or thisFile[:1]=='/':
+				thisFile=thisFile[1:]
+			newList.append(thisFile)
+		file=open(os.path.join(baseDir,'compile.json'),'w')
+		file.write(json.dumps({"files":newList},indent=4))
+		file.close()
+		
 	
 	def writeResult(self,result,targetDir=None,outputFile=None):
 		return
