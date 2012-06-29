@@ -4,6 +4,7 @@ import os.path
 #import thread
 import subprocess
 import json
+import re
 
 """ Some Config """
 
@@ -25,9 +26,25 @@ class Compress:
 			'-jar '+
 			'"'+os.path.join(os.path.realpath('.'),'compiler.jar')+'" '+
 			scripts,
-			stdout=subprocess.PIPE
+			stdout=subprocess.PIPE,
+			stderr=subprocess.PIPE
 		)
-		return process.communicate()[0]
+		result=process.communicate()
+		
+		
+		if len(result[1]):
+			print 'Errors found during compiling...'
+			errors=[]
+			for error in result[1].split('\r\n'):
+				thisError=error.strip().strip('^')
+				if len(thisError) and thisError.find('error(s)')==-1:
+					print '--------------------'
+					print thisError
+					print '--------------------'
+			#exit()
+			return ''
+		else:
+			return result[0]
 	
 	
 	def dirIterator(self, arg, dirname, fnames ):
@@ -49,7 +66,6 @@ class Compress:
 					doContinue=True
 					break
 				
-				
 					
 			if doContinue:
 				doContinue=False
@@ -57,6 +73,7 @@ class Compress:
 			
 			if (fileParts[1]=='.js'):
 				arg.append(thisFile)
+	
 	
 	
 	def compressStrappy(self,configFile=None,targetDir=None):
@@ -84,11 +101,13 @@ class Compress:
 				fileList.append(os.path.abspath(file))
 		
 		return self.compressfileList(fileList)
-		
+	
+	
 	
 	def compressComponent(self,componentDir):
 		fullPath		=os.path.abspath(componentDir)
 		componentName	=fullPath.split('\\')[-1:][0]
+		componentName	=componentName[0].upper()+componentName[1:]
 		fileList		=[]
 		
 		if os.path.isfile(os.path.join(fullPath,'compress.json')):
@@ -124,26 +143,32 @@ class Compress:
 		
 		result=self.compressfileList(fileList)
 		
-		compressor.writeResult(result,componentName+'.min.js')
+		compressor.writeResult(
+			result		=result,
+			targetDir	=componentDir,
+			outputFile	=componentName+'.min.js'
+		)
 		
 		return result
-		
-		
-		
+	
+	
+	
 	def writeResult(self,result,targetDir=None,outputFile=None):
+		return
 		if targetDir==None:
 			targetDir=os.path.abspath('.')
 		else:
 			targetDir=os.path.abspath(targetDir)
+		
 		if outputFile!=None:
-				filePath=os.path.join(targetDir,outputFile)
-				file=open(filePath,'w')
-				file.write(result)
-				file.close()
-				print 'Successfully compressed and combined files...'
-				print 'Result written to "'+os.path.abspath(filePath)+'"'
-		else:
-			print result
+			filePath=os.path.join(targetDir,outputFile)
+			file=open(filePath,'w')
+			file.write(result)
+			file.close()
+			print 'Successfully compressed and combined files...'
+			print 'Result written to "'+os.path.abspath(filePath)+'"'
+		#else:
+		#	print result
 
 
 
@@ -162,6 +187,11 @@ args=parser.parse_args()
 
 result=''
 
+if args.dir!=None:
+	targetDir=os.path.abspath(args.dir)
+else:
+	targetDir=os.path.abspath('.')
+
 if args.strappy:
 	print "Compressing Strappy Framework..."
 	compressor=Compress()
@@ -170,9 +200,27 @@ if args.strappy:
 		targetDir	=args.dir
 	)
 if args.component:
-	print 'Compressing component "'+args.component+'"...'
+	componentList	=args.component.split(',')
+	dirList			=[]
+	if len(componentList)==1 and componentList[0]=='all':
+		print 'Compiling all components in target dir...'
+		for name in os.listdir(targetDir):
+			dirList.append(os.path.join(targetDir,name))
+	else:
+		print 'Compiling selected components...'
+		for name in os.listdir(targetDir):
+			if name in componentList:
+				dirList.append(os.path.join(targetDir,name))
+		
 	compressor=Compress()
-	result+=compressor.compressComponent(args.dir)
+	for dir in dirList:
+		result+=compressor.compressComponent(dir)
+		
+	#print result
 
-compressor.writeResult(result,args.dir,args.file)
+# compressor.writeResult(
+# 	result		=result,
+# 	targetDir	=targetDir,
+# 	outputFile	=args.file
+# )
 
