@@ -137,7 +137,7 @@ class Compress:
 			
 			self.writeFileList(fileList,baseDir=componentDir)
 		else:
-			raise NameError('Main component class not found!')
+			raise NameError('Main component class not found! ('+os.path.join(fullPath,componentName+'.js')+')')
 		
 		result=self.compressfileList(fileList)
 		
@@ -166,7 +166,6 @@ class Compress:
 		
 	
 	def writeResult(self,result,targetDir=None,outputFile=None):
-		return
 		if targetDir==None:
 			targetDir=os.path.abspath('.')
 		else:
@@ -217,7 +216,9 @@ if args.component:
 	if len(componentList)==1 and componentList[0]=='all':
 		print 'Compiling all components in target dir...'
 		for name in os.listdir(targetDir):
-			dirList.append(os.path.join(targetDir,name))
+			thisDir=os.path.join(targetDir,name)
+			if os.path.isdir(thisDir):
+				dirList.append(thisDir)
 	else:
 		print 'Compiling selected components...'
 		for name in os.listdir(targetDir):
@@ -227,12 +228,9 @@ if args.component:
 	compressor=Compress()
 	for dir in dirList:
 		result+=compressor.compressComponent(dir)
-		
-	#print result
 
-# compressor.writeResult(
-# 	result		=result,
-# 	targetDir	=targetDir,
-# 	outputFile	=args.file
-# )
-
+compressor.writeResult(
+	result		=result,
+	targetDir	=targetDir,
+	outputFile	=args.file
+)
