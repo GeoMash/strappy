@@ -132,7 +132,6 @@ $JSKK.Class.create
 									);
 								}.bind(this,index)
 							);
-							
 						}
 						else
 						{
@@ -172,7 +171,7 @@ $JSKK.Class.create
 		 * @property browser.version The version of the browser.
 		 * @readonly
 		 */
-        browser:
+		browser:
 		{
 			name:		null,
 			version:	null
@@ -329,7 +328,7 @@ $JSKK.Class.create
 		 * [_iid description]
 		 * @type {Boolean}
 		 */
-        _iid:			null,
+		_iid:			null,
 		
 		/**
 		 * @constructor
@@ -345,19 +344,19 @@ $JSKK.Class.create
 		 * 
 		 * @return {strappy.Component}
 		 */
-        init: function()
+		init: function()
 		{
 			this.my.name		=this.$reflect('name');
 			this.my.namespace	=this.$reflect('namespace').split('.');
 			
 			if (Object.isUndefined(window.strappy.$components))
-            {
+			{
 				window.strappy.$components={};
 			}
-            if (Object.isUndefined(window.strappy.$components[this.my.name]))
-            {
-            	window.strappy.$components[this.my.name]=[];
-            }
+			if (Object.isUndefined(window.strappy.$components[this.my.name]))
+			{
+				window.strappy.$components[this.my.name]=[];
+			}
 			
 			this.my.index		=window.strappy.$components[this.my.name].push(this);
 			this.my.NSObject	=window;
@@ -485,7 +484,8 @@ $JSKK.Class.create
 		{
 			var parts		=null,
 				config		=null,
-				object		=null;
+				object		=null;//,
+				// queue		=[];
 			for (var component in this.components)
 			{
 				parts		=this.components[component].split('.');
@@ -510,8 +510,10 @@ $JSKK.Class.create
 					throw new Error('Error! component "'+this.components[component]+'" not loaded.');
 					break;
 				}
+				// queue.push(object);
 				this.components[component]=new object();
 			}
+			// this.$reflect('self').initQueue(queue);
 		},
 		/**
 		 * Creates a new child component.
