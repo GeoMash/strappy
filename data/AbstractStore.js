@@ -6,8 +6,8 @@
  * 
  * You should never use this store directly.
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins $JSKK.trait.Observable
+ * @traits framework.trait.ComponentConnector
+ * @traits $JSKK.trait.Observable
  * 
  * @uses framework.trait.ComponentConnector
  * @uses $JSKK.trait.Observable
