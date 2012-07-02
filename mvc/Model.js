@@ -189,7 +189,7 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
-		 * Fetches a record based on its index in the store.
+		 * Fetches a value based on a field name.
 		 * 
 		 * Note: This method is affected by lock state.
 		 * 
