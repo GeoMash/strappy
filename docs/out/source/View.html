@@ -15,34 +15,34 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-mvc-View'>/**
-</span> * @class framework.mvc.View
+  <pre class="prettyprint lang-js"><span id='strappy-mvc-View'>/**
+</span> * @class strappy.mvc.View
  * 
  * TODO:
  * 
  * Explanation &amp; Examples.
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Bindable
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Bindable
  * @mixins $JSKK.trait.Observable
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Bindable
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Bindable
  * @uses $JSKK.trait.Observable
- * @uses framework.mvc.ViewCache
+ * @uses strappy.mvc.ViewCache
  * 
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.mvc',
+		$namespace:		'strappy.mvc',
 		$name:			'View',
 		$abstract:		true,
 		$uses:
 		[
-			framework.trait.ComponentConnector,
-			framework.trait.signal.Bindable,
+			strappy.trait.ComponentConnector,
+			strappy.trait.signal.Bindable,
 			$JSKK.trait.Observable
 		]
 	}
@@ -66,7 +66,7 @@ $JSKK.Class.create
         // TODO: COMPOSITE PATTERN -&gt; See bottom off this Class
         // children: [],
 
-<span id='framework-mvc-View-method-constructor'>        /**
+<span id='strappy-mvc-View-method-constructor'>        /**
 </span>        * @constructor
         * 
         * 
@@ -175,22 +175,22 @@ $JSKK.Class.create
 		{
 			return this.templates[template];
 		},
-<span id='framework-mvc-View-property-onReady'>		/**
+<span id='strappy-mvc-View-property-onReady'>		/**
 </span>		 * 
 		 * @abstract
 		 */
 		onReady:		$JSKK.emptyFunction,
-<span id='framework-mvc-View-property-onViewInit'>		/**
+<span id='strappy-mvc-View-property-onViewInit'>		/**
 </span>		 * 
 		 * @abstract
 		 */
 		onViewInit: 	$JSKK.emptyFunction,
-<span id='framework-mvc-View-property-onStoreChange'>		/**
+<span id='strappy-mvc-View-property-onStoreChange'>		/**
 </span>		 * 
 		 * @abstract
 		 */
 		onStoreChange:	$JSKK.emptyFunction,
-<span id='framework-mvc-View-method-syncView'>		/**
+<span id='strappy-mvc-View-method-syncView'>		/**
 </span>		 * An abstract method to be implemented by extending classes.
 		 * 
 		 * This method should be used to asure the view state is always in sync
@@ -199,11 +199,11 @@ $JSKK.Class.create
 		 * @return
 		 */
 		syncView:		$JSKK.Class.ABSTRACT_METHOD,
-<span id='framework-mvc-View-method-bindDOMEvents'>		/**
+<span id='strappy-mvc-View-method-bindDOMEvents'>		/**
 </span>		 * An abstract method to be implemented by extending classes.
 		 * 
 		 * This method should be used to make calls to
-		 * {@link framework.mvc.View.bindDOMEvent bindDOMEvent}.
+		 * {@link strappy.mvc.View.bindDOMEvent bindDOMEvent}.
 		 * 
 		 * @return
 		 */
@@ -212,21 +212,21 @@ $JSKK.Class.create
 //		{
 //			// empty function
 //		},
-<span id='framework-mvc-View-method-getContainerClass'>		/**
+<span id='strappy-mvc-View-method-getContainerClass'>		/**
 </span>		 * 
 		 */
 		getContainerClass: function()
 		{
 			return '.'+this.getSafeID();
 		},
-<span id='framework-mvc-View-method-getContainer'>		/**
+<span id='strappy-mvc-View-method-getContainer'>		/**
 </span>		 * 
 		 */
 		getContainer: function()
 		{
 			return $('#'+this.getIID());
 		},
-<span id='framework-mvc-View-method-show'>		/**
+<span id='strappy-mvc-View-method-show'>		/**
 </span>		 * 
 		 */
 		show: function()
@@ -237,7 +237,7 @@ $JSKK.Class.create
 			this.fireEvent('onShow',this);
 			return this;
 		},
-<span id='framework-mvc-View-method-hide'>		/**
+<span id='strappy-mvc-View-method-hide'>		/**
 </span>		 * 
 		 */
 		hide: function()
@@ -248,26 +248,26 @@ $JSKK.Class.create
 			this.fireEvent('onHide',this);
 			return this;
 		},
-<span id='framework-mvc-View-method-bindContainerEvent'>		/**
+<span id='strappy-mvc-View-method-bindContainerEvent'>		/**
 </span>		 * 
 		 * @param {String} event The event to bind to.
 		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
-		 * @return {framework.mvc.View} this
+		 * @return {strappy.mvc.View} this
 		 */
 		bindContainerEvent: function(event,handler,method,data)
 		{
 			return this.bindDOMEvent(event,null,handler,method,data);
 		},
-<span id='framework-mvc-View-method-bindDOMEvent'>		/**
+<span id='strappy-mvc-View-method-bindDOMEvent'>		/**
 </span>		 * 
 		 * @param {String} event The event to bind to.
 		 * @param {String} selector A CSS selector, DOM element or jQuery object.
 		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
-		 * @return {framework.mvc.View} this
+		 * @return {strappy.mvc.View} this
 		 */
 		bindDOMEvent: function(event,selector,handler,method,data)
 		{
@@ -294,14 +294,14 @@ $JSKK.Class.create
 			}
 			return this;
 		},
-<span id='framework-mvc-View-method-bindBodyDOMEvent'>		/**
+<span id='strappy-mvc-View-method-bindBodyDOMEvent'>		/**
 </span>		 * 
 		 * @param {String} event The event to bind to.
 		 * @param {String} selector A CSS selector, DOM element or jQuery object.
 		 * @param {String} handler The handler which to attach the event to.
 		 * @param {String} method The method in the controller which to call.
 		 * @param {Object} data Any data that should be passed to the method.
-		 * @return {framework.mvc.View} this
+		 * @return {strappy.mvc.View} this
 		 */
 		bindBodyDOMEvent: function(event,selector,handler,method,data)
 		{

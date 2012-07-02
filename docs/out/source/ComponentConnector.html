@@ -15,11 +15,11 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-trait-ComponentConnector'>/**
-</span> * @class framework.trait.ComponentConnector
+  <pre class="prettyprint lang-js"><span id='strappy-trait-ComponentConnector'>/**
+</span> * @class strappy.trait.ComponentConnector
  * 
- * This trait is designed to be used with {@link framework.mvc.Model models},
- * {@link framework.mvc.View views} and {@link framework.mvc.Controller controllers}.
+ * This trait is designed to be used with {@link strappy.mvc.Model models},
+ * {@link strappy.mvc.View views} and {@link strappy.mvc.Controller controllers}.
  * 
  * This trait will expose a set of useful functionality to the class that
  * is using it, including all the hooks required to access parts of the component.
@@ -29,32 +29,32 @@
 $JSKK.Trait.create
 (
 	{
-		$namespace:	'framework.trait',
+		$namespace:	'strappy.trait',
 		$name:		'ComponentConnector'
 	}
 )
 (
 	{
-<span id='framework-trait-ComponentConnector-method-constructor'>		/**
+<span id='strappy-trait-ComponentConnector-method-constructor'>		/**
 </span>		 * @constructor
 		 * This method binds the component to whatever uses this trait.
 		 * 
-		 * @param {framework.Component} component The component to connect.
+		 * @param {strappy.Component} component The component to connect.
 		 */
 		init: function(component)
 		{
 			this._component=component;
 		},
-<span id='framework-trait-ComponentConnector-method-getParentComponent'>		/**
+<span id='strappy-trait-ComponentConnector-method-getParentComponent'>		/**
 </span>		 * Returns the parent component associated with the class using this trait.
 		 * 
-		 * @return {framework.Component} the parent component.
+		 * @return {strappy.Component} the parent component.
 		 */
 		getParentComponent: function()
 		{
 			return this._component;
 		},
-<span id='framework-trait-ComponentConnector-method-getCmpName'>		/**
+<span id='strappy-trait-ComponentConnector-method-getCmpName'>		/**
 </span>		 * Returns the name of the parent component associated with the class using
 		 * this trait.
 		 * 
@@ -64,25 +64,25 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().my.name;
 		},
-<span id='framework-trait-ComponentConnector-method-getRadioTower'>		/**
+<span id='strappy-trait-ComponentConnector-method-getRadioTower'>		/**
 </span>		 * Returns the Radio Tower singleton.
 		 * 
-		 * @return {framework.RadioTower}
+		 * @return {strappy.RadioTower}
 		 */
 		getRadioTower: function()
 		{
 			return this.getParentComponent().radioTower;
 		},
-<span id='framework-trait-ComponentConnector-method-getStateMgr'>		/**
+<span id='strappy-trait-ComponentConnector-method-getStateMgr'>		/**
 </span>		 * Returns the State Manager singleton.
 		 * 
-		 * @return {framework.StateMgr}
+		 * @return {strappy.StateMgr}
 		 */
 		getStateMgr: function()
 		{
 			return this.getParentComponent().stateMgr;
 		},
-<span id='framework-trait-ComponentConnector-method-getID'>		/**
+<span id='strappy-trait-ComponentConnector-method-getID'>		/**
 </span>		 * Gets the ID of the class which implemented this trait.
 		 * 
 		 * @return {String} The ID.
@@ -91,7 +91,7 @@ $JSKK.Trait.create
 		{
 			return this.$reflect('namespace')+'.'+this.$reflect('name');
 		},
-<span id='framework-trait-ComponentConnector-method-getSafeID'>		/**
+<span id='strappy-trait-ComponentConnector-method-getSafeID'>		/**
 </span>		 * Gets the ID of the class which implemented it and makes it safe
 		 * for using as a HTML-based ID.
 		 * 
@@ -101,60 +101,60 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getSafeID(cmp);
 		},
-<span id='framework-trait-ComponentConnector-method-getCmp'>		/**
+<span id='strappy-trait-ComponentConnector-method-getCmp'>		/**
 </span>		 * Get's a child component of the associated parent component.
 		 * 
 		 * NOTE: As a convention, you should only ever call this if you want
-		 * to {@link framework.Component#configure configure/reconfigure} the
+		 * to {@link strappy.Component#configure configure/reconfigure} the
 		 * component.
 		 * @param {String} cmp The reference name of the component as defined in
 		 * the parent component.
-		 * @return {framework.Component} The child component.
+		 * @return {strappy.Component} The child component.
 		 */
 		getCmp: function(cmp)
 		{
 			return this.getParentComponent().getCmp(cmp);
 		},
-<span id='framework-trait-ComponentConnector-method-getStore'>		/**
+<span id='strappy-trait-ComponentConnector-method-getStore'>		/**
 </span>		 * Fetches a model from the parent component.
 		 * 
 		 * @param {String} model The name of the model.
-		 * @return {framework.mvc.Model} The Model instance.
+		 * @return {strappy.mvc.Model} The Model instance.
 		 */
 		getStore: function(store)
 		{
 			return this.getParentComponent().getStore(store);
 		},
-<span id='framework-trait-ComponentConnector-method-getController'>		/**
+<span id='strappy-trait-ComponentConnector-method-getController'>		/**
 </span>		 * Fetches a controller from the parent component.
 		 * 
 		 * @param {String} controller The name of the controller.
-		 * @return {framework.mvc.Controller} The Controller instance.
+		 * @return {strappy.mvc.Controller} The Controller instance.
 		 */
 		getController: function(controller)
 		{
 			return this.getParentComponent().getController(controller);
 		},
-<span id='framework-trait-ComponentConnector-method-getView'>		/**
+<span id='strappy-trait-ComponentConnector-method-getView'>		/**
 </span>		 * Fetches a view from the parent component.
 		 * 
 		 * @param {String} view The name of the view.
-		 * @return {framework.mvc.View} The View instance.
+		 * @return {strappy.mvc.View} The View instance.
 		 */
 		getView: function(view)
 		{
 			return this.getParentComponent().getView(view);
 		},
-<span id='framework-trait-ComponentConnector-method-getViewCache'>		/**
+<span id='strappy-trait-ComponentConnector-method-getViewCache'>		/**
 </span>		 * Fetches the View Cache.
 		 * 
-		 * @return {framework.mvc.ViewCache}
+		 * @return {strappy.mvc.ViewCache}
 		 */
 		getViewCache: function()
 		{
 			return this.getParentComponent().getViewCache();
 		},
-<span id='framework-trait-ComponentConnector-method-getConfig'>		/**
+<span id='strappy-trait-ComponentConnector-method-getConfig'>		/**
 </span>		 * Gets the value of a config property.
 		 * @param {String} key The config property to get.
 		 * @return 
@@ -163,7 +163,7 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getConfig(key);
 		},
-<span id='framework-trait-ComponentConnector-method-getIID'>		/**
+<span id='strappy-trait-ComponentConnector-method-getIID'>		/**
 </span>		 * Gets the instance ID (IID) of the component.
 		 * @return {String} The instance ID.
 		 */

@@ -15,9 +15,9 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-data-proxy-BTL'>/**
-</span> * @class framework.data.proxy.BTL
- * @extends framework.data.proxy.AbstractProxy
+  <pre class="prettyprint lang-js"><span id='strappy-data-proxy-BTL'>/**
+</span> * @class strappy.data.proxy.BTL
+ * @extends strappy.data.proxy.AbstractProxy
  * 
  * Batchable Transmission Layer Proxy
  * 
@@ -26,21 +26,21 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.data.proxy',
+		$namespace:	'strappy.data.proxy',
 		$name:		'BTL',
-		$extends:	framework.data.proxy.AbstractProxy
+		$extends:	strappy.data.proxy.AbstractProxy
 	}
 )
 (
 	{},
 	{
-<span id='framework-data-proxy-BTL-method-raw'>		/**
+<span id='strappy-data-proxy-BTL-method-raw'>		/**
 </span>		 * Sends a raw request to the server as JSON.
 		 * @param config An object containing configuration for the request. 
 		 * @param config.url The url to send the request to.
 		 * @param config.data The data which will be converted to a JSON string and sent
 		 * with the request.
-		 * @return {framework.data.proxy.BTL} this
+		 * @return {strappy.data.proxy.BTL} this
 		 */
 		raw: function(config)
 		{

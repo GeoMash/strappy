@@ -15,18 +15,18 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-Signal'>/**
-</span> * @class framework.Signal
+  <pre class="prettyprint lang-js"><span id='strappy-Signal'>/**
+</span> * @class strappy.Signal
  * This is the signal class. It is used as a factory by the
- * {@link framework.trait.signal.Send} trait.
+ * {@link strappy.trait.signal.Send} trait.
  * 
  * This class also contains constants for every framework level
- * signal that is emitted by the base {@link framework.Component component class},
- * {@link framework.mvc.Model models}, {@link framework.mvc.View views} and
- * {@link framework.mvc.Controller controllers}.
+ * signal that is emitted by the base {@link strappy.Component component class},
+ * {@link strappy.mvc.Model models}, {@link strappy.mvc.View views} and
+ * {@link strappy.mvc.Controller controllers}.
  * 
  * An instance of this class is generated for every signal
- * that is invoked by the framework.
+ * that is invoked by the strappy.
  * 
  * Every signal contains at least a name and a body. A signal may
  * optionally contain a type property and a filter. The latter two
@@ -39,7 +39,7 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework',
+		$namespace:		'strappy',
 		$name:			'Signal'//,
 //		$uses:
 //		[
@@ -50,13 +50,13 @@ $JSKK.Class.create
 (
 	{
 		//Scope
-<span id='framework-Signal-static-property-LOCAL'>		/**
+<span id='strappy-Signal-static-property-LOCAL'>		/**
 </span>		 * @property LOCAL Forces the signal to be localized within the component
 		 * that it was sent from.
 		 * @static
 		 */
 		LOCAL:						'local',
-<span id='framework-Signal-static-property-GLOBAL'>		/**
+<span id='strappy-Signal-static-property-GLOBAL'>		/**
 </span>		 * @property GLOBAL Forces the signal to be global. Meaning it will be sent
 		 * to all components.
 		 * @static
@@ -64,21 +64,21 @@ $JSKK.Class.create
 		GLOBAL:						'global',
 		
 		//Component
-<span id='framework-Signal-static-property-COMPONENT_IS_READY'>		/**
+<span id='strappy-Signal-static-property-COMPONENT_IS_READY'>		/**
 </span>		 * @property COMPONENT_IS_READY
 		 * @static
 		 */
 		COMPONENT_IS_READY:			'component.ready',
 		
 		//State
-<span id='framework-Signal-static-property-STATE_CHANGE'>		/**
+<span id='strappy-Signal-static-property-STATE_CHANGE'>		/**
 </span>		 * @property STATE_CHANGE
 		 * @static
 		 */
 		STATE_CHANGE:				'state.change',
 		
 		//Component
-<span id='framework-Signal-static-property-CMP_DO_RECONFIGURE'>		/**
+<span id='strappy-Signal-static-property-CMP_DO_RECONFIGURE'>		/**
 </span>		 * @property CMP_DO_RECONFIGURE
 		 * @static
 		 */
@@ -89,20 +89,20 @@ $JSKK.Class.create
 	{
 		config:
 		{
-<span id='framework-Signal-cfg-name'>			/**
+<span id='strappy-Signal-cfg-name'>			/**
 </span>			 * @cfg {String} name The name of the signal.
 			 */
 			name:	null,	// Required
-<span id='framework-Signal-cfg-body'>			/**
+<span id='strappy-Signal-cfg-body'>			/**
 </span>			 * @cfg {Object} body The body of the signal. This should be an object
 			 * containing key/value pair values.
 			 */
 			body:	null,	// Optional
-<span id='framework-Signal-cfg-type'>			/**
+<span id='strappy-Signal-cfg-type'>			/**
 </span>			 * @cfg {String} type An additional type filter.
 			 */
 			type:	null,	// Optional
-<span id='framework-Signal-cfg-filter'>			/**
+<span id='strappy-Signal-cfg-filter'>			/**
 </span>			 * @cfg {Object} filter An additional filter containing a mix of
 			 * key/value pair values.
 			 */
@@ -115,7 +115,7 @@ $JSKK.Class.create
 			this.config.type	=config.type	|| null;
 			this.config.filter	=config.filter	|| {};
 		},
-<span id='framework-Signal-method-getName'>		/**
+<span id='strappy-Signal-method-getName'>		/**
 </span>		 * Gets the name of the signal.
 		 * @return {String} The name of the signal.
 		 */
@@ -123,7 +123,7 @@ $JSKK.Class.create
 		{
 			return this.config.name;
 		},
-<span id='framework-Signal-method-getBody'>		/**
+<span id='strappy-Signal-method-getBody'>		/**
 </span>		 * Gets the body of the signal.
 		 * 
 	$JSKK.Class.create
@@ -131,7 +131,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'Default',
-			$extends:	framework.mvc.Controller
+			$extends:	strappy.mvc.Controller
 		}
 	)
 	(
@@ -153,7 +153,7 @@ $JSKK.Class.create
 		{
 			return this.config.body;
 		},
-<span id='framework-Signal-method-getType'>		/**
+<span id='strappy-Signal-method-getType'>		/**
 </span>		 * Gets the type of the signal.
 		 * @return {String} The signal type.
 		 */
@@ -161,7 +161,7 @@ $JSKK.Class.create
 		{
 			return this.config.type;
 		},
-<span id='framework-Signal-method-getFilter'>		/**
+<span id='strappy-Signal-method-getFilter'>		/**
 </span>		 * Gets the filter object of the signal.
 		 * @return {Object} The signal's filter object.
 		 */
@@ -169,7 +169,7 @@ $JSKK.Class.create
 		{
 			return this.config.filter;
 		},
-<span id='framework-Signal-method-isForMe'>		/**
+<span id='strappy-Signal-method-isForMe'>		/**
 </span>		 * This method will check the signals type and filter against
 		 * the provided type and filter to see if they match.
 		 * 

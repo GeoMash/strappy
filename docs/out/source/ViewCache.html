@@ -15,8 +15,8 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-mvc-ViewCache'>/**
-</span> * @class framework.mvc.ViewCache
+  <pre class="prettyprint lang-js"><span id='strappy-mvc-ViewCache'>/**
+</span> * @class strappy.mvc.ViewCache
  * 
  * This is a private, internally used class.
  * You should not need to use this class directly.
@@ -25,7 +25,7 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.mvc',
+		$namespace:		'strappy.mvc',
 		$name:			'ViewCache'
 	}
 )
@@ -50,12 +50,12 @@ $JSKK.Class.create
 		},
 		setFetching: function(ref)
 		{
-			this[String(ref)]=framework.mvc.ViewCache.FETCHING;
+			this[String(ref)]=strappy.mvc.ViewCache.FETCHING;
 			return this;
 		},
 		isFetching: function(ref)
 		{
-			return (this[String(ref)]===framework.mvc.ViewCache.FETCHING)
+			return (this[String(ref)]===strappy.mvc.ViewCache.FETCHING)
 		}
 	}
 );</pre>

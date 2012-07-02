@@ -15,9 +15,9 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-data-SingleModelStore'>/**
-</span> * @class framework.data.SingleModelStore
- * @extends framework.data.AbstractStore
+  <pre class="prettyprint lang-js"><span id='strappy-data-SingleModelStore'>/**
+</span> * @class strappy.data.SingleModelStore
+ * @extends strappy.data.AbstractStore
  * @abstract
  * 
  * 
@@ -25,20 +25,20 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'SingleModelStore',
-		$extends:		framework.data.AbstractStore,
+		$extends:		strappy.data.AbstractStore,
 		$abstract:		true
 	}
 )
 (
 	{},
 	{
-<span id='framework-data-SingleModelStore-method-constructor'>		/**
+<span id='strappy-data-SingleModelStore-method-constructor'>		/**
 </span>		 * @constructor
 		 * Sets up and validates the store.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		init: function()
 		{
@@ -54,7 +54,7 @@ $JSKK.Class.create
 				throw new Error('Store &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; must be configured with a valid model.');
 			}
 		},
-<span id='framework-data-SingleModelStore-method-get'>		/**
+<span id='strappy-data-SingleModelStore-method-get'>		/**
 </span>		 * Gets the value of a given field from the attached model.
 		 * 
 		 * @param {String} field The name of the field to fetch the value of.
@@ -64,7 +64,7 @@ $JSKK.Class.create
 		{
 			return this.record.get(field);
 		},
-<span id='framework-data-SingleModelStore-method-set'>		/**
+<span id='strappy-data-SingleModelStore-method-set'>		/**
 </span>		 * Sets a value of a given field on the attached model.
 		 * 
 		 * @param {String} field The field to assign a value to.
@@ -76,12 +76,12 @@ $JSKK.Class.create
 			this.record.set.apply(this.record,$JSKK.toArray(arguments));
 			return this;
 		},
-<span id='framework-data-SingleModelStore-method-sync'>		/**
+<span id='strappy-data-SingleModelStore-method-sync'>		/**
 </span>		 * This method will check if the attached model is dirty. If so,
 		 * it will send it to the server. Otherwise it will ignore the model
 		 * and simply request a new one.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		sync: function()
 		{
@@ -115,10 +115,10 @@ $JSKK.Class.create
 			}
 			return this;
 		},
-<span id='framework-data-SingleModelStore-method-load'>		/**
+<span id='strappy-data-SingleModelStore-method-load'>		/**
 </span>		 * This method simply request a new model through the proxy.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		load: function(filter)
 		{

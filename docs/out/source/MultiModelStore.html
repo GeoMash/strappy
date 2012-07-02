@@ -15,9 +15,9 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-data-MultiModelStore'>/**
-</span> * @class framework.data.MultiModelStore
- * @extends framework.data.AbstractStore
+  <pre class="prettyprint lang-js"><span id='strappy-data-MultiModelStore'>/**
+</span> * @class strappy.data.MultiModelStore
+ * @extends strappy.data.AbstractStore
  * 
  * 
  * @abstract
@@ -26,9 +26,9 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'MultiModelStore',
-		$extends:		framework.data.AbstractStore,
+		$extends:		strappy.data.AbstractStore,
 		$abstract:		true
 	}
 )
@@ -39,22 +39,22 @@ $JSKK.Class.create
 		BTL_GET:	null,
 		BTL_SET:	null,
 		model:		null,
-<span id='framework-data-MultiModelStore-property-data'>		/**
+<span id='strappy-data-MultiModelStore-property-data'>		/**
 </span>		 * @property {Array} data initial records to start the store with.
 		 * @private
 		 */
 		data:		[],
-<span id='framework-data-MultiModelStore-property-records'>		/**
+<span id='strappy-data-MultiModelStore-property-records'>		/**
 </span>		 * @property {Array} records Represent an array of
-		 * {@link framework.mvc.Model model} instances.
+		 * {@link strappy.mvc.Model model} instances.
 		 * @private
 		 */
 		records:	[],
-<span id='framework-data-MultiModelStore-method-constructor'>		/**
+<span id='strappy-data-MultiModelStore-method-constructor'>		/**
 </span>		 * @constructor
 		 * Sets up and validates the store.
 		 * 
-		 * @return {framework.data.MultiModelStore}
+		 * @return {strappy.data.MultiModelStore}
 		 */
 		init: function()
 		{
@@ -73,7 +73,7 @@ $JSKK.Class.create
 				throw new Error('Store &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; must be configured with a valid model.');
 			}
 		},
-<span id='framework-data-MultiModelStore-method-newRecord'>		/**
+<span id='strappy-data-MultiModelStore-method-newRecord'>		/**
 </span>		 * Creates new model instances based on the attached model
 		 * and returns them.
 		 * 
@@ -82,7 +82,7 @@ $JSKK.Class.create
 		 * onModelLockChange event.
 		 * 
 		 * @param {Object} record an object representing the model.
-		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		newRecord: function(records)
 		{
@@ -99,7 +99,7 @@ $JSKK.Class.create
 			}
 			return newRecords;
 		},
-<span id='framework-data-MultiModelStore-method-each'>		/**
+<span id='strappy-data-MultiModelStore-method-each'>		/**
 </span>		 * This method allows you to iterate over each item
 		 * in the store.
 		 * 
@@ -109,7 +109,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'Default',
-			$extends:	framework.mvc.Controller
+			$extends:	strappy.mvc.Controller
 		}
 	)
 	(
@@ -132,20 +132,20 @@ $JSKK.Class.create
 	);
 		 * @param {Function} callback A closure which will be called at each iteration.
 		 * The first parameter of the closure will be the data item.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		each: function(callback)
 		{
 			this.records.each(callback);
 			return this;
 		},
-<span id='framework-data-MultiModelStore-method-add'>		/**
+<span id='strappy-data-MultiModelStore-method-add'>		/**
 </span>		 * Adds a record to the store.
 		 * 
 		 * Note: The record will be flagged as dirty when it is added to the store.
 		 * 
 		 * @param {Mixed} record The record to be added to the store.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		add: function(record)
 		{
@@ -154,10 +154,10 @@ $JSKK.Class.create
 			this.fireEvent('onChange',this);
 			return this;
 		},
-<span id='framework-data-MultiModelStore-method-remove'>		/**
+<span id='strappy-data-MultiModelStore-method-remove'>		/**
 </span>		 * Removes a record from the store.
 		 * @param {Mixed} record The record to be removed from the store.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		remove: function(record)
 		{
@@ -173,11 +173,11 @@ $JSKK.Class.create
 			this.fireEvent('onChange',this);
 			return this;
 		},
-<span id='framework-data-MultiModelStore-method-removeByRange'>		/**
+<span id='strappy-data-MultiModelStore-method-removeByRange'>		/**
 </span>		 * Removes a range of records from the store.
 		 * @param {Number} start index of the range to be deleted.
 		 * @param {Number} end index of the range to be deleted.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		removeByRange: function(startIndex,endIndex)
 		{
@@ -202,11 +202,11 @@ $JSKK.Class.create
 			this.fireEvent('onChange',this);
 			return this;
 		},
-<span id='framework-data-MultiModelStore-method-getRecordIndexByValue'>		/**
+<span id='strappy-data-MultiModelStore-method-getRecordIndexByValue'>		/**
 </span>		 * Returns RecordIndex by key/value pair
 		 * @param {Number} key the property key.
 		 * @param {Number} value the property value.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		getRecordIndexByValue: function(key, value)
 		{
@@ -223,10 +223,10 @@ $JSKK.Class.create
 			);
 			return index;
 		},
-<span id='framework-data-MultiModelStore-method-getRecordIndex'>		/**
+<span id='strappy-data-MultiModelStore-method-getRecordIndex'>		/**
 </span>		 * Return RecordIndex by record
 		 * @param {Object} record the record.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		getRecordIndex: function(record)
 		{
@@ -243,16 +243,16 @@ $JSKK.Class.create
 			);
 			return index;
 		},
-<span id='framework-data-MultiModelStore-method-getAll'>		/**
+<span id='strappy-data-MultiModelStore-method-getAll'>		/**
 </span>		 * Returns all attched model instances (records).
 		 * 
-		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		getAll: function()
 		{
 			return this.records;
 		},
-<span id='framework-data-MultiModelStore-method-getAt'>		/**
+<span id='strappy-data-MultiModelStore-method-getAt'>		/**
 </span>		 * Fetches a record based on its index in the store.
 		 * @param {Number} index The index.
 		 * @return {Mixed} The record.
@@ -261,19 +261,19 @@ $JSKK.Class.create
 		{
 			return this.records[index];
 		},
-<span id='framework-data-MultiModelStore-method-first'>		/**
+<span id='strappy-data-MultiModelStore-method-first'>		/**
 </span>		 * Returns the first attached model.
 		 * 
-		 * @return {framework.mvc.Model} The model.
+		 * @return {strappy.mvc.Model} The model.
 		 */
 		first: function()
 		{
 			return this.getAt(0);
 		},
-<span id='framework-data-MultiModelStore-method-last'>		/**
+<span id='strappy-data-MultiModelStore-method-last'>		/**
 </span>		 * Returns the last attached model.
 		 * 
-		 * @return {framework.mvc.Model} The model.
+		 * @return {strappy.mvc.Model} The model.
 		 */
 		last: function()
 		{
@@ -287,7 +287,7 @@ $JSKK.Class.create
 		{
 			
 		},
-<span id='framework-data-MultiModelStore-method-getById'>		/**
+<span id='strappy-data-MultiModelStore-method-getById'>		/**
 </span>		 * 
 		 */
 		getById: function(modelId)
@@ -306,7 +306,7 @@ $JSKK.Class.create
 			);
 			return ret;
 		},
-<span id='framework-data-MultiModelStore-method-find'>		/**
+<span id='strappy-data-MultiModelStore-method-find'>		/**
 </span>		 * Finds attached models based on a simple key value search.
 		 * 
 		 * Find all Toms.
@@ -324,7 +324,7 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} key The key to search against.
 		 * @param {Mixed} value The value to search for.
-		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		find: function()
 		{
@@ -355,7 +355,7 @@ $JSKK.Class.create
 			);
 			return records;
 		},
-<span id='framework-data-MultiModelStore-method-findBy'>		/**
+<span id='strappy-data-MultiModelStore-method-findBy'>		/**
 </span>		 * Finds attached models based on custom searching logic provided
 		 * by a callback function which gets passed to this method.
 		 * 
@@ -375,7 +375,7 @@ $JSKK.Class.create
 	);
 		 * 
 		 * @param {Function} callback A function to call for each record.
-		 * @return {Array} An array of {@link framework.mvc.Model Model} instances.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		findBy: function(callback)
 		{
@@ -392,14 +392,14 @@ $JSKK.Class.create
 			);
 			return records;
 		},
-<span id='framework-data-MultiModelStore-method-setAll'>		/**
+<span id='strappy-data-MultiModelStore-method-setAll'>		/**
 </span>		 * Sets all the associated models
 		 */
 		setAll: function()
 		{
 			var	args		=$JSKK.toArray(arguments),
 				keyVals		={},
-				transaction	=new framework.data.Transaction();
+				transaction	=new strappy.data.Transaction();
 			if (Object.isDefined(args[1]))
 			{
 				keyVals[args.shift()]=args.shift();
@@ -445,7 +445,7 @@ $JSKK.Class.create
 //			
 //			this.fireEvent('onChange',this,index,data);
 //		},
-<span id='framework-data-MultiModelStore-method-sync'>		/**
+<span id='strappy-data-MultiModelStore-method-sync'>		/**
 </span>		 * This method will fetch all dirty models and attach them to a
 		 * proxy sync request.
 		 * The expected response is a new record set. 
@@ -528,7 +528,7 @@ $JSKK.Class.create
 		{
 			return Boolean(this.getDirty().length);
 		},
-<span id='framework-data-MultiModelStore-method-getDirty'>		/**
+<span id='strappy-data-MultiModelStore-method-getDirty'>		/**
 </span>		 * Returns all the attached models which are dirty (have been modified).
 		 * 
 		 * @return {Array} An array of dirty records.
@@ -548,10 +548,10 @@ $JSKK.Class.create
 			);
 			return dirty;
 		},
-<span id='framework-data-MultiModelStore-method-configureBTL'>		/**
+<span id='strappy-data-MultiModelStore-method-configureBTL'>		/**
 </span>		 * 
 		 * 
-		 * @see framework.data.BTL
+		 * @see strappy.data.BTL
 		 */
 		configureBTL: function(config)
 		{

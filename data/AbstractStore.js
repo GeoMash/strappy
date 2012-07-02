@@ -6,7 +6,7 @@
  * 
  * You should never use this store directly.
  * 
- * @traits framework.trait.ComponentConnector
+ * @traits strappy.trait.ComponentConnector
  * @traits $JSKK.trait.Observable
  * 
  * @uses strappy.trait.ComponentConnector

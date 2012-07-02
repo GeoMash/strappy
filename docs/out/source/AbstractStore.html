@@ -15,29 +15,29 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-data-AbstractStore'>/**
-</span> * @class framework.data.AbstractStore
+  <pre class="prettyprint lang-js"><span id='strappy-data-AbstractStore'>/**
+</span> * @class strappy.data.AbstractStore
  * @abstract
  * 
  * This is the base store of which all other stores extend from.
  * 
  * You should never use this store directly.
  * 
- * @traits framework.trait.ComponentConnector
+ * @traits strappy.trait.ComponentConnector
  * @traits $JSKK.trait.Observable
  * 
- * @uses framework.trait.ComponentConnector
+ * @uses strappy.trait.ComponentConnector
  * @uses $JSKK.trait.Observable
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'AbstractStore',
 		$abstract:		true,
 		$uses:
 		[
-			framework.trait.ComponentConnector,
+			strappy.trait.ComponentConnector,
 			$JSKK.trait.Observable
 		]
 	}
@@ -45,7 +45,7 @@ $JSKK.Class.create
 (
 	{},
 	{
-<span id='framework-data-AbstractStore-property-events'>		/**
+<span id='strappy-data-AbstractStore-property-events'>		/**
 </span>		 * @property events A list of observable events.
 		 * @property events.onChange Fired whenever anything in the store is changed.
 		 * @property events.onSync Fired whenever the store is synced.
@@ -61,43 +61,43 @@ $JSKK.Class.create
 			onModelChange:		true,
 			onModelLockChange:	true
 		},
-<span id='framework-data-AbstractStore-property-proxy'>		/**
-</span>		 * @property {framework.data.proxy.AbstractProxy} proxy
+<span id='strappy-data-AbstractStore-property-proxy'>		/**
+</span>		 * @property {strappy.data.proxy.AbstractProxy} proxy
 		 * @private
 		 */
 		proxy:			null,
-<span id='framework-data-AbstractStore-property-model'>		/**
-</span>		 * @property {framework.mvc.Model} model A model object which new models will be created from
+<span id='strappy-data-AbstractStore-property-model'>		/**
+</span>		 * @property {strappy.mvc.Model} model A model object which new models will be created from
 		 * @private
 		 */
 		model:			null,
-<span id='framework-data-AbstractStore-property-data'>		/**
+<span id='strappy-data-AbstractStore-property-data'>		/**
 </span>		 * @property {Object} data initial record to start the store with.
 		 * @private
 		 */
 		data:			{},
-<span id='framework-data-AbstractStore-property-record'>		/**
-</span>		 * @property {framework.mvc.Model} record Represents the model instance.
+<span id='strappy-data-AbstractStore-property-record'>		/**
+</span>		 * @property {strappy.mvc.Model} record Represents the model instance.
 		 * @private
 		 */
 		record:			null,
 		
 		transactions:	[],
 		
-<span id='framework-data-AbstractStore-method-constructor'>		/**
+<span id='strappy-data-AbstractStore-method-constructor'>		/**
 </span>		 * @constructor
 		 * Sets up and validates the store.
 		 * 
-		 * @return {framework.data.AbstractStore}
+		 * @return {strappy.data.AbstractStore}
 		 */
 		init: function()
 		{
 			if (Object.isNull(this.proxy))
 			{
-				this.proxy=new framework.data.proxy.MemoryProxy();
+				this.proxy=new strappy.data.proxy.MemoryProxy();
 			}
 		},
-<span id='framework-data-AbstractStore-method-newRecord'>		/**
+<span id='strappy-data-AbstractStore-method-newRecord'>		/**
 </span>		 * Creates a new model instance based on the attached model
 		 * and returns it.
 		 * 
@@ -105,7 +105,7 @@ $JSKK.Class.create
 		 * model lock change events to the store's onModelLockChange event.
 		 * 
 		 * @param {Object} record an object representing the model.
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		newRecord: function(record)
 		{
@@ -186,55 +186,55 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
-<span id='framework-data-AbstractStore-method-getModel'>		/**
+<span id='strappy-data-AbstractStore-method-getModel'>		/**
 </span>		 * Returns the attached model (not an instance of it).
 		 * 
-		 * @return {framework.mvc.Model}
+		 * @return {strappy.mvc.Model}
 		 */
 		getModel: function()
 		{
 			return this.model;
 		},
-<span id='framework-data-AbstractStore-method-get'>		/**
+<span id='strappy-data-AbstractStore-method-get'>		/**
 </span>		 * Generic getter.
 		 * 
 		 * @return {Mixed}
 		 */
 		get: $JSKK.Class.ABSTRACT_METHOD,
-<span id='framework-data-AbstractStore-method-set'>		/**
+<span id='strappy-data-AbstractStore-method-set'>		/**
 </span>		 * Generic setter.
 		 * 
-		 * @return  {framework.data.AbstractStore} this
+		 * @return  {strappy.data.AbstractStore} this
 		 */
 		set: $JSKK.Class.ABSTRACT_METHOD,
-<span id='framework-data-AbstractStore-method-sync'>		/**
+<span id='strappy-data-AbstractStore-method-sync'>		/**
 </span>		 * This method will check if the attached model is dirty. If so,
 		 * it will send it to the server. Otherwise it will ignore the model
 		 * and simply request a new one.
 		 * 
-		 * @return {framework.data.SingleModelStore}
+		 * @return {strappy.data.SingleModelStore}
 		 */
 		sync: $JSKK.Class.ABSTRACT_METHOD,
-<span id='framework-data-AbstractStore-method-setProxy'>		/**
+<span id='strappy-data-AbstractStore-method-setProxy'>		/**
 </span>		 * Sets a new proxy on the store.
 		 * 
-		 * @return {framework.data.AbstractStore} this
+		 * @return {strappy.data.AbstractStore} this
 		 */
 		setProxy: function(proxy)
 		{
 			this.proxy=proxy;
 			return this;
 		},
-<span id='framework-data-AbstractStore-method-getProxy'>		/**
+<span id='strappy-data-AbstractStore-method-getProxy'>		/**
 </span>		 * Returns the attached proxy.
 		 * 
-		 * @return {framework.data.proxy.AbstractProxy} The attached proxy.
+		 * @return {strappy.data.proxy.AbstractProxy} The attached proxy.
 		 */
 		getProxy: function()
 		{
 			return this.proxy;
 		},
-<span id='framework-data-AbstractStore-method-isDirty'>		/**
+<span id='strappy-data-AbstractStore-method-isDirty'>		/**
 </span>		 * Checks the state of the store to determine weather or not this
 		 * 
 		 * @return {Boolean} true if the store is dirty.
