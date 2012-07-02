@@ -288,7 +288,7 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 			delete this.models;
-			delete this;
+			return this;
 		},
 <span id='framework-data-Transaction-method-rollback'>		/**
 </span>		 * Rolls back the transaction, effectively trashing all
@@ -310,7 +310,7 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 			delete this.models;
-			delete this;
+			return this;
 		},
 <span id='framework-data-Transaction-method-fullLock'>		/**
 </span>		 * Applies a full lock to the associated models.
@@ -327,7 +327,6 @@ $JSKK.Class.create
 					model.lock('full');
 				}
 			);
-			return this;
 			return this;
 		},
 <span id='framework-data-Transaction-method-readOnly'>		/**
