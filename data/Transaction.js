@@ -1,5 +1,5 @@
 /**
- * @class framework.data.Transaction
+ * @class strappy.data.Transaction
  * 
  * Model Transaction Utility.
  * 
@@ -8,7 +8,7 @@
 	var store			=this.getStore('File'),
 		model1			=store.getById(112),
 		model2			=store.getById(119),
-		transaction		=new framework.data.Transaction(false),
+		transaction		=new strappy.data.Transaction(false),
 		clonedModel1	=transaction.attachModel(model1),
 		clonedModel2	=transaction.attachModel(model2);
 
@@ -21,8 +21,8 @@
 			onSuccess:	function()
 			{
 				//Don't actually ever unlock like this - this is for example only!!!
-				model1.lock(framework.mvc.Model.LOCK_NONE);
-				model2.lock(framework.mvc.Model.LOCK_NONE);
+				model1.lock(strappy.mvc.Model.LOCK_NONE);
+				model2.lock(strappy.mvc.Model.LOCK_NONE);
 				console.debug(model1.get('name'),model2.get('name'));
 				transaction.commit();
 				console.debug(model1.get('name'),model2.get('name'));
@@ -40,7 +40,7 @@
 	var store			=this.getStore('File'),
 		model1			=store.getById(112),
 		model2			=store.getById(119),
-		transaction		=new framework.data.Transaction(false),
+		transaction		=new strappy.data.Transaction(false),
 		clonedModel1	=transaction.attachModel(model1),
 		clonedModel2	=transaction.attachModel(model2);
 
@@ -48,19 +48,19 @@
 	clonedModel2.set('name','Bar');
 	
 	//Don't actually ever unlock like this - this is for example only!!!
-	model1.lock(framework.mvc.Model.LOCK_NONE);
-	model2.lock(framework.mvc.Model.LOCK_NONE);
+	model1.lock(strappy.mvc.Model.LOCK_NONE);
+	model2.lock(strappy.mvc.Model.LOCK_NONE);
 	console.debug(model1.get('name'),model2.get('name'));
 	transaction.commit();
 	console.debug(model1.get('name'),model2.get('name'));
  * 
- * @uses framework.data.Queue
- * @uses framework.mvc.Model
+ * @uses strappy.data.Queue
+ * @uses strappy.mvc.Model
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework.data',
+		$namespace:		'strappy.data',
 		$name:			'Transaction'
 	}
 )
@@ -114,13 +114,13 @@ $JSKK.Class.create
 		 * Sets up the transaction object, enabling or disabling queueing.
 		 * 
 		 * @param {Boolean} queue True if queueing is enabled.
-		 * @return {framework.data.Transaction}
+		 * @return {strappy.data.Transaction}
 		 */
 		init: function(queue)
 		{
 			if (queue!==false)
 			{
-				this.queue=new framework.data.Queue();
+				this.queue=new strappy.data.Queue();
 			}
 		},
 		/**
@@ -128,14 +128,14 @@ $JSKK.Class.create
 		 * of the model. All changes to the cloned instance will be reflected on the original
 		 * model once the transaction has been comitted.
 		 * 
-		 * @param {framework.mvc.Model} model The model to attach to the transaction.
-		 * @return {framework.data.Transaction} A clone of the original model.
+		 * @param {strappy.mvc.Model} model The model to attach to the transaction.
+		 * @return {strappy.data.Transaction} A clone of the original model.
 		 */
 		attachModel: function(model)
 		{
 			if (Object.isDefined(model)
 			&& Object.isFunction(model.$reflect)
-			&& (model.$reflect('extends')==framework.mvc.Model))
+			&& (model.$reflect('extends')==strappy.mvc.Model))
 			{
 				/**
 				 * If the model has an attached store, inform it that
@@ -163,12 +163,12 @@ $JSKK.Class.create
 			}
 		},
 		/**
-		 * Starts the transaction process. Automatically calls {@see framework.Transaction#fullLock}.
-		 * @return {framework.data.Transaction} this
+		 * Starts the transaction process. Automatically calls {@see strappy.Transaction#fullLock}.
+		 * @return {strappy.data.Transaction} this
 		 */
 		start: function()
 		{
-			this.state|=framework.data.Transaction.STATE_STARTED;
+			this.state|=strappy.data.Transaction.STATE_STARTED;
 			this.fullLock();
 			return this;
 		},
@@ -178,7 +178,7 @@ $JSKK.Class.create
 		 * @param {Object} config A config object.
 		 * @param {Function} config.onSuccess Called when the transaction is successful.
 		 * @param {Function} config.onFailure Called when the transaction has failed.
-		 * @return {framework.data.Transaction} this
+		 * @return {strappy.data.Transaction} this
 		 */
 		execute: function(config)
 		{
@@ -255,16 +255,16 @@ $JSKK.Class.create
 		 * All changes made to any of the attached model's clones will
 		 * be reflected upon the original models.
 		 * 
-		 * @return {framework.data.Transaction} this
+		 * @return {strappy.data.Transaction} this
 		 */
 		commit: function()
 		{
-			this.state|=framework.data.Transaction.STATE_COMITTED;
+			this.state|=strappy.data.Transaction.STATE_COMITTED;
 			this.models.each
 			(
 				function(model,index)
 				{
-					model.lock(framework.mvc.Model.LOCK_NONE);
+					model.lock(strappy.mvc.Model.LOCK_NONE);
 					model.set(model.getPhantom().getRecord());
 					model.destroyPhantom();
 					delete this.models[index];
@@ -278,11 +278,11 @@ $JSKK.Class.create
 		 * changes made to all attached models and destroying the
 		 * transaction object.
 		 * 
-		 * @return {framework.data.Transaction} this
+		 * @return {strappy.data.Transaction} this
 		 */
 		rollback: function()
 		{
-			this.state|=framework.data.Transaction.STATE_ROLLEDBACK;
+			this.state|=strappy.data.Transaction.STATE_ROLLEDBACK;
 			
 			this.models.each
 			(
@@ -298,7 +298,7 @@ $JSKK.Class.create
 		/**
 		 * Applies a full lock to the associated models.
 		 * 
-		 * @return {framework.data.Transaction} this
+		 * @return {strappy.data.Transaction} this
 		 */
 		fullLock: function()
 		{
@@ -315,7 +315,7 @@ $JSKK.Class.create
 		/**
 		 * Applies a read-only lock to the associated models.
 		 * 
-		 * @return {framework.data.Transaction} this
+		 * @return {strappy.data.Transaction} this
 		 */
 		readOnly: function()
 		{

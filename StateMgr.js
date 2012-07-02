@@ -1,11 +1,11 @@
 /**
- * @class framework.StateMgr
+ * @class strappy.StateMgr
  * 
  * This is the frameworks state management handler. It helps to manage
  * the state of all components.
  * 
  * Note that this class doesn't actually directly change the state of any
- * component. That job is left up to {@link framework.mvc.StatefulController state controllers}.
+ * component. That job is left up to {@link strappy.mvc.StatefulController state controllers}.
  * 
  * This class will capture, monitor and update state properties which are
  * recorded in the URL of the current page. This URL is a hashed url and
@@ -13,18 +13,18 @@
  * 
  * Note that this class is a singleton and should never be instantiated directly.
  * 
- * @mixin framework.trait.signal.Send
- * @uses framework.trait.signal.Send
+ * @mixin strappy.trait.signal.Send
+ * @uses strappy.trait.signal.Send
  * @singleton
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:		'framework',
+		$namespace:		'strappy',
 		$name:			'StateMgr',
 		$uses:
 		[
-			framework.trait.signal.Send
+			strappy.trait.signal.Send
 		]
 	}
 )
@@ -41,7 +41,7 @@ $JSKK.Class.create
 		 */
 		stateString:	'',
 		/**
-		 * @property radioTower A reference to the {@link framework.RadioTower Radio Tower}. 
+		 * @property radioTower A reference to the {@link strappy.RadioTower Radio Tower}. 
 		 * @private
 		 */
 		radioTower:		null,
@@ -49,7 +49,7 @@ $JSKK.Class.create
 		 * @property eventSupported A flag which is set to true or false depending on weather
 		 * or not the browser supports the "hashchange" event.
 		 * 
-		 * See {@link framework.RadioTower Radio Tower}.
+		 * See {@link strappy.RadioTower Radio Tower}.
 		 * @private
 		 */
 		eventSupported:	false,
@@ -60,15 +60,15 @@ $JSKK.Class.create
 		supressNext:	false,
 		/**
 		 * @constructor
-		 * Sets up the state manager by linking it to the {@link framework.RadioTower Radio Tower},
+		 * Sets up the state manager by linking it to the {@link strappy.RadioTower Radio Tower},
 		 * testing for "hashchange" event support, and creating bindings
 		 * for the hash changes to be captured.
 		 * 
-		 * @return {framework.StateMgr}
+		 * @return {strappy.StateMgr}
 		 */
 		init: function()
 		{
-			this.radioTower		=framework.$radioTower;
+			this.radioTower		=strappy.$radioTower;
 			
 			$(window).bind('hashchange',this.onHashChangeTest.bind(this));
 			
@@ -99,7 +99,7 @@ $JSKK.Class.create
 		 * This method will bind to the hash change event natively,
 		 * or if the browser does not support it, then it will bind to
 		 * hand over the control of monitoring the hash changes to
-		 * {@link framework.StateMgr#monitorHashChange}.
+		 * {@link strappy.StateMgr#monitorHashChange}.
 		 * @private
 		 * @return {void}
 		 */
@@ -119,7 +119,7 @@ $JSKK.Class.create
 		 * "hashchange" event.
 		 * 
 		 * It is designed to poll the hash address for changes and call
-		 * {@link framework.StateMgr#onHashChange} if a change is detected.
+		 * {@link strappy.StateMgr#onHashChange} if a change is detected.
 		 * 
 		 * @private
 		 * @return {void}
@@ -143,14 +143,14 @@ $JSKK.Class.create
 		},
 		/**
 		 * This method will be invoked automatically whenever a change in the
-		 * hash address is detected. It will fire the {@link framework.Signal#STATE_CHANGE State Change}
+		 * hash address is detected. It will fire the {@link strappy.Signal#STATE_CHANGE State Change}
 		 * signal and provide the new state in the body of the signal.
 		 * 
 		 * Note that the signal can be supressed by passing true to the supressSignal param.
 		 * 
 		 * @param {Object} event The event object. Is null if the browser
 		 * does not support the "hashchange" event.
-		 * @param {Boolean} supressSignal Blocks the {@link framework.Signal#STATE_CHANGE State Change}
+		 * @param {Boolean} supressSignal Blocks the {@link strappy.Signal#STATE_CHANGE State Change}
 		 * signal from being issued.
 		 * 
 		 * @private
@@ -174,11 +174,11 @@ $JSKK.Class.create
 			}
 			if (!supressSignal)
 			{
-				this.sendSignal(framework.Signal.STATE_CHANGE,'state',{},this.state);
+				this.sendSignal(strappy.Signal.STATE_CHANGE,'state',{},this.state);
 			}
 		},
 		/**
-		 * This is a method which {@link framework.View views} can use
+		 * This is a method which {@link strappy.View views} can use
 		 * to register a dom element's "click" event with a state URL.
 		 * 
 		 * This means whenever the bound element is clicked, the state will
@@ -206,7 +206,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.view',
 			$name:		'Default',
-			$extends:	framework.mvc.View
+			$extends:	strappy.mvc.View
 		}
 	)
 	(
@@ -226,11 +226,11 @@ $JSKK.Class.create
 		 * In the above example, the "a" tags would be bound so that the
 		 * "section" state property changed whenever they were clicked.
 		 * 
-		 * The state manager would then send the {@link framework.Signal#STATE_CHANGE State Change}
-		 * signal and a {@link framework.StatefulController state controller}
+		 * The state manager would then send the {@link strappy.Signal#STATE_CHANGE State Change}
+		 * signal and a {@link strappy.StatefulController state controller}
 		 * could take this change and apply it to it's associated 
-		 * {@link framework.StatefulModel state model}. This would then
-		 * invoke a method bound by the views {@link framework.View#bindStateEvents}
+		 * {@link strappy.StatefulModel state model}. This would then
+		 * invoke a method bound by the views {@link strappy.View#bindStateEvents}
 		 * method which could switch the visible section within the outerContainer div
 		 * and update which li was "active".
 		 * 
@@ -246,7 +246,7 @@ $JSKK.Class.create
 		},
 		/**
 		 * This is a private method which wraps state change events bound with
-		 * {@link framework.StateMgr#registerStateChanger}. It parses the
+		 * {@link strappy.StateMgr#registerStateChanger}. It parses the
 		 * new state and applies it to the hash address.
 		 * @param {Object} A key valued state object.
 		 * @return {void}
@@ -312,7 +312,7 @@ $JSKK.Class.create
 		},
 		/**
 		 * Fetches the Radio Tower singleton.
-		 * @return {framework.RadioTower} The Radio Tower.
+		 * @return {strappy.RadioTower} The Radio Tower.
 		 */
 		getRadioTower: function()
 		{

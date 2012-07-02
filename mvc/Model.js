@@ -1,5 +1,5 @@
 /**
- * @class framework.mvc.Model
+ * @class strappy.mvc.Model
  * 
  * 
  * @abstract
@@ -8,7 +8,7 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.mvc',
+		$namespace:	'strappy.mvc',
 		$name:		'Model',
 		$uses:
 		[
@@ -62,7 +62,7 @@ $JSKK.Class.create
 		 */
 		record:		{},
 		/**
-		 * @property {framework.data.AbstractStore} store The store that the model instance is attached to.
+		 * @property {strappy.data.AbstractStore} store The store that the model instance is attached to.
 		 * @private
 		 */
 		store:		null,
@@ -127,7 +127,7 @@ $JSKK.Class.create
 		 * 
 		 * TODO: Detail this.
 		 * 
-		 * @return {framework.mvc.Model} this
+		 * @return {strappy.mvc.Model} this
 		 */
 		sync: function(config)
 		{
@@ -189,7 +189,7 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
-		 * Fetches a record based on its index in the store.
+		 * Fetches a value based on a field name.
 		 * 
 		 * Note: This method is affected by lock state.
 		 * 
@@ -198,8 +198,8 @@ $JSKK.Class.create
 		 */
         get: function(key)
 		{
-			if (this.lockState==framework.mvc.Model.LOCK_NONE
-			|| this.lockState==framework.mvc.Model.LOCK_READONLY
+			if (this.lockState==strappy.mvc.Model.LOCK_NONE
+			|| this.lockState==strappy.mvc.Model.LOCK_READONLY
 			|| this.isClone())
 			{
 				return this.record[key];
@@ -218,8 +218,8 @@ $JSKK.Class.create
 		 */
 		getRecord: function()
 		{
-			if (this.lockState==framework.mvc.Model.LOCK_NONE
-			|| this.lockState==framework.mvc.Model.LOCK_READONLY
+			if (this.lockState==strappy.mvc.Model.LOCK_NONE
+			|| this.lockState==strappy.mvc.Model.LOCK_READONLY
 			|| this.isClone())
 			{
 				return this.record;
@@ -251,7 +251,7 @@ $JSKK.Class.create
         set: function()
 		{
 			
-			if (this.lockState==framework.mvc.Model.LOCK_NONE || this.isClone())
+			if (this.lockState==strappy.mvc.Model.LOCK_NONE || this.isClone())
 			{
 				var	args		=$JSKK.toArray(arguments),
 					keyVals		={};
@@ -273,14 +273,14 @@ $JSKK.Class.create
 			{
 				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents any modification.');
 			}
-			if (this.lockState==framework.mvc.Model.LOCK_NONE && !this.isClone())
+			if (this.lockState==strappy.mvc.Model.LOCK_NONE && !this.isClone())
 			{
 				this.fireEvent('onChange',this);
 			}
 		},
 		/**
 		 * Flags the model as being changed.
-		 * @return {framework.mvc.Model} this
+		 * @return {strappy.mvc.Model} this
 		 */
 		flagDirty: function()
 		{
@@ -289,7 +289,7 @@ $JSKK.Class.create
 		},
 		/**
 		 * Flags the model as being unchanged.
-		 * @return {framework.mvc.Model} this
+		 * @return {strappy.mvc.Model} this
 		 */
 		flagClean: function()
 		{
@@ -315,13 +315,13 @@ $JSKK.Class.create
 		/**
 		 * Locks the model based on the type of lock given to this method.
 		 * @param {String} lockType The type of lock. Valid lock types are:<br>
-		 * * {@link framework.mvc.Model#LOCK_NONE}<br>
-		 * * {@link framework.mvc.Model#LOCK_READONLY}<br>
-		 * * {@link framework.mvc.Model#LOCK_FULL}<br>
+		 * * {@link strappy.mvc.Model#LOCK_NONE}<br>
+		 * * {@link strappy.mvc.Model#LOCK_READONLY}<br>
+		 * * {@link strappy.mvc.Model#LOCK_FULL}<br>
 		 * @param {Boolean} supressEvent Blocks the onLockChange event
 		 * from being fired.
 		 * 
-		 * @retrun {framework.data.stateful.Store}
+		 * @retrun {strappy.data.stateful.Store}
 		 */
 		lock: function(lockType,supressEvent)
 		{
@@ -347,7 +347,7 @@ $JSKK.Class.create
 		 * model of the same original with those record values.
 		 * This new model isntance will not be flagged as dirty.
 		 * 
-		 * @return {framework.mvc.Model} The cloned instance.
+		 * @return {strappy.mvc.Model} The cloned instance.
 		 */
 		clone: function()
 		{
@@ -368,7 +368,7 @@ $JSKK.Class.create
 		 * 
 		 * Note: This is usually used with internally by transactions.
 		 * 
-		 * @return {framework.mvc.Model} this
+		 * @return {strappy.mvc.Model} this
 		 */
 		attachPhantom: function(phantomModel)
 		{
@@ -386,7 +386,7 @@ $JSKK.Class.create
 		/**
 		 * Fetches the attached phantom record. Throws an error if there is no
 		 * phantom record attached.
-		 * @return {framework.mvc.Model} The phantom record.
+		 * @return {strappy.mvc.Model} The phantom record.
 		 */
 		getPhantom: function()
 		{
@@ -401,7 +401,7 @@ $JSKK.Class.create
 		},
 		/**
 		 * Destroys the phantom record attached to this model.
-		 * @return {framework.mvc.Model} this
+		 * @return {strappy.mvc.Model} this
 		 */
 		destroyPhantom: function()
 		{

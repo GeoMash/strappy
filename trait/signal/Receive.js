@@ -1,7 +1,7 @@
 /**
- * @class framework.trait.signal.Receive
- * This trait enables a {@link framework.mvc.Model model},
- * {@link framework.mvc.View view} or {@link framework.mvc.Controller controller}
+ * @class strappy.trait.signal.Receive
+ * This trait enables a {@link strappy.mvc.Model model},
+ * {@link strappy.mvc.View view} or {@link strappy.mvc.Controller controller}
  * with the ability to register and receive signals.
  * 
  * @abstract
@@ -9,7 +9,7 @@
  $JSKK.Trait.create
 (
 	{
-		$namespace:	'framework.trait.signal',
+		$namespace:	'strappy.trait.signal',
 		$name:		'Receive'
 	}
 )
@@ -25,7 +25,7 @@
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'Default',
-			$extends:	framework.mvc.Controller
+			$extends:	strappy.mvc.Controller
 		}
 	)
 	(

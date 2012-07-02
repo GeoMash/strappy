@@ -1,5 +1,5 @@
 /**
- * @class framework.RadioTower
+ * @class strappy.RadioTower
  * This is a special container class which leverages $JSKK's
  * Observable trait to handle registering signal callbacks
  * and distributing signals.
@@ -14,7 +14,7 @@
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework',
+		$namespace:	'strappy',
 		$name:		'RadioTower',
 		$uses:
 		[
