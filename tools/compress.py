@@ -46,7 +46,7 @@ class Compress:
 			return result[0]
 	
 	
-	def dirIterator(self, arg, dirname, fnames ):
+	def dirIterator(self, arg, dirname, fnames):
 		for file in fnames:
 			thisFile	=os.path.join(dirname, file)
 			fileParts	=os.path.splitext(thisFile)
