@@ -81,8 +81,12 @@ $JSKK.Class.create
 )
 (
 	{
+		/**
+		 * @deprecated Use {@link strappy.InitQueue} instead.
+		 */
 		initQueue: function(queue,callback)
-		{	
+		{
+			console.warn('use of strappy.Component.initQueue is deprecated. Use strappy.InitQueue instead.');
 			var	args		=$JSKK.toArray(arguments);
 			
 			if (Object.isDefined(args[1]))
