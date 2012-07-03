@@ -6,8 +6,8 @@
  * 
  * You should never use this store directly.
  * 
- * @mixins strappy.trait.ComponentConnector
- * @mixins $JSKK.trait.Observable
+ * @traits strappy.trait.ComponentConnector
+ * @traits $JSKK.trait.Observable
  * 
  * @uses strappy.trait.ComponentConnector
  * @uses $JSKK.trait.Observable

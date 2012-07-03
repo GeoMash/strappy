@@ -1,6 +1,6 @@
 {
 	"--output":				"./out/",
-    "--title":				"Framework Docs",
+    "--title":				"Strappy Docs",
     "--welcome":			"index.html",
     "--warnings":			["-link", "-no_doc"],
     "--examples-base-url":	"../examples/",

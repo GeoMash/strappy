@@ -15,10 +15,10 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-trait-signal-Receive'>/**
-</span> * @class framework.trait.signal.Receive
- * This trait enables a {@link framework.mvc.Model model},
- * {@link framework.mvc.View view} or {@link framework.mvc.Controller controller}
+  <pre class="prettyprint lang-js"><span id='strappy-trait-signal-Receive'>/**
+</span> * @class strappy.trait.signal.Receive
+ * This trait enables a {@link strappy.mvc.Model model},
+ * {@link strappy.mvc.View view} or {@link strappy.mvc.Controller controller}
  * with the ability to register and receive signals.
  * 
  * @abstract
@@ -26,13 +26,13 @@
  $JSKK.Trait.create
 (
 	{
-		$namespace:	'framework.trait.signal',
+		$namespace:	'strappy.trait.signal',
 		$name:		'Receive'
 	}
 )
 (
 	{
-<span id='framework-trait-signal-Receive-method-registerSignals'>		/**
+<span id='strappy-trait-signal-Receive-method-registerSignals'>		/**
 </span>		 * Registers signals that the class implementing this trait will
 		 * listen for and binds them to callbacks within the class.
 		 * 
@@ -42,7 +42,7 @@
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'Default',
-			$extends:	framework.mvc.Controller
+			$extends:	strappy.mvc.Controller
 		}
 	)
 	(

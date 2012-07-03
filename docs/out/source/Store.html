@@ -15,24 +15,24 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-data-stateful-Store'>/**
-</span> * @class framework.data.stateful.Store
+  <pre class="prettyprint lang-js"><span id='strappy-data-stateful-Store'>/**
+</span> * @class strappy.data.stateful.Store
  * 
  * 
  * 
- * @mixins framework.trait.ComponentConnector
- * @mixins framework.trait.signal.Send
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Send
  * @abstract
  * 
- * @uses framework.trait.ComponentConnector
- * @uses framework.trait.signal.Send
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Send
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.data.stateful',
+		$namespace:	'strappy.data.stateful',
 		$name:		'Store',
-		$extends:	framework.data.SingleModelStore
+		$extends:	strappy.data.SingleModelStore
 	}
 )
 (
@@ -51,27 +51,27 @@ $JSKK.Class.create
 			onChange:		true,
 			onReady:		true
 		},
-<span id='framework-data-stateful-Store-property-ready'>		/**
+<span id='strappy-data-stateful-Store-property-ready'>		/**
 </span>		 * @property {Boolean} ready A flag indicating that the component's state is ready.
 		 * @private
 		 */
 		ready:		false,
-<span id='framework-data-stateful-Store-property-readyViews'>		/**
+<span id='strappy-data-stateful-Store-property-readyViews'>		/**
 </span>		 * @property {Array} readyViews A container filled with views which a controller has
 		 * flagged as ready.
 		 * 
-		 * See {@link framework.data.stateful.Store#setViewReady} and
-		 * {@link framework.data.stateful.Store#getReadyViews} for more information and
+		 * See {@link strappy.data.stateful.Store#setViewReady} and
+		 * {@link strappy.data.stateful.Store#getReadyViews} for more information and
 		 * examples of how to use this.
 		 * @private
 		 */
 		readyViews:	[],
-<span id='framework-data-stateful-Store-property-stateMap'>		/**
+<span id='strappy-data-stateful-Store-property-stateMap'>		/**
 </span>		 * @property {Object} stateMap A reference object for mapped private and public state properties.
 		 * @private
 		 */
 		stateMap:{},
-<span id='framework-data-stateful-Store-property-lockState'>		/**
+<span id='strappy-data-stateful-Store-property-lockState'>		/**
 </span>		 * 
 		 * @property {String} lockState This property will block behaviours on this store depending on its state.
 		 * @private
@@ -82,7 +82,7 @@ $JSKK.Class.create
 		init: function()
 		{
 			//Set the model.
-			this.model=framework.mvc.stateful.Model;
+			this.model=strappy.mvc.stateful.Model;
 			
 			// for (var item in this.state)
 			// {
@@ -104,7 +104,7 @@ $JSKK.Class.create
 				this.stateMap[item]=self.ACCESS_PUBLIC;
 			}
 		},
-<span id='framework-data-stateful-Store-method-canManageStateItem'>		/**
+<span id='strappy-data-stateful-Store-method-canManageStateItem'>		/**
 </span>		 * Checks to see if the passed in state item
 		 * can be managed by this store.
 		 * 
@@ -116,44 +116,54 @@ $JSKK.Class.create
 			return this.stateMap[item]==this.$reflect('self').ACCESS_PUBLIC;
 		},
 		
-<span id='framework-data-stateful-Store-method-set'>		/**
+<span id='strappy-data-stateful-Store-method-set'>		/**
 </span>		 * Sets a state property with a new value.
 		 * 
 		 * Sends signal:
 		 * 
-		 * * {@link framework.Signal.STATEFULSTORE_DONE_CHANGE}
+		 * * {@link strappy.Signal.STATEFULSTORE_DONE_CHANGE}
 		 * 
 		 * @param {String} key The property to set.
 		 * @param {Mixed} value The new value.
-		 * @return {framework.data.stateful.Store}
+		 * @return {strappy.data.stateful.Store}
 		 */
-		set: function(key,value)
+		set: function()
 		{
-			if (this.lockState==framework.data.stateful.Store.LOCK_NONE)
+			if (this.lockState==strappy.data.stateful.Store.LOCK_NONE)
 			{
-				var mapping=this.stateMap[key];
-				this.record.get(mapping)[key]=value;
-				if (mapping==this.$reflect('self').ACCESS_PUBLIC)
+				var	args		=$JSKK.toArray(arguments),
+					keyVals		={},
+					mapping		=null,
+					updateState	=false,
+					newState	={};
+				if (Object.isDefined(args[1]))
 				{
-					var newState={};
-					newState[key]=value;
-					this.getStateMgr().updateState(newState,true);
-				}
-					
-				
-				
-				
-				// this.state[key]	=value;
-				// var changeSet	={};
-				// changeSet[key]	=value;
-				
-				if (this.fireEvent('onBeforeChange',this,key,value)!==false)
-				{
-					this.fireEvent('onChange',this,key,value);
+					keyVals[args.shift()]=args.shift();
 				}
 				else
 				{
-					return false;
+					keyVals=args.shift();
+				}
+				for (var key in keyVals)
+				{
+					mapping=this.stateMap[key];
+					//Ignore if the value is the same.
+					if (this.record.get(mapping)[key]===keyVals[key])continue;
+					//Keep going otherwise...
+					if (this.fireEvent('onBeforeChange',this,key,keyVals[key])!==false)
+					{
+						this.record.get(mapping)[key]=keyVals[key];
+						if (mapping==this.$reflect('self').ACCESS_PUBLIC)
+						{
+							updateState		=true;
+							newState[key]	=keyVals[key];
+						}
+						this.fireEvent('onChange',this,key,keyVals[key]);
+					}
+				}
+				if (updateState)
+				{
+					this.getStateMgr().updateState(newState,true);
 				}
 			}
 			else
@@ -162,11 +172,11 @@ $JSKK.Class.create
 			}
 			return this;
 		},
-<span id='framework-data-stateful-Store-method-setReady'>		/**
+<span id='strappy-data-stateful-Store-method-setReady'>		/**
 </span>		 * This method will set the ready state of the component.
 		 * 
 		 * @param {Boolean} ready The ready state.
-		 * @return {framework.data.stateful.Store}
+		 * @return {strappy.data.stateful.Store}
 		 */
 		setReady: function(ready)
 		{
@@ -190,7 +200,7 @@ $JSKK.Class.create
 			// this.fireEvent('onChange',this);
 			return this;
 		},
-<span id='framework-data-stateful-Store-method-isReady'>		/**
+<span id='strappy-data-stateful-Store-method-isReady'>		/**
 </span>		 * Checks if the component's ready state is true.
 		 * @return {Boolean} True if the component state is ready.
 		 */
@@ -198,7 +208,7 @@ $JSKK.Class.create
 		{
 			return this.ready;
 		},
-<span id='framework-data-stateful-Store-method-get'>		/**
+<span id='strappy-data-stateful-Store-method-get'>		/**
 </span>		 * Gets a state property from the model's store.
 		 * @param {String} key The state property to fetch.
 		 * @return {Mixed} The value of the property.
@@ -207,7 +217,7 @@ $JSKK.Class.create
 		{
 			return this.get.$parent(this.stateMap[key])[key];
 		},
-<span id='framework-data-stateful-Store-method-setViewReady'>		/**
+<span id='strappy-data-stateful-Store-method-setViewReady'>		/**
 </span>		 * Stores the view name in a private store for ready views.
 		 * 
 		 * Example:
@@ -216,7 +226,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'State',
-			$extends:	framework.mvc.stateful.Controller
+			$extends:	strappy.mvc.stateful.Controller
 		}
 	)
 	(
@@ -229,14 +239,14 @@ $JSKK.Class.create
 		}
 	);
 		 * @param {String} view The name of the view.
-		 * @return {framework.data.stateful.Store}
+		 * @return {strappy.data.stateful.Store}
 		 */
 		setViewReady: function(view)
 		{
 			this.readyViews.push(view);
 			return this;
 		},
-<span id='framework-data-stateful-Store-method-getReadyViews'>		/**
+<span id='strappy-data-stateful-Store-method-getReadyViews'>		/**
 </span>		 * Returns an array of ready views.
 		 * 
 		 * Example:
@@ -245,7 +255,7 @@ $JSKK.Class.create
 		{
 			$namespace:	'Application.component.myComponent.controller',
 			$name:		'State',
-			$extends:	framework.mvc.stateful.Controller
+			$extends:	strappy.mvc.stateful.Controller
 		}
 	)
 	(
@@ -270,14 +280,14 @@ $JSKK.Class.create
 		{
 			return this.readyViews;
 		},
-<span id='framework-data-stateful-Store-method-lock'>		/**
+<span id='strappy-data-stateful-Store-method-lock'>		/**
 </span>		 * Locks the model based on the type of lock given to this method.
 		 * @param {String} lockType The type of lock. Valid lock types are:
-		 * * {@link framework.data.stateful.Store#LOCK_NONE}
-		 * * {@link framework.data.stateful.Store#LOCK_READONLY}
-		 * * {@link framework.data.stateful.Store#LOCK_FULL}
+		 * * {@link strappy.data.stateful.Store#LOCK_NONE}
+		 * * {@link strappy.data.stateful.Store#LOCK_READONLY}
+		 * * {@link strappy.data.stateful.Store#LOCK_FULL}
 		 * 
-		 * @retrun {framework.data.stateful.Store}
+		 * @retrun {strappy.data.stateful.Store}
 		 */
 		lock: function(lockType)
 		{

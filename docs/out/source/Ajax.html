@@ -15,24 +15,24 @@
   </script>
 </head>
 <body onload="prettyPrint(); highlight();">
-  <pre class="prettyprint lang-js"><span id='framework-data-proxy-Ajax'>/**
-</span> * @class framework.data.proxy.Ajax
- * @extends framework.data.proxy.AbstractProxy
+  <pre class="prettyprint lang-js"><span id='strappy-data-proxy-Ajax'>/**
+</span> * @class strappy.data.proxy.Ajax
+ * @extends strappy.data.proxy.AbstractProxy
  * 
  * 
  */
 $JSKK.Class.create
 (
 	{
-		$namespace:	'framework.data.proxy',
+		$namespace:	'strappy.data.proxy',
 		$name:		'Ajax',
-		$extends:	framework.data.proxy.AbstractProxy
+		$extends:	strappy.data.proxy.AbstractProxy
 	}
 )
 (
 	{},
 	{
-<span id='framework-data-proxy-Ajax-method-get'>		/**
+<span id='strappy-data-proxy-Ajax-method-get'>		/**
 </span>		 * 
 		 */
 		get: function(config)
@@ -56,7 +56,7 @@ $JSKK.Class.create
 				.fail(config.onFailure || $JSKK.emptyFunction);
 			}
 		},
-<span id='framework-data-proxy-Ajax-method-sync'>		/**
+<span id='strappy-data-proxy-Ajax-method-sync'>		/**
 </span>		 * 
 		 */
 		sync: function(config)
@@ -76,7 +76,7 @@ $JSKK.Class.create
 				.fail(config.onFailure || $JSKK.emptyFunction);
 			}
 		},
-<span id='framework-data-proxy-Ajax-method-raw'>		/**
+<span id='strappy-data-proxy-Ajax-method-raw'>		/**
 </span>		 * 
 		 */
 		raw: function(config)
