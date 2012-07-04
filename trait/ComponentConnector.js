@@ -157,6 +157,25 @@ $JSKK.Trait.create
 		makeAttachPoint: function(attachTo)
 		{
 			return [this.getConfig('attachTo'), attachTo].join(' ');
+		},
+		
+		showChildComponent: function(cmp)
+		{
+			this.sendSignal
+			(
+				strappy.Signal.SHOW,
+				'strappy',
+				{iid:this.getCmp(cmp).getIID()}	
+			);
+		},
+		hideChildComponent: function(cmp)
+		{
+			this.sendSignal
+			(
+				strappy.Signal.HIDE,
+				'strappy',
+				{iid:this.getCmp(cmp).getIID()}	
+			);
 		}
 	}
 );

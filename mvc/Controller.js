@@ -99,25 +99,6 @@ $JSKK.Class.create
 		
 		
 		onSignalShow:	$JSKK.emptyFunction,
-		onSignalHide:	$JSKK.emptyFunction,
-		
-		showChildComponent: function(cmp)
-		{
-			this.sendSignal
-			(
-				strappy.Signal.SHOW,
-				'strappy',
-				{iid:this.getCmp(cmp).getIID()}	
-			);
-		},
-		hideChildComponent: function(cmp)
-		{
-			this.sendSignal
-			(
-				strappy.Signal.HIDE,
-				'strappy',
-				{iid:this.getCmp(cmp).getIID()}	
-			);
-		}
+		onSignalHide:	$JSKK.emptyFunction
 	}
 );
