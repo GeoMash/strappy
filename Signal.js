@@ -179,7 +179,7 @@ $JSKK.Class.create
 			{
 				body=this.getBody();
 			}
-			this.sendSignal(this.getName()),this.getType(),filter,body);
+			this.sendSignal(this.getName(),this.getType(),filter,body);
 			return this;
 		}
 	}
