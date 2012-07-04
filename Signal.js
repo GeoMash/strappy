@@ -93,6 +93,10 @@ $JSKK.Class.create
 		{
 			return this.config.name;
 		},
+		getRadioTower: function()
+		{
+			return window.strappy.$radioTower;
+		},
 		/**
 		 * Gets the body of the signal.
 		 * 
@@ -178,6 +182,10 @@ $JSKK.Class.create
 			if (Object.isUndefined(body))
 			{
 				body=this.getBody();
+			}
+			if (Object.isUndefined(filter.origin) && Object.isDefined(this.getFilter().origin))
+			{
+				filter.origin=this.this.getFilter().origin;
 			}
 			this.sendSignal(this.getName(),this.getType(),filter,body);
 			return this;
