@@ -306,7 +306,14 @@ $JSKK.Class.create
 			var stateString=[];
 			for (var node in this.state)
 			{
-				stateString.push(node+'='+this.state[node]);
+				if (!Object.isNull(this.state[node]))
+				{
+					stateString.push(node+'='+this.state[node]);
+				}
+				else
+				{
+					delete this.state[node];
+				}
 			}
 			return stateString.join('&');
 		},
