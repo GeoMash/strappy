@@ -175,6 +175,9 @@ $JSKK.Class.create
 			if (!supressSignal)
 			{
 				this.sendSignal(strappy.Signal.STATE_CHANGE,'state',{},this.state);
+				//At this point we update the state again so that we can deal with
+				//removing any null values.
+				window.location.hash=this.parseStateObject(this.state);
 			}
 		},
 		/**
@@ -306,7 +309,7 @@ $JSKK.Class.create
 			var stateString=[];
 			for (var node in this.state)
 			{
-				if (!Object.isNull(this.state[node]))
+				if (!Object.isNull(this.state[node]) && this.state[node]!='null')
 				{
 					stateString.push(node+'='+this.state[node]);
 				}
