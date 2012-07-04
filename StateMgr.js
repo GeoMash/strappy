@@ -177,6 +177,13 @@ $JSKK.Class.create
 				this.sendSignal(strappy.Signal.STATE_CHANGE,'state',{},this.state);
 				//At this point we update the state again so that we can deal with
 				//removing any null values.
+				for (var node in this.state)
+				{
+					if (Object.isNull(this.state[node]))
+					{
+						delete this.state[node];
+					}
+				}
 				window.location.hash=this.parseStateObject(this.state);
 			}
 		},
@@ -286,12 +293,13 @@ $JSKK.Class.create
 			for (var i=0,j=states.length; i<j; i++)
 			{
 				stateParts=states[i].split('=');
-				if (['true','false'].inArray(stateParts[1]))
+				if (['true','false','null'].inArray(stateParts[1]))
 				{
 					switch (stateParts[1])
 					{
 						case 'true':	stateParts[1]=true;		break;
 						case 'false':	stateParts[1]=false;	break;
+						case 'null':	stateParts[1]=null;		break;
 					}
 				}
 				stateObj[stateParts[0]]=stateParts[1];
@@ -309,14 +317,15 @@ $JSKK.Class.create
 			var stateString=[];
 			for (var node in this.state)
 			{
-				if (!Object.isNull(this.state[node]) && this.state[node]!='null')
-				{
-					stateString.push(node+'='+this.state[node]);
-				}
-				else
-				{
-					delete this.state[node];
-				}
+				// if (!Object.isNull(this.state[node]) && this.state[node]!='null')
+				// {
+				// 	stateString.push(node+'='+this.state[node]);
+				// }
+				// else
+				// {
+				// 	delete this.state[node];
+				// }
+				stateString.push(node+'='+this.state[node]);
 			}
 			return stateString.join('&');
 		},
