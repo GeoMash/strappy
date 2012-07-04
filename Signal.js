@@ -23,11 +23,11 @@ $JSKK.Class.create
 (
 	{
 		$namespace:		'strappy',
-		$name:			'Signal'//,
-//		$uses:
-//		[
-//			$JSKK.trait.Configurable
-//		]
+		$name:			'Signal',
+		$uses:
+		[
+			strappy.trait.signal.Send
+		]
 	}
 )
 (
@@ -172,6 +172,15 @@ $JSKK.Class.create
 				}
 			}
 			return true;
+		},
+		resend: function(filter,body)
+		{
+			if (Object.isUndefined(body))
+			{
+				body=this.getBody();
+			}
+			this.sendSignal(this.getName(),this.getType(),filter,body);
+			return this;
 		}
 	}
 );

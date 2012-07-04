@@ -59,7 +59,12 @@ $JSKK.Class.create
 						type:		'strappy',
 						filter:		{iid:this.getIID()}
 					},
-					onSignalHide:	strappy.Signal.HIDE
+					onSignalHide:
+					{
+						signal:		strappy.Signal.SHOW,
+						type:		'strappy',
+						filter:		{iid:this.getIID()}
+					},
 				}
 			);
 		},
