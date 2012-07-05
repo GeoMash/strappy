@@ -185,7 +185,7 @@ $JSKK.Class.create
 			}
 			if (Object.isUndefined(filter.origin) && Object.isDefined(this.getFilter().origin))
 			{
-				filter.origin=this.this.getFilter().origin;
+				filter.origin=this.getFilter().origin;
 			}
 			this.sendSignal(this.getName(),this.getType(),filter,body);
 			return this;
