@@ -45,6 +45,9 @@ $JSKK.Class.create
 		 * @private
 		 */
 		radioTower:		null,
+		
+		sharedState:	null,
+		
 		/**
 		 * @property eventSupported A flag which is set to true or false depending on weather
 		 * or not the browser supports the "hashchange" event.
@@ -69,6 +72,7 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.radioTower		=strappy.$radioTower;
+			this.sharedState	=new strappy.SharedState();
 			
 			$(window).bind('hashchange',this.onHashChangeTest.bind(this));
 			
@@ -345,6 +349,10 @@ $JSKK.Class.create
 		getRadioTower: function()
 		{
 			return this.radioTower;
+		},
+		getSharedState: function()
+		{
+			return this.sharedState;
 		}
 	}
 );

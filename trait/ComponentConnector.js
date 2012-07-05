@@ -176,6 +176,15 @@ $JSKK.Trait.create
 				'strappy',
 				{iid:this.getCmp(cmp).getIID()}	
 			);
+		},
+		setSharedState: function(key,val)
+		{
+			this.getStateMgr().getSharedState().set(key,val);
+			return this;
+		},
+		getSharedState: function(key)
+		{
+			this.getStateMgr().getSharedState().get(key);
 		}
 	}
 );
