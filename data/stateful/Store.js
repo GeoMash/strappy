@@ -67,14 +67,11 @@ $JSKK.Class.create
 			//Set the model.
 			this.model=strappy.mvc.stateful.Model;
 			
-			// for (var item in this.state)
-			// {
-			// 	this.keys.push(item);
-			// }
-			
-			
-			
 			this.init.$parent();
+			this.mapStateProperties();
+		},
+		mapStateProperties: function()
+		{
 			var	self=this.$reflect('self'),
 				item=null;
 			
