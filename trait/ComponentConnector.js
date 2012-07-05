@@ -184,7 +184,7 @@ $JSKK.Trait.create
 		},
 		getSharedState: function(key)
 		{
-			this.getStateMgr().getSharedState().get(key);
+			return this.getStateMgr().getSharedState().get(key);
 		}
 	}
 );
