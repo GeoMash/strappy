@@ -17,12 +17,24 @@ $JSKK.Class.create
 			onItemReady:	true,
 			onAllReady:		true
 		},
-		items:		[],
-		
+		component:		null,
+		items:			[],
 		processPointer:	-1,
 		length:			0,
 		complete:		0,
 		
+		init: function(component)
+		{
+			if (Object.isDefined(component))
+			{
+				this.component=component;
+			}
+			else
+			{
+				console.warn('You should provide the parent component to the InitQueue constructor'
+							+' otherwise initalized child components could be unreferencable.');
+			}
+		},
 		add: function(name,ref,config,callback)
 		{
 			this.items.push
@@ -59,6 +71,15 @@ $JSKK.Class.create
 			{
 				cmp=this.items[this.processPointer].ref;
 			}
+			if (Object.isDefined(this.component) && !Object.isNull(this.component)
+			&& Object.isUndefined(this.component.components[this.items[this.processPointer].name]))
+			{
+				this.component.components[this.items[this.processPointer].name]=cmp;
+			}
+			// else
+			// {
+			// 	throw new Error('Attempted to initalize a queued item but the component already has a');
+			// }
 			if (Object.isAssocArray(this.items[this.processPointer].config))
 			{
 				cmp.observeOnce

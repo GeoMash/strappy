@@ -582,6 +582,19 @@ $JSKK.Class.create
 			this.components[component].push(cmp);
 			return cmp;
 		},
+		newInitQueue: function(onAllReady,onItemReady)
+		{
+			var queue=new strappy.InitQueue({},this);
+			if (Object.isFunction(onAllReady))
+			{
+				queue.observe('onAllReady',onAllReady);
+			}
+			if (Object.isFunction(onItemReady))
+			{
+				queue.observe('onItemReady',onItemReady);
+			}
+			return queue;
+		},
 		/**
 		 * Returns a child component which is pre-defined in this
 		 * components "components" property.
@@ -599,6 +612,7 @@ $JSKK.Class.create
 			}
 			else
 			{
+				console.trace();
 				throw new Error('Unable to get component "'+cmpName+'". This component has not been registered.');
 			}
 		},

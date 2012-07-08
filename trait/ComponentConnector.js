@@ -185,6 +185,10 @@ $JSKK.Trait.create
 		getSharedState: function(key)
 		{
 			return this.getStateMgr().getSharedState().get(key);
+		},
+		newInitQueue: function(onAllReady,onItemReady)
+		{
+			return this.getParentComponent().newInitQueue(onAllReady,onItemReady);
 		}
 	}
 );
