@@ -131,7 +131,7 @@ $JSKK.Class.create
 				{
 					mapping=this.stateMap[key];
 					//Ignore if the value is the same.
-					if (this.record.get(mapping)[key]===keyVals[key])continue;
+					if (this.record.get(mapping)[key]==keyVals[key])continue;
 					//Keep going otherwise...
 					if (this.fireEvent('onBeforeChange',this,key,keyVals[key])!==false)
 					{
