@@ -23,51 +23,38 @@ $JSKK.Class.create
 (
 	{
 		$namespace:		'strappy',
-		$name:			'Signal'//,
-//		$uses:
-//		[
-//			$JSKK.trait.Configurable
-//		]
+		$name:			'Signal',
+		$uses:
+		[
+			strappy.trait.signal.Send
+		]
 	}
 )
 (
 	{
-		//Scope
-		/**
-		 * @property LOCAL Forces the signal to be localized within the component
-		 * that it was sent from.
-		 * @static
-		 */
-		LOCAL:						'local',
-		/**
-		 * @property GLOBAL Forces the signal to be global. Meaning it will be sent
-		 * to all components.
-		 * @static
-		 */
-		GLOBAL:						'global',
-		
 		//Component
 		/**
 		 * @property COMPONENT_IS_READY
 		 * @static
 		 */
-		COMPONENT_IS_READY:			'component.ready',
+		COMPONENT_IS_READY:			'strappy.component.ready',
 		
 		//State
 		/**
 		 * @property STATE_CHANGE
 		 * @static
 		 */
-		STATE_CHANGE:				'state.change',
+		STATE_CHANGE:				'strappy.state.change',
 		
 		//Component
 		/**
 		 * @property CMP_DO_RECONFIGURE
 		 * @static
 		 */
-		CMP_DO_RECONFIGURE:			'component.do.reconfigure'
+		CMP_DO_RECONFIGURE:			'strappy.component.do.reconfigure',
 		
-		
+		SHOW:						'strappy.component.show',
+		HIDE:						'strappy.component.hide'
 	},
 	{
 		config:
@@ -105,6 +92,10 @@ $JSKK.Class.create
 		getName: function()
 		{
 			return this.config.name;
+		},
+		getRadioTower: function()
+		{
+			return window.strappy.$radioTower;
 		},
 		/**
 		 * Gets the body of the signal.
@@ -185,6 +176,19 @@ $JSKK.Class.create
 				}
 			}
 			return true;
+		},
+		resend: function(filter,body)
+		{
+			if (Object.isUndefined(body))
+			{
+				body=this.getBody();
+			}
+			if (Object.isUndefined(filter.origin) && Object.isDefined(this.getFilter().origin))
+			{
+				filter.origin=this.getFilter().origin;
+			}
+			this.sendSignal(this.getName(),this.getType(),filter,body);
+			return this;
 		}
 	}
 );

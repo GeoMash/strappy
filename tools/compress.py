@@ -77,7 +77,6 @@ class Compress:
 	
 	def compressStrappy(self,configFile=None,targetDir=None):
 		fileList	=[]
-		
 		if configFile==None:
 			if targetDir:
 				targetDir	=os.path.abspath(targetDir)
@@ -87,7 +86,7 @@ class Compress:
 					file	=open(configFile, 'r')
 					config	=json.loads(file.read())
 					for file in config['files']:
-						fileList.append(os.path.abspath(file))
+						fileList.append(os.path.abspath(os.path.join(targetDir,file)))
 				else:
 					print 'Could not find compile.json file.'
 					os.path.walk(os.path.abspath(DIR_STRAPPY),self.dirIterator,fileList)
@@ -97,7 +96,7 @@ class Compress:
 			file	=open(configFile, 'r')
 			config	=json.loads(file.read())
 			for file in config['files']:
-				fileList.append(os.path.abspath(file))
+				fileList.append(os.path.abspath(os.path.join(targetDir,file)))
 		
 		return self.compressfileList(fileList)
 	

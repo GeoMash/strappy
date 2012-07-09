@@ -28,7 +28,7 @@
 		 */
 		sendSignal: function(name,type,filter,body)
 		{
-			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(trait) :: ',name);
+			// console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(trait) :: ',name);
 			if (!Object.isEmpty(name))
 			{
 				if (Object.isUndefined(filter))filter={};
@@ -58,14 +58,6 @@
 			{
 				throw new Error('Class '+this.$reflect('name')+' attempted to fire an empty signal.');
 			}
-		},
-		sendLocalSignal: function()
-		{
-			
-		},
-		sendGlobalSignal: function()
-		{
-			
 		}
 	}
 );

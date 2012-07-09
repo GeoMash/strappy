@@ -7,14 +7,14 @@
  * 
  * Bound Signals:
  * 
- * * {@link strappy.Signal.CMP_DO_RECONFIGURE}: {@link strappy.mvc.Controller#onReconfigure}
- * * {@link strappy.Signal.VIEW_IS_READY}: {@link strappy.mvc.Controller#onViewReady}
+ * * {@link strappy.Signal.SHOW}: {@link strappy.mvc.Controller#onSignalShow}
+ * * {@link strappy.Signal.HIDE}: {@link strappy.mvc.Controller#onSignalHide}
  * * {@link strappy.Signal.VIEW_DONE_GOTBASEHTML}: {@link strappy.mvc.Controller#onGotBaseHTML}
  * * {@link strappy.Signal.STATEFULMODEL_IS_READY}: {@link strappy.mvc.Controller#onReadyState}
  * 
- * @mixins strappy.trait.ComponentConnector
- * @mixins strappy.trait.signal.Receive
- * @mixins strappy.trait.signal.Send
+ * @traits strappy.trait.ComponentConnector
+ * @traits strappy.trait.signal.Receive
+ * @traits strappy.trait.signal.Send
  * @abstract
  * 
  * @uses strappy.trait.ComponentConnector
@@ -26,6 +26,7 @@ $JSKK.Class.create
 	{
 		$namespace:	'strappy.mvc',
 		$name:		'Controller',
+		$abstract:	true,
 		$uses:
 		[
 			strappy.trait.ComponentConnector,
@@ -49,7 +50,23 @@ $JSKK.Class.create
 		 */
 		init: function()
 		{
-			
+			this.registerSignals
+			( 
+				{
+					onSignalShow:
+					{
+						signal:		strappy.Signal.SHOW,
+						type:		'strappy',
+						filter:		{iid:this.getIID()}
+					},
+					onSignalHide:
+					{
+						signal:		strappy.Signal.HIDE,
+						type:		'strappy',
+						filter:		{iid:this.getIID()}
+					}
+				}
+			);
 		},
 		/**
 		 * This method will be called when a component fires a {@link strappy.Signal.CMP_DO_RECONFIGURE Do Reconfigure}
@@ -78,6 +95,10 @@ $JSKK.Class.create
 		 * @abstract
 		 * @param {strappy.Signal} The signal object.
 		 */
-		onReadyState:	$JSKK.emptyFunction
+		onReadyState:	$JSKK.emptyFunction,
+		
+		
+		onSignalShow:	$JSKK.emptyFunction,
+		onSignalHide:	$JSKK.emptyFunction
 	}
 );

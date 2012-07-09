@@ -45,6 +45,9 @@ $JSKK.Class.create
 		 * @private
 		 */
 		radioTower:		null,
+		
+		sharedState:	null,
+		
 		/**
 		 * @property eventSupported A flag which is set to true or false depending on weather
 		 * or not the browser supports the "hashchange" event.
@@ -69,6 +72,7 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.radioTower		=strappy.$radioTower;
+			this.sharedState	=new strappy.SharedState();
 			
 			$(window).bind('hashchange',this.onHashChangeTest.bind(this));
 			
@@ -175,6 +179,16 @@ $JSKK.Class.create
 			if (!supressSignal)
 			{
 				this.sendSignal(strappy.Signal.STATE_CHANGE,'state',{},this.state);
+				// //At this point we update the state again so that we can deal with
+				// //removing any null values.
+				// for (var node in this.state)
+				// {
+				// 	if (Object.isNull(this.state[node]))
+				// 	{
+				// 		delete this.state[node];
+				// 	}
+				// }
+				// window.location.hash=this.parseStateObject(this.state);
 			}
 		},
 		/**
@@ -253,9 +267,23 @@ $JSKK.Class.create
 		 */
 		updateState: function(state,supressed,event)
 		{
+			var nullProperties=[];
 			for (var node in state)
 			{
+				if (Object.isNull(state[node]))
+				{
+					nullProperties.push(node);
+				}
 				this.state[node]=state[node];
+			}
+			if (nullProperties.length)
+			{
+				var state={};
+				for (var i=0,j=nullProperties.length; i<j; i++)
+				{
+					state[nullProperties[i]]=null;
+				}
+				this.sendSignal(strappy.Signal.STATE_CHANGE,'state',{},state);
 			}
 			// this.supressNext=supressed;
 			window.location.hash=this.parseStateObject(this.state);
@@ -283,12 +311,13 @@ $JSKK.Class.create
 			for (var i=0,j=states.length; i<j; i++)
 			{
 				stateParts=states[i].split('=');
-				if (['true','false'].inArray(stateParts[1]))
+				if (['true','false','null'].inArray(stateParts[1]))
 				{
 					switch (stateParts[1])
 					{
 						case 'true':	stateParts[1]=true;		break;
 						case 'false':	stateParts[1]=false;	break;
+						case 'null':	stateParts[1]=null;		break;
 					}
 				}
 				stateObj[stateParts[0]]=stateParts[1];
@@ -306,7 +335,10 @@ $JSKK.Class.create
 			var stateString=[];
 			for (var node in this.state)
 			{
-				stateString.push(node+'='+this.state[node]);
+				if (!Object.isNull(this.state[node]))
+				{
+					stateString.push(node+'='+this.state[node]);
+				}
 			}
 			return stateString.join('&');
 		},
@@ -317,6 +349,10 @@ $JSKK.Class.create
 		getRadioTower: function()
 		{
 			return this.radioTower;
+		},
+		getSharedState: function()
+		{
+			return this.sharedState;
 		}
 	}
 );
