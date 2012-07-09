@@ -132,6 +132,7 @@ $JSKK.Class.create
 					//Keep going otherwise...
 					if (this.fireEvent('onBeforeChange',this,key,keyVals[key])!==false)
 					{
+						console.debug();
 						this.record.get(mapping)[key]=keyVals[key];
 						if (mapping==this.$reflect('self').ACCESS_PUBLIC)
 						{
@@ -279,6 +280,13 @@ $JSKK.Class.create
 			{
 				throw new Error('"'+lockType+'" is an invalid lock type. Valid locks are "none", "readonly" and "full".');
 			}
+			return this;
+		},
+		
+		reset: function()
+		{
+			this.set(this.data['private']);
+			this.set(this.data['public']);
 			return this;
 		}
 	}
