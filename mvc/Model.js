@@ -84,7 +84,7 @@ $JSKK.Class.create
 				{
 					if (Object.isDefined(record[field]))
 					{
-						this.record[field]=record[field];
+						this.record[field]=Object.clone(record[field]);
 					}
 				}
 			}
@@ -92,7 +92,7 @@ $JSKK.Class.create
 			{
 				for (var field in this.fields)
 				{
-					this.record[field]=this.fields[field];
+					this.record[field]=Object.clone(this.fields[field]);
 				}
 			}
 		},
