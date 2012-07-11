@@ -280,6 +280,13 @@ $JSKK.Class.create
 				throw new Error('"'+lockType+'" is an invalid lock type. Valid locks are "none", "readonly" and "full".');
 			}
 			return this;
+		},
+		
+		reset: function()
+		{
+			this.set(this.data['private']);
+			this.set(this.data['public']);
+			return this;
 		}
 	}
 );
