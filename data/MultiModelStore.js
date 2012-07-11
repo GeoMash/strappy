@@ -130,10 +130,21 @@ $JSKK.Class.create
 		 * @param {Mixed} record The record to be added to the store.
 		 * @return {strappy.mvc.Model}
 		 */
-		add: function(record)
+		add: function(records)
 		{
-			record.flagDirty();
-			this.records.push(record);
+			if (!Object.isArray(records))
+			{
+				records=[records];
+			}
+			for (var i=0,j=records.length; i<j; i++)
+			{
+				if (!Object.isFunction(records[i].$reflect))
+				{
+					records[i]=this.newRecord(records[i])[0];
+				}
+				// records[i].flagDirty();
+				this.records.push(records[i]);
+			}
 			this.fireEvent('onChange',this);
 			return this;
 		},
