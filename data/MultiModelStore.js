@@ -389,7 +389,7 @@ $JSKK.Class.create
 		/**
 		 * Sets all the associated models
 		 */
-		setAll: function()
+		setAll: function(onComplete)
 		{
 			var	args		=$JSKK.toArray(arguments),
 				keyVals		={},
@@ -417,10 +417,18 @@ $JSKK.Class.create
 					{
 						transaction.commit();
 						this.fireEvent('onChange',this);
+						if (Object.isFunction(onComplete))
+						{
+							onComplete(true);
+						}
 					}.bind(this),
 					onFailure: function()
 					{
 						transaction.rollback();
+						if (Object.isFunction(onComplete))
+						{
+							onComplete(false);
+						}
 					}
 				}
 			);
