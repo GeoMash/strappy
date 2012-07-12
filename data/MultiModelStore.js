@@ -144,6 +144,7 @@ $JSKK.Class.create
 				}
 				// records[i].flagDirty();
 				this.records.push(records[i]);
+				this.bindchangeEvent(records[i]);
 			}
 			this.fireEvent('onChange',this);
 			return this;
