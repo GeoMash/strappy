@@ -99,6 +99,14 @@ $JSKK.Trait.create
 			return this.getParentComponent().getCmp(cmp);
 		},
 		/**
+		 * 
+		 * @return {Boolean}
+		 */
+		hasChildCmp: function(cmp)
+		{
+			return Object.isDefined(this.getParentComponent().components[cmp]);
+		},
+		/**
 		 * Fetches a model from the parent component.
 		 * 
 		 * @param {String} model The name of the model.
