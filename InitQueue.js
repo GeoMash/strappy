@@ -93,6 +93,7 @@ $JSKK.Class.create
 							function(pointer)
 							{
 								this.fireEvent('onItemReady',this.items[this.processPointer]);
+								this.items[this.processPointer].callback();
 								if (++this.complete!=this.length)
 								{
 									this.processNextItem();
