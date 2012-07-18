@@ -167,7 +167,8 @@ $JSKK.Class.create
 		 */
 		config:
 		{
-			attachTo:	null
+			attachTo:	null,
+			attachHow:	'append'
 		},
 		/**
 		 * @property browser Contains browser information.
@@ -549,38 +550,30 @@ $JSKK.Class.create
 	);
 		 * 
 		 */
-		newChildComponent: function(component)
+		newChildComponent: function(component,name)
 		{
-			var parts		=component.split('.'),
-				object		=window[parts[0]],
-				config		=null;
-			
-			if (Object.isDefined(object))
+			var object=$JSKK.namespace(component);
+			if (Object.isDefined(object.definition))
 			{
-				for (var i=1,j=parts.length; i<j; i++)
+				if (!Object.isDefined(this.components[component]))
 				{
-					if (Object.isDefined(object[parts[i]]))
+					var cmp=new object();
+					if (Object.isUndefined(name))
 					{
-						object=object[parts[i]];
+						this.components[component]=[];
+						this.components[component].push(cmp);
 					}
 					else
 					{
-						throw new Error('Error! component "'+this.components[component]+'" not loaded.');
-						break;
+						this.components[name]=cmp;
 					}
+					return cmp;
 				}
 			}
 			else
 			{
 				throw new Error('Error! component "'+this.components[component]+'" not loaded.');
 			}
-			if (!Object.isDefined(this.components[component]))
-			{
-				this.components[component]=[];
-			}
-			var cmp=new object();
-			this.components[component].push(cmp);
-			return cmp;
 		},
 		newInitQueue: function(onAllReady,onItemReady)
 		{

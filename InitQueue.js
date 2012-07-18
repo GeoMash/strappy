@@ -65,12 +65,9 @@ $JSKK.Class.create
 			this.processPointer++;
 			if (!Object.isFunction(this.items[this.processPointer].ref.$reflect))
 			{
-				cmp=new this.items[this.processPointer].ref();
+				this.items[this.processPointer].ref=new this.items[this.processPointer].ref();
 			}
-			else
-			{
-				cmp=this.items[this.processPointer].ref;
-			}
+			cmp=this.items[this.processPointer].ref;
 			if (Object.isDefined(this.component) && !Object.isNull(this.component)
 			&& Object.isUndefined(this.component.components[this.items[this.processPointer].name]))
 			{
@@ -93,6 +90,7 @@ $JSKK.Class.create
 							function(pointer)
 							{
 								this.fireEvent('onItemReady',this.items[this.processPointer]);
+								this.items[this.processPointer].callback();
 								if (++this.complete!=this.length)
 								{
 									this.processNextItem();

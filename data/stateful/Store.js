@@ -132,7 +132,6 @@ $JSKK.Class.create
 					//Keep going otherwise...
 					if (this.fireEvent('onBeforeChange',this,key,keyVals[key])!==false)
 					{
-						console.debug();
 						this.record.get(mapping)[key]=keyVals[key];
 						if (mapping==this.$reflect('self').ACCESS_PUBLIC)
 						{

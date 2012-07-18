@@ -164,7 +164,7 @@ $JSKK.Class.create
 					else
 					{
 						this.fireEvent('onModelChange',this,model);
-						this.fireEvent('onChange',this,model);
+						// this.fireEvent('onChange',this,model);
 					}
 				}.bind(this)
 			);

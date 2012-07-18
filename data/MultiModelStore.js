@@ -130,10 +130,22 @@ $JSKK.Class.create
 		 * @param {Mixed} record The record to be added to the store.
 		 * @return {strappy.mvc.Model}
 		 */
-		add: function(record)
+		add: function(records)
 		{
-			record.flagDirty();
-			this.records.push(record);
+			if (!Object.isArray(records))
+			{
+				records=[records];
+			}
+			for (var i=0,j=records.length; i<j; i++)
+			{
+				if (!Object.isFunction(records[i].$reflect))
+				{
+					records[i]=this.newRecord(records[i])[0];
+				}
+				// records[i].flagDirty();
+				this.records.push(records[i]);
+				this.bindchangeEvent(records[i]);
+			}
 			this.fireEvent('onChange',this);
 			return this;
 		},
@@ -378,7 +390,7 @@ $JSKK.Class.create
 		/**
 		 * Sets all the associated models
 		 */
-		setAll: function()
+		setAll: function(onComplete)
 		{
 			var	args		=$JSKK.toArray(arguments),
 				keyVals		={},
@@ -406,10 +418,18 @@ $JSKK.Class.create
 					{
 						transaction.commit();
 						this.fireEvent('onChange',this);
+						if (Object.isFunction(onComplete))
+						{
+							onComplete(true);
+						}
 					}.bind(this),
 					onFailure: function()
 					{
 						transaction.rollback();
+						if (Object.isFunction(onComplete))
+						{
+							onComplete(false);
+						}
 					}
 				}
 			);

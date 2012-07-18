@@ -31,7 +31,10 @@
 			// console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(trait) :: ',name);
 			if (!Object.isEmpty(name))
 			{
-				if (Object.isUndefined(filter))filter={};
+				if (Object.isUndefined(filter) || Object.isNull(filter))
+				{
+					filter={};
+				}
 				if (Object.isFunction(this.getIID))
 				{
 					filter.origin=this.getIID();
