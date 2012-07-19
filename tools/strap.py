@@ -13,8 +13,7 @@ class Strap:
 	def genComponent(self,directory,name):
 		templateDir		=os.path.abspath('./templates/component')
 		baseDir			=os.path.abspath(directory)
-		componentsDir	=os.path.join(baseDir,'component')
-		componentDir	=os.path.join(componentsDir,name)
+		componentDir	=os.path.join(baseDir,'component',name)
 		
 		try:	shutil.copytree(templateDir,componentDir)
 		except:	pass
@@ -29,7 +28,48 @@ class Strap:
 		
 		os.rename(os.path.join(componentDir,'Cmp.js'),os.path.join(componentDir,name.capitalize()+'.js'))
 		
+		return
 	
+	def genModel(self,directory,cmp,name):
+		template		=os.path.abspath('./templates/Model.js')
+		baseDir			=os.path.abspath(directory)
+		componentDir	=os.path.join(baseDir,'component',cmp)
+		keyvals			={
+			'{NS_FULL}':	self.getNamespace('full',baseDir,cmp),
+			'{MODEL_NAME}':	name.capitalize()
+		}
+		self.copyAndReplaceInFile(template,os.path.join(componentDir,'model',name.capitalize()+'.js'),keyvals);
+	
+	def genView(self,directory,cmp,name):
+		template		=os.path.abspath('./templates/View.js')
+		baseDir			=os.path.abspath(directory)
+		componentDir	=os.path.join(baseDir,'component',cmp)
+		keyvals			={
+			'{NS_FULL}':	self.getNamespace('full',baseDir,cmp),
+			'{VIEW_NAME}':	name.capitalize()
+		}
+		self.copyAndReplaceInFile(template,os.path.join(componentDir,'view',name.capitalize()+'.js'),keyvals);
+		
+	def genController(self,directory,cmp,name):
+		template		=os.path.abspath('./templates/Controller.js')
+		baseDir			=os.path.abspath(directory)
+		componentDir	=os.path.join(baseDir,'component',cmp)
+		keyvals			={
+			'{NS_FULL}':			self.getNamespace('full',baseDir,cmp),
+			'{CONTROLLER_NAME}':	name.capitalize()
+		}
+		self.copyAndReplaceInFile(template,os.path.join(componentDir,'controller',name.capitalize()+'.js'),keyvals);
+		
+	def genStore(self,directory,cmp,name):
+		template		=os.path.abspath('./templates/Store.js')
+		baseDir			=os.path.abspath(directory)
+		componentDir	=os.path.join(baseDir,'component',cmp)
+		keyvals			={
+			'{NS_FULL}':	self.getNamespace('full',baseDir,cmp),
+			'{STORE_NAME}':	name.capitalize()
+		}
+		self.copyAndReplaceInFile(template,os.path.join(componentDir,'store',name.capitalize()+'.js'),keyvals);
+		
 	def replaceInDir(self,directory,keyvals):
 		for root,dirs,files in os.walk(directory):
 			for file in files:
@@ -41,6 +81,15 @@ class Strap:
 				handler.write(multiple_replace(keyvals,content))
 				handler.close();
 	
+	def copyAndReplaceInFile(self,source,destination,keyvals):
+		handler=open(source,'r');
+		content=handler.read();
+		handler.close();
+		
+		handler=open(destination,'w')
+		handler.write(multiple_replace(keyvals,content))
+		handler.close();
+	
 	def getNamespace(self,type,directory,name):
 		root			=directory.split('\\')[-1]
 		rootNamespace	=root+'.component'
@@ -48,8 +97,9 @@ class Strap:
 			return rootNamespace
 		elif type=='full':
 			return rootNamespace+'.'+name
-	
-	
+
+
+
 """ Command Line Stuff """
 
 parser=argparse.ArgumentParser()
@@ -61,14 +111,18 @@ parser.add_argument('-d',		'--dir',		help='A directory to start at.')
 args	=parser.parse_args()
 strap	=Strap()
 if args.action=='component':
-	strap.genComponent(args.dir,args.name)
+	if args.name.count(','):
+		for name in args.name.split(','):
+			strap.genComponent(args.dir,name)
+	else:
+		strap.genComponent(args.dir,args.name)
 elif args.action=='model':
-	pass
+	strap.genModel(args.dir,args.component,args.name)
 elif args.action=='view':
-	pass
+	strap.genView(args.dir,args.component,args.name)
 elif args.action=='controller':
-	pass
+	strap.genController(args.dir,args.component,args.name)
 elif args.action=='store':
-	pass
+	strap.genStore(args.dir,args.component,args.name)
 else:
 	raise NameError('Invalid action "'+args.action+'".')
