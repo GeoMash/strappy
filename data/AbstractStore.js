@@ -49,6 +49,8 @@ $JSKK.Class.create
 		 * @private
 		 */
 		proxy:			null,
+		
+		sharedFrom:		null,
 		/**
 		 * @property {strappy.mvc.Model} model A model object which new models will be created from
 		 * @private
@@ -79,6 +81,10 @@ $JSKK.Class.create
 			{
 				this.proxy=new strappy.data.proxy.MemoryProxy();
 			}
+			if (!Object.isNull(this.sharedFrom))
+			{
+				this.sharedFrom=$JSKK.namespace(this.sharedFrom);
+			}
 		},
 		/**
 		 * Creates a new model instance based on the attached model
@@ -92,7 +98,12 @@ $JSKK.Class.create
 		 */
 		newRecord: function(record)
 		{
-			return new this.model
+			var model=this.model;
+			if  (this.isShared())
+			{
+				model=this.getShared().model;
+			}
+			return new model
 			(
 				{
 					onLockChange: function(model,lockState)
@@ -224,7 +235,20 @@ $JSKK.Class.create
 		 */
 		isDirty: $JSKK.Class.ABSTRACT_METHOD,
 		
+		/**
+		 * Checks if this store is attached to a shared store.
+		 * 
+		 * @return {Boolean} True if the store is a shared store.
+		 */
+		isShared: function()
+		{
+			return (!Object.isNull(this.sharedFrom));
+		},
 		
+		getShared: function()
+		{
+			return this.sharedFrom;
+		},
 		
 		informModelIsInTransaction: function(model,transaction)
 		{

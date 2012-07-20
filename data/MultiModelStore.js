@@ -42,18 +42,33 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.init.$parent();
-			if (!Object.isNull(this.model) && Object.isDefined(this.model))
+			
+			if (!this.isShared())
 			{
-				this.records=this.newRecord(this.data);
-				for (var i=0,j=this.records.length; i<j; i++)
+				if (!Object.isNull(this.model) && Object.isDefined(this.model))
 				{
-					this.bindchangeEvent(this.records[i]);
+					this.records=this.newRecord(this.data);
+					for (var i=0,j=this.records.length; i<j; i++)
+					{
+						this.bindchangeEvent(this.records[i]);
+					}
+					delete this.data;
 				}
-				delete this.data;
+				else
+				{
+					throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
+				}
 			}
 			else
 			{
-				throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
+				var records=this.getShared().newRecord(this.data);
+				this.getShared().add(records);
+				for (var i=0,j=records.length; i<j; i++)
+				{
+					this.bindchangeEvent(records[i]);
+				}
+				//Make a reference.
+				this.records=this.getShared().records;
 			}
 		},
 		/**
@@ -178,19 +193,19 @@ $JSKK.Class.create
 		{
 			if(startIndex < 0 || startIndex > this.records.length)
 			{
-				console.log("StartIndex is out of range.");
+				// console.log("StartIndex is out of range.");
 				return this;
 			}
 
 			if(endIndex < startIndex)
 			{
-				console.log("EndIndex is invalid.");
+				// console.log("EndIndex is invalid.");
 				return this;
 			}
 
 			if(endIndex > this.records.length)
 			{
-				console.log("EndIndex is out of range.");
+				// console.log("EndIndex is out of range.");
 				return this;
 			}
 			var sliced = this.records.splice(startIndex,endIndex);
@@ -497,7 +512,7 @@ $JSKK.Class.create
 					function(model)
 					{
 						var index=changeset.push(model.getRecord())-1;
-						console.debug(index,changeset);
+						// console.debug(index,changeset);
 						changeset[index]=this.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
 					}.bind(this)
 				);

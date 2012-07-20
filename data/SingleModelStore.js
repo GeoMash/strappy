@@ -26,15 +26,26 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.init.$parent();
-			if (!Object.isNull(this.model) && Object.isDefined(this.model))
+			if (!this.isShared())
 			{
-				this.record=this.newRecord(this.data);
-				this.bindchangeEvent(this.record);
-				delete this.data;
+				if (!Object.isNull(this.model) && Object.isDefined(this.model))
+				{
+					this.record=this.newRecord(this.data);
+					this.bindchangeEvent(this.record);
+					delete this.data;
+				}
+				else
+				{
+					throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
+				}
 			}
 			else
 			{
-				throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
+				var record=this.getShared().newRecord(this.data);
+				this.getShared().add(records);
+				this.bindchangeEvent(record);
+				//Make a reference.
+				this.record=this.getShared().record;
 			}
 		},
 		/**
