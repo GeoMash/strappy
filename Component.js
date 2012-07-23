@@ -560,7 +560,10 @@ $JSKK.Class.create
 					var cmp=new object();
 					if (Object.isUndefined(name))
 					{
-						this.components[component]=[];
+						if (!Object.isArray(this.components[component]))
+						{
+							this.components[component]=[];
+						}
 						this.components[component].push(cmp);
 					}
 					else
