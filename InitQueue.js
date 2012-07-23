@@ -51,7 +51,7 @@ $JSKK.Class.create
 		},
 		execute: function()
 		{
-			if (!this.execute.length) {
+			if (!this.items.length) {
 				return;
 			}
 			$JSKK.when(this,{object:'complete',value:this.length}).isEqualTo
