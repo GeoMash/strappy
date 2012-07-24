@@ -18,6 +18,10 @@ $JSKK.Class.create
 		}
 	},
 	{
+		config:
+		{
+			
+		},
 		components:
 		{
 			
