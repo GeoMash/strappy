@@ -85,6 +85,10 @@ $JSKK.Class.create
 			{
 				this.sharedFrom=$JSKK.namespace(this.sharedFrom);
 			}
+			if (Object.isString(this.model))
+			{
+				this.model=$JSKK.namespace(this.model);
+			}
 		},
 		/**
 		 * Creates a new model instance based on the attached model
