@@ -38,6 +38,8 @@ class Strap:
 			'{NS_FULL}':	self.getNamespace('full',baseDir,cmp),
 			'{MODEL_NAME}':	name.capitalize()
 		}
+		try:	os.mkdir(os.path.join(componentDir,'model'))
+		except:	pass
 		self.copyAndReplaceInFile(template,os.path.join(componentDir,'model',name.capitalize()+'.js'),keyvals);
 	
 	def genView(self,directory,cmp,name):
@@ -48,6 +50,8 @@ class Strap:
 			'{NS_FULL}':	self.getNamespace('full',baseDir,cmp),
 			'{VIEW_NAME}':	name.capitalize()
 		}
+		try:	os.mkdir(os.path.join(componentDir,'view'))
+		except:	pass
 		self.copyAndReplaceInFile(template,os.path.join(componentDir,'view',name.capitalize()+'.js'),keyvals);
 		
 	def genController(self,directory,cmp,name):
@@ -58,6 +62,8 @@ class Strap:
 			'{NS_FULL}':			self.getNamespace('full',baseDir,cmp),
 			'{CONTROLLER_NAME}':	name.capitalize()
 		}
+		try:	os.mkdir(os.path.join(componentDir,'controller'))
+		except:	pass
 		self.copyAndReplaceInFile(template,os.path.join(componentDir,'controller',name.capitalize()+'.js'),keyvals);
 		
 	def genStore(self,directory,cmp,name):
@@ -68,6 +74,8 @@ class Strap:
 			'{NS_FULL}':	self.getNamespace('full',baseDir,cmp),
 			'{STORE_NAME}':	name.capitalize()
 		}
+		try:	os.mkdir(os.path.join(componentDir,'store'))
+		except:	pass
 		self.copyAndReplaceInFile(template,os.path.join(componentDir,'store',name.capitalize()+'.js'),keyvals);
 		
 	def replaceInDir(self,directory,keyvals):
