@@ -12,7 +12,7 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.init.$parent();
-			this.getView('Structure')	.observe('onTemplatesLoaded',	this.onTemplatesLoaded.bind(this));
+			this.getView('Default')	.observe('onTemplatesLoaded',	this.onTemplatesLoaded.bind(this));
 			this.getController('State')	.observe('onReadyState',		this.onReadyState.bind(this));
 		},
 		onTemplatesLoaded: function(view)

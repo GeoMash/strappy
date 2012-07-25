@@ -12,7 +12,7 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.init.$parent();
-			this.getView('Structure').observe('onReady',this.onViewReady.bind(this));
+			this.getView('Default').observe('onReady',this.onViewReady.bind(this));
 		},
 		onBeforeChange: function(state,key,value)
 		{
