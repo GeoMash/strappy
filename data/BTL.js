@@ -29,8 +29,9 @@ $JSKK.Class.create
 					url:		this.config.url,
 					data:
 					{
-						call:	call,
-						data:	params || null
+						timestamp:	new Date().getTime(),
+						call:		call,
+						data:		params || null,
 					},
 					onComplete: function(response)
 					{
