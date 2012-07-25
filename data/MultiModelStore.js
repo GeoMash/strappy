@@ -56,20 +56,39 @@ $JSKK.Class.create
 				}
 				else
 				{
-					console.debug(this.model);
 					throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
+				}
+				if (!Object.isNull(this.BTL))
+				{
+					if (Object.isString(this.BTL))
+					{
+						this.BTL	=$JSKK.namespace(this.BTL);
+						this.BTL_GET=$JSKK.namespace(this.BTL_GET);
+						this.BTL_SET=$JSKK.namespace(this.BTL_SET);
+					}
 				}
 			}
 			else
 			{
-				var records=this.getShared().newRecord(this.data);
-				this.getShared().add(records);
+				var	shared	=this.getShared(),
+					records	=shared.newRecord(this.data);
+				this.shared.add(records);
 				for (var i=0,j=records.length; i<j; i++)
 				{
 					this.bindchangeEvent(records[i]);
 				}
 				//Make a reference.
-				this.records=this.getShared().records;
+				this.records=this.shared.records;
+				
+				if (!Object.isNull(this.shared.BTL))
+				{
+					if (Object.isString(this.shared.BTL))
+					{
+						this.shared.BTL	=$JSKK.namespace(this.shared.BTL);
+						this.shared.BTL_GET=$JSKK.namespace(this.shared.BTL_GET);
+						this.shared.BTL_SET=$JSKK.namespace(this.shared.BTL_SET);
+					}
+				}
 			}
 		},
 		/**
@@ -522,78 +541,80 @@ $JSKK.Class.create
 		 */
 		sync: function()
 		{
-			if (this.proxy && Object.isFunction(this.proxy.sync))
+			var target=(this.isShared()?this.getShared():this);
+			if (Object.isAssocArray(target.BTL))
+			{
+				var	changeset	=[];
+				target.getDirty().each
+				(
+					function(model)
+					{
+						var index=changeset.push(model.getRecord())-1;
+						// console.debug(index,changeset);
+						changeset[index]=target.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
+					}.bind(target)
+				);
+				target.BTL.startQueue();
+				if (changeset.length)
+				{
+					target.BTL_SET(changeset);
+				}
+				target.BTL_GET
+				(
+					null,
+					function(records)
+					{
+						target.records=target.newRecord(records);
+						for (var i=0,j=target.records.length; i<j; i++)
+						{
+							target.bindchangeEvent(target.records[i]);
+						}
+						target.fireEvent('onChange',target,records);
+						target.fireEvent('onSync',target,records);
+					}.bind(target)
+				);
+				target.BTL.executeQueue();
+			}
+			else if (target.proxy && Object.isFunction(target.proxy.sync))
 			{
 				var changeset=[];
-				this.getDirty().each
+				target.getDirty().each
 				(
 					function(model)
 					{
 						changeset.push(model.getRecord());
 					}
 				);
-				this.proxy.sync
+				target.proxy.sync
 				(
 					{
 						data:		changeset,
 						onSuccess:	function(response)
 						{
-							this.records=this.newRecord(response.data);
-							for (var i=0,j=this.records.length; i<j; i++)
+							target.records=target.newRecord(response.data);
+							for (var i=0,j=target.records.length; i<j; i++)
 							{
-								this.bindchangeEvent(this.records[i]);
+								target.bindchangeEvent(target.records[i]);
 							}
-							this.fireEvent('onChange',this,response);
-							this.fireEvent('onSync',this,response);
-						}.bind(this),
+							target.fireEvent('onChange',target,response);
+							target.fireEvent('onSync',target,response);
+						}.bind(target),
 						onFailure: function(response)
 						{
-							this.fireEvent('onSyncFailed',this,response);
-						}.bind(this)
+							target.fireEvent('onSyncFailed',target,response);
+						}.bind(target)
 					}
 				);
 			}
-			else if (Object.isAssocArray(this.BTL))
-			{
-				var	changeset	=[];
-				this.getDirty().each
-				(
-					function(model)
-					{
-						var index=changeset.push(model.getRecord())-1;
-						// console.debug(index,changeset);
-						changeset[index]=this.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
-					}.bind(this)
-				);
-				this.BTL.startQueue();
-				if (changeset.length)
-				{
-					this.BTL_SET(changeset);
-				}
-				this.BTL_GET
-				(
-					null,
-					function(records)
-					{
-						this.records=this.newRecord(records);
-						for (var i=0,j=this.records.length; i<j; i++)
-						{
-							this.bindchangeEvent(this.records[i]);
-						}
-						this.fireEvent('onChange',this,records);
-						this.fireEvent('onSync',this,records);
-					}.bind(this)
-				);
-				this.BTL.executeQueue();
-			}
 			else
 			{
-				throw new Error('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
+				throw new Error('The store "'+target.$reflect('namespace')+'.'+target.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
 		},
 		isDirty: function()
 		{
-			return Boolean(this.getDirty().length);
+			var target=(this.isShared()?this.getShared():this);
+			return Boolean(target.getDirty().length);
 		},
 		/**
 		 * Returns all the attached models which are dirty (have been modified).
@@ -602,8 +623,9 @@ $JSKK.Class.create
 		 */
 		getDirty: function()
 		{
-			var dirty=[];
-			this.records.each
+			var	target	=(this.isShared()?this.getShared():this),
+				dirty	=[];
+			target.records.each
 			(
 				function(model)
 				{
