@@ -159,7 +159,6 @@ $JSKK.Class.create
 		 */
 		updateState:	function()
 		{
-			this.stateStore.set(key,value);
 			this.stateStore.set.apply(this.stateStore,$JSKK.toArray(arguments));
 			return this;
 		},
