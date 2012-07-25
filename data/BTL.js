@@ -30,7 +30,7 @@ $JSKK.Class.create
 					data:
 					{
 						call:	call,
-						data:	params
+						data:	params || null
 					},
 					onComplete: function(response)
 					{
