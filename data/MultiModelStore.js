@@ -56,6 +56,7 @@ $JSKK.Class.create
 				}
 				else
 				{
+					console.debug(this.model);
 					throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
 				}
 			}
@@ -261,6 +262,54 @@ $JSKK.Class.create
 		getAll: function()
 		{
 			return this.records;
+		},
+		/**
+		 * Returns the specified keys of the attached model instances (records).
+		 * 
+		 * @param  {Array} keys An array of keys to return.
+		 * @flatten {Boolean} flatten If only one key is passed, the returned array can be flattened.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
+		 */
+		getAllFiltered: function(keys,flatten)
+		{
+			if (!Object.isArray(keys))keys=[keys];
+			
+			var records=[];
+			
+			this.each
+			(
+				function(record)
+				{
+					var thisRecord={};
+					for (var i=0,j=keys.length; i<j; i++)
+					{
+						thisRecord[keys[i]]=record.get(keys[i]);
+					}
+					records.push(thisRecord);
+				}
+			);
+			if (flatten && keys.length)
+			{
+				var flattenedRecords=[];
+				for (var i=0,j=records.length; i<j; i++)
+				{
+					flattenedRecords.push(records[i][keys[0]]);
+				}
+				return flattenedRecords;
+			}
+			else
+			{
+				return records;
+			}
+		},
+		/**
+		 * Returns the total number of records in this store.
+		 * 
+		 * @return {Number} The total number of records.
+		 */
+		getCount: function()
+		{
+			return this.records.length;
 		},
 		/**
 		 * Fetches a record based on its index in the store.
