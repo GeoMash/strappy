@@ -91,14 +91,15 @@ $JSKK.Class.create
 			{
 				for (var i=0,j=this.requests[url].length; i<j; i++)
 				{
-					this.requests[url][i].timestamp=Date.parse(new Date());
+					if (Object.isUndefined(this.requests[url][i].data.timestamp))
+					{
+						this.requests[url][i].data.timestamp=Date.parse(new Date());
+					}
+					this.requests[url][i].data.sequence=this.requests[url][i].sequence;
+					
 					requests.push
 					(
-						{
-							sequence:	this.requests[url][i].sequence,
-							data:		this.requests[url][i].data,
-							timestamp:	this.requests[url][i].timestamp
-						}
+						this.requests[url][i].data
 					);
 				}
 				
