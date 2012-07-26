@@ -539,7 +539,7 @@ $JSKK.Class.create
 		 * 
 		 * TODO: Detail this.
 		 */
-		sync: function()
+		sync: function(params)
 		{
 			var target=(this.isShared()?this.getShared():this);
 			if (Object.isAssocArray(target.BTL))
@@ -561,7 +561,7 @@ $JSKK.Class.create
 				}
 				target.BTL_GET
 				(
-					null,
+					params,
 					function(records)
 					{
 						target.records=target.newRecord(records);
