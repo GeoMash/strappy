@@ -473,7 +473,7 @@ $JSKK.Class.create
 		/**
 		 * Sets all the associated models
 		 */
-		setAll: function(onComplete)
+		setAll: function()
 		{
 			var	args		=$JSKK.toArray(arguments),
 				keyVals		={},
@@ -501,18 +501,10 @@ $JSKK.Class.create
 					{
 						transaction.commit();
 						this.fireEvent('onChange',this);
-						if (Object.isFunction(onComplete))
-						{
-							onComplete(true);
-						}
 					}.bind(this),
 					onFailure: function()
 					{
 						transaction.rollback();
-						if (Object.isFunction(onComplete))
-						{
-							onComplete(false);
-						}
 					}
 				}
 			);
@@ -555,7 +547,7 @@ $JSKK.Class.create
 					}.bind(target)
 				);
 				target.BTL.startQueue();
-				if (changeset.length)
+				if (changeset.length && Object.isFunction(target.BTL_SET))
 				{
 					target.BTL_SET(changeset);
 				}
