@@ -21,7 +21,7 @@ $JSKK.Class.create
 )
 (
 	{
-		APIMethod: function(call,params,callback)
+		APIMethod: function(call,data,query,callback)
 		{
 			this.proxy.raw
 			(
@@ -31,7 +31,8 @@ $JSKK.Class.create
 					{
 						timestamp:	new Date().getTime(),
 						call:		call,
-						data:		params || null,
+						data:		data || null,
+						query:		query || null
 					},
 					onComplete: function(response)
 					{

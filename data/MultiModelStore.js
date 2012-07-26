@@ -531,9 +531,10 @@ $JSKK.Class.create
 		 * 
 		 * TODO: Detail this.
 		 */
-		sync: function(params)
+		sync: function(data,query)
 		{
 			var target=(this.isShared()?this.getShared():this);
+			
 			if (Object.isAssocArray(target.BTL))
 			{
 				var	changeset	=[];
@@ -547,13 +548,15 @@ $JSKK.Class.create
 					}.bind(target)
 				);
 				target.BTL.startQueue();
+				
 				if (changeset.length && Object.isFunction(target.BTL_SET))
 				{
 					target.BTL_SET(changeset);
 				}
 				target.BTL_GET
 				(
-					params,
+					data,
+					query,
 					function(records)
 					{
 						target.records=target.newRecord(records);
