@@ -7,16 +7,7 @@ $JSKK.Class.create
 	}
 )
 (
-	{
-		Signal:
-		{
-			
-		},
-		Type:
-		{
-			
-		}
-	},
+	{},
 	{
 		config:
 		{
