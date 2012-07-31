@@ -72,21 +72,21 @@ $JSKK.Class.create
 			{
 				var	shared	=this.getShared(),
 					records	=shared.newRecord(this.data);
-				this.shared.add(records);
+				shared.add(records);
 				for (var i=0,j=records.length; i<j; i++)
 				{
 					this.bindchangeEvent(records[i]);
 				}
 				//Make a reference.
-				this.records=this.shared.records;
+				this.records=shared.records;
 				
-				if (!Object.isNull(this.shared.BTL))
+				if (!Object.isNull(shared.BTL))
 				{
-					if (Object.isString(this.shared.BTL))
+					if (Object.isString(shared.BTL))
 					{
-						this.shared.BTL	=$JSKK.namespace(this.shared.BTL);
-						this.shared.BTL_GET=$JSKK.namespace(this.shared.BTL_GET);
-						this.shared.BTL_SET=$JSKK.namespace(this.shared.BTL_SET);
+						shared.BTL		=$JSKK.namespace(shared.BTL);
+						shared.BTL_GET	=$JSKK.namespace(shared.BTL_GET);
+						shared.BTL_SET	=$JSKK.namespace(shared.BTL_SET);
 					}
 				}
 			}
