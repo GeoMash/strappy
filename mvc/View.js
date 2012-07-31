@@ -303,6 +303,10 @@ $JSKK.Class.create
 			}
 			$('body').on(event,selector,data,handle[method].bind(handle));
 			return this;
+		},
+		find: function(selector)
+		{
+			return this.getContainer().find(selector);
 		}
 //		bindStoreChange: function(store,bindings)
 //		{
