@@ -59,6 +59,22 @@ $JSKK.Class.create
 			return this.record.get(field);
 		},
 		/**
+		 * 
+		 * @return {strappy.mvc.Model}
+		 */
+		getRecord: function()
+		{
+			return this.record;
+		},
+		/**
+		 * 
+		 * @return {Object}
+		 */
+		getRawRecord: function()
+		{
+			return this.record.record;
+		},
+		/**
 		 * Sets a value of a given field on the attached model.
 		 * 
 		 * @param {String} field The field to assign a value to.
