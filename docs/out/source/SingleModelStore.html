@@ -75,6 +75,22 @@ $JSKK.Class.create
 		{
 			return this.record.get(field);
 		},
+<span id='strappy-data-SingleModelStore-method-getRecord'>		/**
+</span>		 * 
+		 * @return {strappy.mvc.Model}
+		 */
+		getRecord: function()
+		{
+			return this.record;
+		},
+<span id='strappy-data-SingleModelStore-method-getRawRecord'>		/**
+</span>		 * 
+		 * @return {Object}
+		 */
+		getRawRecord: function()
+		{
+			return this.record.record;
+		},
 <span id='strappy-data-SingleModelStore-method-set'>		/**
 </span>		 * Sets a value of a given field on the attached model.
 		 * 

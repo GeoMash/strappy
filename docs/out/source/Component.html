@@ -758,6 +758,18 @@ $JSKK.Class.create
 								+'A component MUST have a state store and controller.');
 			}
 		},
+<span id='strappy-Component-method-attachSharedStore'>		/**
+</span>		 * Attaches a shared store to the component as a locally referenced and used store.
+		 * 
+		 * @param  {string} localRef The local name of the store. Eg &quot;MyStore&quot;.
+		 * @param  {string} sharedRef The shared full namespace of the store. Eg &quot;Project.shared.store.MyStore&quot;.
+		 * @return {strappy.Component} this
+		 */
+		attachSharedStore: function(localRef,sharedRef)
+		{
+			this._stores[localRef]=$JSKK.namespace(sharedRef);
+			return this;
+		},
 <span id='strappy-Component-method-getStore'>		/**
 </span>		 * Returns an associated store which is pre-defined in this
 		 * components &quot;models&quot; property.

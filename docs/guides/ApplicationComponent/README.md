@@ -176,8 +176,10 @@ We mentioned generic components earlier. This section of the guide is to explain
 
 There are two approaches for this. I'll explain them both, but we'll be using the latter.
 
-Firstly, you can create composite components and consider them as "extensions" to your application component. That is to say, your application component instantiates these components, and these components instantiate subcomponents and manage those in similar ways to which the application component does.
+The first option, you can create composite components and consider them as "extensions" to your application component. That is to say, your application component instantiates these components, and these components instantiate subcomponents and manage those in similar ways to which the application component does.
 
+The second option, and the option which we'll be demonstrating in this guide, is by using multiple controllers to handle the various sections of your application.
+This approach reduces the amount of composite components and centralises the business logic by encapsulating the logic specialized controllers, managed by your application component.
 
-
+Before continuing, if you have never built a generic component before, please skip over to the guide on creating generic components. Once you've completed that, return here and continue.
 

@@ -19,6 +19,11 @@
 				"description": "A guide on developing a main application component."
 			},
 			{
+				"name": "GenericComponent",
+				"title": "Generic Component",
+				"description": "Create a generic list component."
+			},
+			{
 				"name": "StyleGuide",
 				"title": "Style Guide",
 				"description": "A guide for Spinifex software."

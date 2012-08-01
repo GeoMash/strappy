@@ -742,6 +742,18 @@ $JSKK.Class.create
 			}
 		},
 		/**
+		 * Attaches a shared store to the component as a locally referenced and used store.
+		 * 
+		 * @param  {string} localRef The local name of the store. Eg "MyStore".
+		 * @param  {string} sharedRef The shared full namespace of the store. Eg "Project.shared.store.MyStore".
+		 * @return {strappy.Component} this
+		 */
+		attachSharedStore: function(localRef,sharedRef)
+		{
+			this._stores[localRef]=$JSKK.namespace(sharedRef);
+			return this;
+		},
+		/**
 		 * Returns an associated store which is pre-defined in this
 		 * components "models" property.
 		 * 
