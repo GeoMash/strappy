@@ -18,6 +18,7 @@
 		"data/Queue.js",
 		"data/stateful/Store.js",
 		"StateMgr.js",
+		"ShareMgr.js",
 		"SharedState.js",
 		"mvc/Model.js",
 		"mvc/ViewCache.js",
