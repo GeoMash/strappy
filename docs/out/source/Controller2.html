@@ -78,6 +78,11 @@ $JSKK.Class.create
 		 * @param {strappy.Signal} The signal object.
 		 */
 		onBeforeChange:		$JSKK.Class.ABSTRACT_METHOD,
+<span id='strappy-mvc-stateful-Controller-property-ready'>		/**
+</span>		 * @property {Boolean} ready A flag identifying the readyness of the controller.
+		 * @private
+		 */
+		ready:	false,
 <span id='strappy-mvc-stateful-Controller-method-constructor'>		/**
 </span>		 * @constructor
 		 * 
@@ -148,6 +153,7 @@ $JSKK.Class.create
 		setReady:		function()
 		{
 			this.stateStore.setReady(true);
+			this.ready=true;
 			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
 			{
 				var state=this.getStateMgr().getState()
@@ -176,7 +182,6 @@ $JSKK.Class.create
 		 */
 		updateState:	function()
 		{
-			this.stateStore.set(key,value);
 			this.stateStore.set.apply(this.stateStore,$JSKK.toArray(arguments));
 			return this;
 		},

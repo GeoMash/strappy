@@ -1,5 +1,22 @@
-/**
- * @class strappy.InitQueue
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='strappy-InitQueue'>/**
+</span> * @class strappy.InitQueue
  * 
  * 
  * 
@@ -79,8 +96,8 @@ $JSKK.Class.create
 				this.items[this.processPointer].ref=new this.items[this.processPointer].ref();
 			}
 			cmp=this.items[this.processPointer].ref;
-			if (Object.isDefined(this.component) && !Object.isNull(this.component)
-			&& Object.isUndefined(this.component.components[this.items[this.processPointer].name]))
+			if (Object.isDefined(this.component) &amp;&amp; !Object.isNull(this.component)
+			&amp;&amp; Object.isUndefined(this.component.components[this.items[this.processPointer].name]))
 			{
 				this.component.components[this.items[this.processPointer].name]=cmp;
 			}
@@ -119,4 +136,6 @@ $JSKK.Class.create
 			}
 		}
 	}
-)
+)</pre>
+</body>
+</html>

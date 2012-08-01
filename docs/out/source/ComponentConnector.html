@@ -115,6 +115,14 @@ $JSKK.Trait.create
 		{
 			return this.getParentComponent().getCmp(cmp);
 		},
+<span id='strappy-trait-ComponentConnector-method-hasChildCmp'>		/**
+</span>		 * 
+		 * @return {Boolean}
+		 */
+		hasChildCmp: function(cmp)
+		{
+			return Object.isDefined(this.getParentComponent().components[cmp]);
+		},
 <span id='strappy-trait-ComponentConnector-method-getStore'>		/**
 </span>		 * Fetches a model from the parent component.
 		 * 
@@ -174,6 +182,38 @@ $JSKK.Trait.create
 		makeAttachPoint: function(attachTo)
 		{
 			return [this.getConfig('attachTo'), attachTo].join(' ');
+		},
+		
+		showChildComponent: function(cmp)
+		{
+			this.sendSignal
+			(
+				strappy.Signal.SHOW,
+				'strappy',
+				{iid:this.getCmp(cmp).getIID()}	
+			);
+		},
+		hideChildComponent: function(cmp)
+		{
+			this.sendSignal
+			(
+				strappy.Signal.HIDE,
+				'strappy',
+				{iid:this.getCmp(cmp).getIID()}	
+			);
+		},
+		setSharedState: function(key,val)
+		{
+			this.getStateMgr().getSharedState().set(key,val);
+			return this;
+		},
+		getSharedState: function(key)
+		{
+			return this.getStateMgr().getSharedState().get(key);
+		},
+		newInitQueue: function(onAllReady,onItemReady)
+		{
+			return this.getParentComponent().newInitQueue(onAllReady,onItemReady);
 		}
 	}
 );</pre>

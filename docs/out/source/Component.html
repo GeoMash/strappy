@@ -98,8 +98,12 @@ $JSKK.Class.create
 )
 (
 	{
+<span id='strappy-Component-method-initQueue'>		/**
+</span>		 * @deprecated Use {@link strappy.InitQueue} instead.
+		 */
 		initQueue: function(queue,callback)
-		{	
+		{
+			console.warn('use of strappy.Component.initQueue is deprecated. Use strappy.InitQueue instead.');
 			var	args		=$JSKK.toArray(arguments);
 			
 			if (Object.isDefined(args[1]))
@@ -149,7 +153,6 @@ $JSKK.Class.create
 									);
 								}.bind(this,index)
 							);
-							
 						}
 						else
 						{
@@ -181,7 +184,8 @@ $JSKK.Class.create
 		 */
 		config:
 		{
-			attachTo:	null
+			attachTo:	null,
+			attachHow:	'append'
 		},
 <span id='strappy-Component-property-browser'>		/**
 </span>		 * @property browser Contains browser information.
@@ -189,7 +193,7 @@ $JSKK.Class.create
 		 * @property browser.version The version of the browser.
 		 * @readonly
 		 */
-        browser:
+		browser:
 		{
 			name:		null,
 			version:	null
@@ -346,7 +350,7 @@ $JSKK.Class.create
 </span>		 * [_iid description]
 		 * @type {Boolean}
 		 */
-        _iid:			null,
+		_iid:			null,
 		
 <span id='strappy-Component-method-constructor'>		/**
 </span>		 * @constructor
@@ -362,19 +366,19 @@ $JSKK.Class.create
 		 * 
 		 * @return {strappy.Component}
 		 */
-        init: function()
+		init: function()
 		{
 			this.my.name		=this.$reflect('name');
 			this.my.namespace	=this.$reflect('namespace').split('.');
 			
 			if (Object.isUndefined(window.strappy.$components))
-            {
+			{
 				window.strappy.$components={};
 			}
-            if (Object.isUndefined(window.strappy.$components[this.my.name]))
-            {
-            	window.strappy.$components[this.my.name]=[];
-            }
+			if (Object.isUndefined(window.strappy.$components[this.my.name]))
+			{
+				window.strappy.$components[this.my.name]=[];
+			}
 			
 			this.my.index		=window.strappy.$components[this.my.name].push(this);
 			this.my.NSObject	=window;
@@ -502,7 +506,8 @@ $JSKK.Class.create
 		{
 			var parts		=null,
 				config		=null,
-				object		=null;
+				object		=null;//,
+				// queue		=[];
 			for (var component in this.components)
 			{
 				parts		=this.components[component].split('.');
@@ -527,8 +532,10 @@ $JSKK.Class.create
 					throw new Error('Error! component &quot;'+this.components[component]+'&quot; not loaded.');
 					break;
 				}
+				// queue.push(object);
 				this.components[component]=new object();
 			}
+			// this.$reflect('self').initQueue(queue);
 		},
 <span id='strappy-Component-method-newChildComponent'>		/**
 </span>		 * Creates a new child component.
@@ -560,38 +567,46 @@ $JSKK.Class.create
 	);
 		 * 
 		 */
-		newChildComponent: function(component)
+		newChildComponent: function(component,name)
 		{
-			var parts		=component.split('.'),
-				object		=window[parts[0]],
-				config		=null;
-			
-			if (Object.isDefined(object))
+			var object=$JSKK.namespace(component);
+			if (Object.isDefined(object.definition))
 			{
-				for (var i=1,j=parts.length; i&lt;j; i++)
+				if (!Object.isDefined(this.components[component]))
 				{
-					if (Object.isDefined(object[parts[i]]))
+					var cmp=new object();
+					if (Object.isUndefined(name))
 					{
-						object=object[parts[i]];
+						if (!Object.isArray(this.components[component]))
+						{
+							this.components[component]=[];
+						}
+						this.components[component].push(cmp);
 					}
 					else
 					{
-						throw new Error('Error! component &quot;'+this.components[component]+'&quot; not loaded.');
-						break;
+						this.components[name]=cmp;
 					}
+					return cmp;
 				}
 			}
 			else
 			{
 				throw new Error('Error! component &quot;'+this.components[component]+'&quot; not loaded.');
 			}
-			if (!Object.isDefined(this.components[component]))
+		},
+		newInitQueue: function(onAllReady,onItemReady)
+		{
+			var queue=new strappy.InitQueue({},this);
+			if (Object.isFunction(onAllReady))
 			{
-				this.components[component]=[];
+				queue.observe('onAllReady',onAllReady);
 			}
-			var cmp=new object();
-			this.components[component].push(cmp);
-			return cmp;
+			if (Object.isFunction(onItemReady))
+			{
+				queue.observe('onItemReady',onItemReady);
+			}
+			return queue;
 		},
 <span id='strappy-Component-method-getCmp'>		/**
 </span>		 * Returns a child component which is pre-defined in this
@@ -610,6 +625,7 @@ $JSKK.Class.create
 			}
 			else
 			{
+				console.trace();
 				throw new Error('Unable to get component &quot;'+cmpName+'&quot;. This component has not been registered.');
 			}
 		},

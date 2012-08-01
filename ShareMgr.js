@@ -1,3 +1,9 @@
+/**
+ * @class strappy.ShareMgr
+ * 
+ * 
+ * 
+ */
 $JSKK.Class.create
 (
 	{

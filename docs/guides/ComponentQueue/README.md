@@ -1,5 +1,9 @@
 #How to use the Component Queue
 
+NOTE THAT THIS GUIDE IS DEPRECATED!!!
+
+
+
 The main component class has a special static method which acts as a helper to initiate components in a specific order. This is useful when you have a lot of child components which depend on other components to be loaded.
 
 Its simple to use. Here's an example:

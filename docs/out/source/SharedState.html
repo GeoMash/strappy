@@ -1,5 +1,22 @@
-/**
- * @class strappy.SharedState
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='strappy-SharedState'>/**
+</span> * @class strappy.SharedState
  * 
  * 
  * 
@@ -56,7 +73,7 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Error('Store "'+this.$reflect('name')+'" is in lock state "'+this.lockState+'" and so cannot be modified.');
+				throw new Error('Store &quot;'+this.$reflect('name')+'&quot; is in lock state &quot;'+this.lockState+'&quot; and so cannot be modified.');
 			}
 		},
 		get: function(key)
@@ -64,4 +81,6 @@ $JSKK.Class.create
 			return this.record.record[strappy.data.stateful.Store.ACCESS_PRIVATE][key];
 		}
 	}
-);
+);</pre>
+</body>
+</html>

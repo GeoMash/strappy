@@ -5,13 +5,18 @@
 		[
 			{
 				"name": "GettingStarted",
-				"title": "Getting Started with Framework",
-				"description": "This introduction to Framework explains how you can get started."
+				"title": "Getting Started with Strappy",
+				"description": "This introduction to Strappy explains how you can get started."
 			},
 			{
 				"name": "HelloWorld",
 				"title": "Hello World Component",
 				"description": "A simple Hello World example."
+			},
+			{
+				"name": "ApplicationComponent",
+				"title": "Application Component",
+				"description": "A guide on developing a main application component."
 			},
 			{
 				"name": "StyleGuide",
@@ -26,7 +31,7 @@
 			{
 				"name": "ComponentQueue",
 				"title": "How to use the Component Queue",
-				"description": "A guide for using the Component Queue feature of the framework."
+				"description": "A guide for using the Component Queue feature of Strappy."
 			}
 		]
 	}
