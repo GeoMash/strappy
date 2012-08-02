@@ -21,10 +21,6 @@ $JSKK.Class.create
 		{
 			
 		},
-		onModelLockChange: function(signal)
-		{
-			
-		},
 		syncView: function()
 		{
 			
