@@ -234,6 +234,8 @@ Finally we attach the model to the signal as its body. This enables anything tha
 so any changes to the model will cause store change events to be fired. Since this model will belong to a shared store, this is a very powerful thing as you effectively update every component currently using
 this shared store simply by modifying the model instance.
 
+We're assuming your data is coming from the server. So we want to update our view to reflect any large changes that may happen. To do this we can tie into the onSync event of the store.
+
 	$JSKK.Class.create
 	(
 		{
@@ -283,4 +285,12 @@ this shared store simply by modifying the model instance.
 			}
 		}
 	);
+
+As you can see, we added this line into our init:
+
+	this.getStore('Records')	.observe('onSync',		this.onSync.bind(this));
+
+That calls our local onSync method which calls syncView() on the view.
+
+##View
 
