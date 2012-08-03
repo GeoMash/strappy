@@ -163,7 +163,7 @@ $JSKK.Class.create
 		 * Note: The record will be flagged as dirty when it is added to the store.
 		 * 
 		 * @param {Mixed} record The record to be added to the store.
-		 * @return {strappy.mvc.Model}
+		 * @return {strappy.mvc.data.MultiModelStore} this
 		 */
 		add: function(records)
 		{
@@ -187,7 +187,7 @@ $JSKK.Class.create
 		/**
 		 * Removes a record from the store.
 		 * @param {Mixed} record The record to be removed from the store.
-		 * @return {strappy.mvc.Model}
+		 * @return {strappy.mvc.data.MultiModelStore} this
 		 */
 		remove: function(record)
 		{
@@ -204,10 +204,20 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Removes all records in the store.
+		 * @return {strappy.mvc.data.MultiModelStore} this
+		 */
+		removeAll: function()
+		{
+			this.removeByRange(0,this.records.length);
+			this.fireEvent('onChange');
+			return this;
+		},
+		/**
 		 * Removes a range of records from the store.
 		 * @param {Number} start index of the range to be deleted.
 		 * @param {Number} end index of the range to be deleted.
-		 * @return {strappy.mvc.Model}
+		 * @return {strappy.mvc.data.MultiModelStore} this
 		 */
 		removeByRange: function(startIndex,endIndex)
 		{
@@ -604,6 +614,34 @@ $JSKK.Class.create
 			{
 				throw new Error('The store "'+target.$reflect('namespace')+'.'+target.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
+		},
+		/**
+		 * Flags all records in the store as being dirty. 
+		 * @return {strappy.data.MultiModelStore} this
+		 */
+		flagAllDirty: function()
+		{
+			this.each
+			(
+				function(record)
+				{
+					record.flagDirty();
+				}
+			);
+		},
+		/**
+		 * Flags all records in the store as being clean. 
+		 * @return {strappy.data.MultiModelStore} this
+		 */
+		flagAllClean: function()
+		{
+			this.each
+			(
+				function(record)
+				{
+					record.flagClean();
+				}
+			);
 		},
 		isDirty: function()
 		{
