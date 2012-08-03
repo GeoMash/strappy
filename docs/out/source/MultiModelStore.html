@@ -555,6 +555,7 @@ $JSKK.Class.create
 			if (Object.isAssocArray(target.BTL))
 			{
 				var	changeset	=[];
+				console.debug('DIRTY LITTLE SHITS:',target.getDirty());
 				target.getDirty().each
 				(
 					function(model)
@@ -568,6 +569,7 @@ $JSKK.Class.create
 				
 				if (changeset.length &amp;&amp; Object.isFunction(target.BTL_SET))
 				{
+					console.debug('CHANGESET',changeset);
 					target.BTL_SET(changeset);
 				}
 				target.BTL_GET
