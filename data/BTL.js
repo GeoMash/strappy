@@ -45,23 +45,49 @@ $JSKK.Class.create
 	{
 		config:
 		{
+			/**
+			 * @cfg url
+			 */
 			url:	'',
+			/**
+			 * @cfg proxy
+			 */
 			proxy:	strappy.data.proxy.BTL
 		},
+		/**
+		 *  @property ready
+		 */
 		ready:			false,
+		/**
+		 * @property proxy
+		 */
 		proxy:			null,
+		/**
+		 * @property API
+		 */
 		API:			{},
+		/**
+		 * @property queue
+		 */
 		queue:			null,
-//		transaction:	null,
+		/**
+		 * 
+		 */
 		init: function()
 		{
 			this.proxy=new this.config.proxy({url:this.config.url});
 			this.getServiceAPI();
 		},
+		/**
+		 * 
+		 */
 		onReady: function(callback)
 		{
 			$JSKK.when(this,'ready').isTrue(callback);
 		},
+		/**
+		 * 
+		 */
 		getServiceAPI: function()
 		{
 			$.ajax
@@ -80,6 +106,9 @@ $JSKK.Class.create
 				}
 			);
 		},
+		/**
+		 * 
+		 */
 		createAPIMethods: function(exposedAPI)
 		{
 			var	controller	=null,
@@ -95,82 +124,38 @@ $JSKK.Class.create
 			}
 			this.ready=true;
 		},
+		/**
+		 * 
+		 */
 		setProxy: function(proxy,url)
 		{
 			this.proxy=new this.config.proxy({url:(url || this.config.url)});
 			return this;
 		},
+		/**
+		 * 
+		 */
 		bindType: function(record,type)
 		{
 			record['_type']=type;
-			return this;
+			return record;
 		},
+		/**
+		 * 
+		 */
 		startQueue: function()
 		{
 			this.queue=new strappy.data.Queue();
 			this.queue.attachProxy(this.proxy);
 			return this;
 		},
+		/**
+		 * 
+		 */
 		executeQueue: function()
 		{
 			this.queue.execute();
 			return this;
 		}
-//		startTransaction: function()
-//		{
-//			this.transaction=new strappy.data.Transaction();
-//			this.transaction.start();
-//		},
-//		executeTransaction: function()
-//		{
-//			this.transaction.execute
-//			(
-//				{
-//					
-//				}
-//			);
-//		},
-//		commitTransaction: function()
-//		{
-//			
-//		}
 	}
 );
-
-//var	args		=$JSKK.toArray(arguments),
-//	keyVals		={},
-//	transaction	=new strappy.data.Transaction();
-//if (Object.isDefined(args[1]))
-//{
-//	keyVals[args.shift()]=args.shift();
-//}
-//else
-//{
-//	keyVals=args.shift();
-//}
-//transaction.start();
-//var	thisModel	=null,
-//	field		=null;
-//for (field in keyVals)
-//{
-//	for (var i=0,j=this.records.length; i<j; i++)
-//	{
-//		thisModel=transaction.attachModel(this.records[i]);
-//		thisModel.set(field,keyVals[field]);
-//	}
-//}
-//transaction.execute
-//(
-//	{
-//		onSuccess:	function()
-//		{
-//			transaction.commit();
-//			this.fireEvent('onChange',this);
-//		}.bind(this),
-//		onFailure: function()
-//		{
-//			transaction.rollback();
-//		}
-//	}
-//);
-//return this;
