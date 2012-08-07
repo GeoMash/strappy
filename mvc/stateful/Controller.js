@@ -185,6 +185,15 @@ $JSKK.Class.create
 		getReadyViews: function()
 		{
 			return this.stateStore.getReadyViews();
+		},
+		/**
+		 * Checks to see if the store has been flagged as ready.
+		 * 
+		 * @return {Boolean} True if ready.
+		 */
+		isReady: function()
+		{
+			return this.ready;
 		}
 	}
 );

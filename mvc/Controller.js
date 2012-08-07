@@ -53,13 +53,13 @@ $JSKK.Class.create
 			this.registerSignals
 			( 
 				{
-					onSignalShow:
+					_onSignalShow:
 					{
 						signal:		strappy.Signal.SHOW,
 						type:		'strappy',
 						filter:		{iid:this.getIID()}
 					},
-					onSignalHide:
+					_onSignalHide:
 					{
 						signal:		strappy.Signal.HIDE,
 						type:		'strappy',
@@ -97,6 +97,16 @@ $JSKK.Class.create
 		 */
 		onReadyState:	$JSKK.emptyFunction,
 		
+		_onSignalShow:	function()
+		{
+			var controller=this.getController('State');
+			$JSKK.when(controller.isReady.bind(controller)).isTrue(this.onSignalShow.bind(this));
+		},
+		_onSignalHide:	function()
+		{
+			var controller=this.getController('State');
+			$JSKK.when(controller.isReady.bind(controller)).isTrue(this.onSignalHide.bind(this));
+		},
 		
 		onSignalShow:	$JSKK.emptyFunction,
 		onSignalHide:	$JSKK.emptyFunction
