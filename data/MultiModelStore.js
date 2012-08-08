@@ -553,7 +553,7 @@ $JSKK.Class.create
 					function(model)
 					{
 						var index=changeset.push(model.getRecord())-1;
-						changeset[index]=target.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
+						// changeset[index]=target.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
 					}.bind(target)
 				);
 				target.BTL.startQueue();
