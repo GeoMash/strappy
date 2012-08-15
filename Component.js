@@ -864,20 +864,24 @@ $JSKK.Class.create
 		 */
 		getConfig:		function(key)
 		{
-			var	parts	=key.split('.'),
-				object	=this.config;
-			for (var i=0,j=parts.length; i<j; i++)
+			if (Object.isDefined(key))
 			{
-				if (Object.isDefined(object[parts[i]]))
+				var	parts	=key.split('.'),
+					object	=this.config;
+				for (var i=0,j=parts.length; i<j; i++)
 				{
-					object=object[parts[i]];
+					if (Object.isDefined(object[parts[i]]))
+					{
+						object=object[parts[i]];
+					}
+					else
+					{
+						return null;
+					}
 				}
-				else
-				{
-					return null;
-				}
+				return object;
 			}
-			return object;
+			return this.config;
 		},
 		/**
 		 * Calculates the ID of this component based off of
