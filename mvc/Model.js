@@ -123,26 +123,41 @@ $JSKK.Class.create
 		{
 			var	store	=this.getStore(),
 				target	=(store.isShared()?store.getShared():store);
+			target.BTL.startQueue();
 			if (this.isDirty())
 			{
-				target.BTL_SET(this.getRecord());
+				target.BTL_SET
+				(
+					this.getRecord(),
+					null,
+					function(record)
+					{
+						this.lock(strappy.mvc.Model.LOCK_NONE,true);
+						this.set(record[0]);
+						this.flagClean();
+						this.fireEvent('onSync',this,record);
+						this.fireEvent('onChange',this,record);
+					}.bind(this)
+				);
 			}
-			target.BTL.startQueue();
-			var query={};
-			query[this.idField]=this.getId();
-			target.BTL_GET
-			(
-				null,
-				query,
-				function(record)
-				{
-					this.lock(strappy.mvc.Model.LOCK_NONE,true);
-					this.set(record[0]);
-					this.flagClean();
-					this.fireEvent('onSync',this,record);
-					this.fireEvent('onChange',this,record);
-				}.bind(this)
-			);
+			else
+			{
+				var query={};
+				query[this.idField]=this.getId();
+				target.BTL_GET
+				(
+					null,
+					query,
+					function(record)
+					{
+						this.lock(strappy.mvc.Model.LOCK_NONE,true);
+						this.set(record[0]);
+						this.flagClean();
+						this.fireEvent('onSync',this,record);
+						this.fireEvent('onChange',this,record);
+					}.bind(this)
+				);
+			}
 			target.BTL.executeQueue();
 		},
 		/**
