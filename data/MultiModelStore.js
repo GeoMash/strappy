@@ -569,13 +569,14 @@ $JSKK.Class.create
 					function(records)
 					{
 						target.records=target.newRecord(records);
+						this.records	=target.records;
 						for (var i=0,j=target.records.length; i<j; i++)
 						{
 							target.bindchangeEvent(target.records[i]);
 						}
 						target.fireEvent('onChange',target,records);
 						target.fireEvent('onSync',target,records);
-					}.bind(target)
+					}.bind(this)
 				);
 				target.BTL.executeQueue();
 			}
@@ -596,6 +597,7 @@ $JSKK.Class.create
 						onSuccess:	function(response)
 						{
 							target.records=target.newRecord(response.data);
+							this.records	=target.records;
 							for (var i=0,j=target.records.length; i<j; i++)
 							{
 								target.bindchangeEvent(target.records[i]);
@@ -606,7 +608,7 @@ $JSKK.Class.create
 						onFailure: function(response)
 						{
 							target.fireEvent('onSyncFailed',target,response);
-						}.bind(target)
+						}.bind(this)
 					}
 				);
 			}
