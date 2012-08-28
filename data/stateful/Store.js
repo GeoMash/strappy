@@ -195,7 +195,12 @@ $JSKK.Class.create
 		 */
 		get: function(key)
 		{
-			return this.get.$parent(this.stateMap[key])[key];
+			try
+			{
+				return this.get.$parent(this.stateMap[key])[key];
+			}catch(e){
+				throw new Error('No state property available for key: "'+ key);
+			}
 		},
 		/**
 		 * Stores the view name in a private store for ready views.
