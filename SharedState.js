@@ -42,7 +42,6 @@ $JSKK.Class.create
 				}
 				for (var key in keyVals)
 				{
-					
 					if (Object.isUndefined(this.record.fields[strappy.data.stateful.Store.ACCESS_PRIVATE][key]))
 					{
 						this.record.fields[strappy.data.stateful.Store.ACCESS_PRIVATE][key]=null;

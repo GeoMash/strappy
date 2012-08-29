@@ -202,6 +202,15 @@ $JSKK.Class.create
 		getReadyViews: function()
 		{
 			return this.stateStore.getReadyViews();
+		},
+<span id='strappy-mvc-stateful-Controller-method-isReady'>		/**
+</span>		 * Checks to see if the store has been flagged as ready.
+		 * 
+		 * @return {Boolean} True if ready.
+		 */
+		isReady: function()
+		{
+			return this.ready;
 		}
 	}
 );</pre>

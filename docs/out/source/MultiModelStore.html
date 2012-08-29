@@ -180,7 +180,7 @@ $JSKK.Class.create
 		 * Note: The record will be flagged as dirty when it is added to the store.
 		 * 
 		 * @param {Mixed} record The record to be added to the store.
-		 * @return {strappy.mvc.Model}
+		 * @return {strappy.data.MultiModelStore} this
 		 */
 		add: function(records)
 		{
@@ -204,7 +204,7 @@ $JSKK.Class.create
 <span id='strappy-data-MultiModelStore-method-remove'>		/**
 </span>		 * Removes a record from the store.
 		 * @param {Mixed} record The record to be removed from the store.
-		 * @return {strappy.mvc.Model}
+		 * @return {strappy.data.MultiModelStore} this
 		 */
 		remove: function(record)
 		{
@@ -220,11 +220,21 @@ $JSKK.Class.create
 			this.fireEvent('onChange',this);
 			return this;
 		},
+<span id='strappy-data-MultiModelStore-method-removeAll'>		/**
+</span>		 * Removes all records in the store.
+		 * @return {strappy.data.MultiModelStore} this
+		 */
+		removeAll: function()
+		{
+			this.removeByRange(0,this.records.length);
+			this.fireEvent('onChange');
+			return this;
+		},
 <span id='strappy-data-MultiModelStore-method-removeByRange'>		/**
 </span>		 * Removes a range of records from the store.
 		 * @param {Number} start index of the range to be deleted.
 		 * @param {Number} end index of the range to be deleted.
-		 * @return {strappy.mvc.Model}
+		 * @return {strappy.data.MultiModelStore} this
 		 */
 		removeByRange: function(startIndex,endIndex)
 		{
@@ -555,21 +565,18 @@ $JSKK.Class.create
 			if (Object.isAssocArray(target.BTL))
 			{
 				var	changeset	=[];
-				console.debug('DIRTY LITTLE SHITS:',target.getDirty());
 				target.getDirty().each
 				(
 					function(model)
 					{
 						var index=changeset.push(model.getRecord())-1;
-						// console.debug(index,changeset);
-						changeset[index]=target.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
+						// changeset[index]=target.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
 					}.bind(target)
 				);
 				target.BTL.startQueue();
 				
 				if (changeset.length &amp;&amp; Object.isFunction(target.BTL_SET))
 				{
-					console.debug('CHANGESET',changeset);
 					target.BTL_SET(changeset);
 				}
 				target.BTL_GET
@@ -579,13 +586,14 @@ $JSKK.Class.create
 					function(records)
 					{
 						target.records=target.newRecord(records);
+						this.records	=target.records;
 						for (var i=0,j=target.records.length; i&lt;j; i++)
 						{
 							target.bindchangeEvent(target.records[i]);
 						}
 						target.fireEvent('onChange',target,records);
 						target.fireEvent('onSync',target,records);
-					}.bind(target)
+					}.bind(this)
 				);
 				target.BTL.executeQueue();
 			}
@@ -606,6 +614,7 @@ $JSKK.Class.create
 						onSuccess:	function(response)
 						{
 							target.records=target.newRecord(response.data);
+							this.records	=target.records;
 							for (var i=0,j=target.records.length; i&lt;j; i++)
 							{
 								target.bindchangeEvent(target.records[i]);
@@ -616,7 +625,7 @@ $JSKK.Class.create
 						onFailure: function(response)
 						{
 							target.fireEvent('onSyncFailed',target,response);
-						}.bind(target)
+						}.bind(this)
 					}
 				);
 			}
@@ -624,6 +633,34 @@ $JSKK.Class.create
 			{
 				throw new Error('The store &quot;'+target.$reflect('namespace')+'.'+target.$reflect('name')+'&quot; cannot be synced as it does not have a syncable proxy attached.');
 			}
+		},
+<span id='strappy-data-MultiModelStore-method-flagAllDirty'>		/**
+</span>		 * Flags all records in the store as being dirty. 
+		 * @return {strappy.data.MultiModelStore} this
+		 */
+		flagAllDirty: function()
+		{
+			this.each
+			(
+				function(record)
+				{
+					record.flagDirty();
+				}
+			);
+		},
+<span id='strappy-data-MultiModelStore-method-flagAllClean'>		/**
+</span>		 * Flags all records in the store as being clean. 
+		 * @return {strappy.data.MultiModelStore} this
+		 */
+		flagAllClean: function()
+		{
+			this.each
+			(
+				function(record)
+				{
+					record.flagClean();
+				}
+			);
 		},
 		isDirty: function()
 		{

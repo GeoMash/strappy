@@ -163,7 +163,7 @@ $JSKK.Class.create
 		 * Note: The record will be flagged as dirty when it is added to the store.
 		 * 
 		 * @param {Mixed} record The record to be added to the store.
-		 * @return {strappy.mvc.data.MultiModelStore} this
+		 * @return {strappy.data.MultiModelStore} this
 		 */
 		add: function(records)
 		{
@@ -187,7 +187,7 @@ $JSKK.Class.create
 		/**
 		 * Removes a record from the store.
 		 * @param {Mixed} record The record to be removed from the store.
-		 * @return {strappy.mvc.data.MultiModelStore} this
+		 * @return {strappy.data.MultiModelStore} this
 		 */
 		remove: function(record)
 		{
@@ -205,7 +205,7 @@ $JSKK.Class.create
 		},
 		/**
 		 * Removes all records in the store.
-		 * @return {strappy.mvc.data.MultiModelStore} this
+		 * @return {strappy.data.MultiModelStore} this
 		 */
 		removeAll: function()
 		{
@@ -217,7 +217,7 @@ $JSKK.Class.create
 		 * Removes a range of records from the store.
 		 * @param {Number} start index of the range to be deleted.
 		 * @param {Number} end index of the range to be deleted.
-		 * @return {strappy.mvc.data.MultiModelStore} this
+		 * @return {strappy.data.MultiModelStore} this
 		 */
 		removeByRange: function(startIndex,endIndex)
 		{
