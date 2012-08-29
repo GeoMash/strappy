@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='strappy-data-proxy-Ajax'>/**
+</span> * @class strappy.data.proxy.Ajax
+ * @extends strappy.data.proxy.AbstractProxy
+ * 
+ * 
+ */
+$JSKK.Class.create
+(
+	{
+		$namespace:	'strappy.data.proxy',
+		$name:		'Ajax',
+		$extends:	strappy.data.proxy.AbstractProxy
+	}
+)
+(
+	{},
+	{
+<span id='strappy-data-proxy-Ajax-method-get'>		/**
+</span>		 * 
+		 */
+		get: function(config)
+		{
+			config.url=this.config.url;
+			if (this.fireEvent('onBeforeRequest',this,config)!==false)
+			{
+				if (Object.isUndefined(config.method))
+				{
+					config.method='POST';
+				}
+				$.get
+				(
+					{
+						type:		config.method,
+						url:		config.url,
+						data:		config.filter || {}
+					}
+				)
+				.done(this._onDone.bind(this,config))
+				.fail(config.onFailure || $JSKK.emptyFunction);
+			}
+		},
+<span id='strappy-data-proxy-Ajax-method-sync'>		/**
+</span>		 * 
+		 */
+		sync: function(config)
+		{
+			config.url=this.config.url;
+			if (this.fireEvent('onBeforeRequest',this,config)!==false)
+			{
+				$.ajax
+				(
+					{
+						type:	'POST',
+						url:	config.url,
+						data:	config.data || {}
+					}
+				)
+				.done(this._onDone.bind(this,config))
+				.fail(config.onFailure || $JSKK.emptyFunction);
+			}
+		},
+<span id='strappy-data-proxy-Ajax-method-raw'>		/**
+</span>		 * 
+		 */
+		raw: function(config)
+		{
+			console.debug('RAW DATA:',$.stringify(config.data));
+			config.url=this.config.url;
+			if (this.fireEvent('onBeforeRequest',this,config)!==false)
+			{
+				$.ajax
+				(
+					{
+						type:			'POST',
+						contentType:	'application/json',
+						processData:	false,
+						url:			config.url,
+						data:			$.stringify(config.data) || {}
+					}
+				)
+				.done(this._onDone.bind(this,config))
+				.fail(config.onFailure || $JSKK.emptyFunction);
+			}
+		},
+		_onDone: function(config,response)
+		{
+			if (response.success)
+			{
+				(config.onSuccess || $JSKK.emptyFunction)(response);
+			}
+			else
+			{
+				(config.onFailure || $JSKK.emptyFunction)(response);
+			}
+		}
+	}
+)</pre>
+</body>
+</html>
