@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='strappy-data-BTL'>/**
+</span> * @class strappy.data.BTL
+ * 
+ * Batchable Transmission Layer
+ * 
+ * 
+ * 
+ * 
+ * @abstract
+ */
+$JSKK.Class.create
+(
+	{
+		$namespace:	'strappy.data',
+		$name:		'BTL',
+		$uses:
+		[
+			$JSKK.trait.Configurable
+		]
+	}
+)
+(
+	{
+		APIMethod: function(call,data,query,callback)
+		{
+			this.proxy.raw
+			(
+				{
+					url:		this.config.url,
+					data:
+					{
+						timestamp:	new Date().getTime(),
+						call:		call,
+						data:		data || null,
+						query:		query || null
+					},
+					onComplete: function(response)
+					{
+						if (Object.isFunction(callback))callback(response);
+					}.bind(this)
+				}
+			);
+		}
+	},
+	{
+		config:
+		{
+<span id='strappy-data-BTL-cfg-url'>			/**
+</span>			 * @cfg url
+			 */
+			url:	'',
+<span id='strappy-data-BTL-cfg-proxy'>			/**
+</span>			 * @cfg proxy
+			 */
+			proxy:	strappy.data.proxy.BTL
+		},
+<span id='strappy-data-BTL-property-ready'>		/**
+</span>		 *  @property ready
+		 */
+		ready:			false,
+<span id='strappy-data-BTL-property-proxy'>		/**
+</span>		 * @property proxy
+		 */
+		proxy:			null,
+<span id='strappy-data-BTL-property-API'>		/**
+</span>		 * @property API
+		 */
+		API:			{},
+<span id='strappy-data-BTL-property-queue'>		/**
+</span>		 * @property queue
+		 */
+		queue:			null,
+<span id='strappy-data-BTL-method-init'>		/**
+</span>		 * 
+		 */
+		init: function()
+		{
+			this.proxy=new this.config.proxy({url:this.config.url});
+			this.getServiceAPI();
+		},
+<span id='strappy-data-BTL-method-onReady'>		/**
+</span>		 * 
+		 */
+		onReady: function(callback)
+		{
+			$JSKK.when(this,'ready').isTrue(callback);
+		},
+<span id='strappy-data-BTL-method-getServiceAPI'>		/**
+</span>		 * 
+		 */
+		getServiceAPI: function()
+		{
+			$.ajax
+			(
+				{
+					type:	'GET',
+					url:	this.config.url
+				}
+			)
+			.done(this.createAPIMethods.bind(this))
+			.fail
+			(
+				function()
+				{
+					console.debug('SERVICE LOAD ERROR',arguments);
+				}
+			);
+		},
+<span id='strappy-data-BTL-method-createAPIMethods'>		/**
+</span>		 * 
+		 */
+		createAPIMethods: function(exposedAPI)
+		{
+			var	controller	=null,
+				i			=0,
+				j			=0;
+			for (controller in exposedAPI)
+			{
+				this.API[controller]={};
+				for (i=0,j=exposedAPI[controller].length; i&lt;j; i++)
+				{
+					this.API[controller][exposedAPI[controller][i]]=this.$reflect('self').APIMethod.bind(this,controller+'.'+exposedAPI[controller][i]);
+				}
+			}
+			this.ready=true;
+		},
+<span id='strappy-data-BTL-method-setProxy'>		/**
+</span>		 * 
+		 */
+		setProxy: function(proxy,url)
+		{
+			this.proxy=new this.config.proxy({url:(url || this.config.url)});
+			return this;
+		},
+<span id='strappy-data-BTL-method-bindType'>		/**
+</span>		 * 
+		 */
+		bindType: function(record,type)
+		{
+			record['_type']=type;
+			return record;
+		},
+<span id='strappy-data-BTL-method-startQueue'>		/**
+</span>		 * 
+		 */
+		startQueue: function()
+		{
+			this.queue=new strappy.data.Queue();
+			this.queue.attachProxy(this.proxy);
+			return this;
+		},
+<span id='strappy-data-BTL-method-executeQueue'>		/**
+</span>		 * 
+		 */
+		executeQueue: function()
+		{
+			this.queue.execute();
+			return this;
+		}
+	}
+);</pre>
+</body>
+</html>
