@@ -291,23 +291,23 @@ This is because the component core manually initalises the {@link strappy.ShareM
 
 First, lets let at what a shared store looks like.
 
-$JSKK.Class.create
-(
-	{
-		$namespace:	'Project.shared.store',
-		$name:		'Users',
-		$extends:	strappy.data.MultiModelStore
-	}
-)
-(
-	{},
-	{
-		model:		Project.shared.model.User,
-		BTL:		'Project.BTL',
-		BTL_GET:	'Project.API.user.get',
-		BTL_SET:	'Project.API.user.set'
-	}
-);
+	$JSKK.Class.create
+	(
+		{
+			$namespace:	'Project.shared.store',
+			$name:		'Users',
+			$extends:	strappy.data.MultiModelStore
+		}
+	)
+	(
+		{},
+		{
+			model:		Project.shared.model.User,
+			BTL:		'Project.BTL',
+			BTL_GET:	'Project.API.user.get',
+			BTL_SET:	'Project.API.user.set'
+		}
+	);
 
 
 Note the above example is using BTL for managing the data. See the BTL guide for more information about that.
