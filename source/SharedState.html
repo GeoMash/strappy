@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='strappy-SharedState'>/**
+</span> * @class strappy.SharedState
+ * 
+ * 
+ * 
+ */
+$JSKK.Class.create
+(
+	{
+		$namespace:	'strappy',
+		$name:		'SharedState',
+		$extends:	strappy.data.stateful.Store
+	}
+)
+(
+	{},
+	{
+		// init: function()
+		// {
+		// 	this.init.$parent();
+			
+			
+			
+		// }
+		
+		set: function()
+		{
+			if (this.lockState==strappy.data.stateful.Store.LOCK_NONE)
+			{
+				var	args		=$JSKK.toArray(arguments),
+					keyVals		={},
+					mapping		=null,
+					updateState	=false,
+					newState	={};
+				if (Object.isDefined(args[1]))
+				{
+					keyVals[args.shift()]=args.shift();
+				}
+				else
+				{
+					keyVals=args.shift();
+				}
+				for (var key in keyVals)
+				{
+					if (Object.isUndefined(this.record.fields[strappy.data.stateful.Store.ACCESS_PRIVATE][key]))
+					{
+						this.record.fields[strappy.data.stateful.Store.ACCESS_PRIVATE][key]=null;
+					}
+					if (this.fireEvent('onBeforeChange',this,key,keyVals[key])!==false)
+					{
+						this.record.record[strappy.data.stateful.Store.ACCESS_PRIVATE][key]=keyVals[key];
+						this.fireEvent('onChange',this,key,keyVals[key]);
+					}
+				}
+			}
+			else
+			{
+				throw new Error('Store &quot;'+this.$reflect('name')+'&quot; is in lock state &quot;'+this.lockState+'&quot; and so cannot be modified.');
+			}
+		},
+		get: function(key)
+		{
+			return this.record.record[strappy.data.stateful.Store.ACCESS_PRIVATE][key];
+		}
+	}
+);</pre>
+</body>
+</html>
