@@ -1,0 +1,44 @@
+{
+	"--output":				"./out/",
+    "--title":				"Strappy Docs",
+    "--welcome":			"index.html",
+    "--warnings":			["-link", "-no_doc"],
+    "--examples-base-url":	"../examples/",
+    "--examples":			"./examples.json",
+    "--guides":				"./guides.json",
+    "--external":
+    [
+    	"jQuery",
+    	"$JSKK.trait.Configurable",
+    	"$JSKK.trait.Observable"
+    ],
+    "--":
+    [
+        "../Component.js",
+        "../RadioTower.js",
+        "../StateMgr.js",
+        "../InitQueue.js",
+        "../Signal.js",
+        "../SharedState.js",
+        "../ShareMgr.js",
+        "../trait/ComponentConnector.js",
+        "../trait/signal/Send.js",
+        "../trait/signal/Receive.js",
+        "../trait/signal/Bindable.js",
+        "../mvc/ViewCache.js",
+        "../mvc/Model.js",
+        "../mvc/View.js",
+        "../mvc/Controller.js",
+        "../mvc/stateful/Controller.js",
+        "../data/stateful/Store.js",
+        "../data/AbstractStore.js",
+        "../data/SingleModelStore.js",
+        "../data/MultiModelStore.js",
+        "../data/Queue.js",
+        "../data/Transaction.js",
+        "../data/proxy/AbstractProxy.js",
+        "../data/proxy/Ajax.js",
+        "../data/proxy/BTL.js",
+        "../data/BTL.js"
+    ]
+}
