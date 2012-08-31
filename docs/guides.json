@@ -19,6 +19,16 @@
 				"description": "A guide on developing a main application component."
 			},
 			{
+				"name": "Signals",
+				"title": "Signals",
+				"description": "A guide on signalling."
+			},
+			{
+				"name": "SharedEntities",
+				"title": "Shared Entities",
+				"description": "An explaination on whtat shared entities are and how they can be used."
+			},
+			{
 				"name": "GenericComponent",
 				"title": "Generic Component",
 				"description": "Create a generic list component."

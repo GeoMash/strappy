@@ -23,6 +23,10 @@ $JSKK.Class.create
 	{
 		APIMethod: function(call,data,query,callback)
 		{
+			if (this.config.debug)
+			{
+				this.debugWindow.find('ul').append('<li>'+call+'</li>');
+			}
 			this.proxy.raw
 			(
 				{
@@ -49,6 +53,7 @@ $JSKK.Class.create
 			 * @cfg url
 			 */
 			url:	'',
+			debug:	false,
 			/**
 			 * @cfg proxy
 			 */
@@ -70,11 +75,32 @@ $JSKK.Class.create
 		 * @property queue
 		 */
 		queue:			null,
+		
+		debugWindow:	null,
+		
 		/**
 		 * 
 		 */
 		init: function()
 		{
+			if (this.config.debug)
+			{
+				this.debugWindow=$('<div id="strappy-BTL-debugWindow"><h2>BTL Requests</h2><ul></ul></div>');
+				this.debugWindow.css
+				(
+					{
+						position:		'absolute',
+						top:			0,
+						left:			0,
+						zIndex:			100000,
+						width:			600,
+						height:			400,
+						overflow:		'auto',
+						backgroundColor:'#58595B'
+					}	
+				);
+				$('body').append(this.debugWindow);
+			}
 			this.proxy=new this.config.proxy({url:this.config.url});
 			this.getServiceAPI();
 		},
