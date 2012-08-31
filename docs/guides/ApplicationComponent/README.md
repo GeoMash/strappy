@@ -211,7 +211,7 @@ No doubt there will be other non-structural views that you'll need to use which 
 
 The base controller is where all your initialization logic lives.
 
-Generally this is where you connect to any APIs (such as your backend's BTL API).
+Generally this is where you connect to any APIs (such as your backend's BTL API), wait for initial state to be ready
 
 
 	$JSKK.Class.create
@@ -225,10 +225,6 @@ Generally this is where you connect to any APIs (such as your backend's BTL API)
 	(
 		{},
 		{
-			events:
-			{
-				onReady:			true
-			},
 			shareMgr:			null,
 			API:				null,
 			stateReady:			false,
@@ -238,13 +234,13 @@ Generally this is where you connect to any APIs (such as your backend's BTL API)
 				this.init.$parent();
 				this.getController('State')	.observe('onReadyState',this.onReadyState.bind(this));
 				
-				this.API=new strappy.data.BTL({url:'/api/',debug:true});
+				this.API=new strappy.data.BTL({url:'/api/'});
 				this.API.onReady
 				(
 					function()
 					{
-						Coates.BTL		=this.API;
-						Coates.API		=this.API.API;
+						Project.BTL		=this.API;
+						Project.API		=this.API.API;
 						this.APIReady	=true;
 					}.bind(this)
 				);
@@ -256,10 +252,16 @@ Generally this is where you connect to any APIs (such as your backend's BTL API)
 					}.bind(this)
 				).isTrue(this.onReady.bind(this));
 			},
+			/**
+			 * Called when the State Controller is ready.
+			 */
 			onReadyState: function()
 			{
 				this.stateReady=true;
 			},
+			/**
+			 * Called when the State Controller and API are both ready.
+			 */
 			onReady: function()
 			{
 				this.shareMgr=new strappy.ShareMgr(this,Coates);
