@@ -217,6 +217,7 @@ $JSKK.Class.create
 //			console.debug('onShow');
 			// this.getContainer().fadeIn(500);
 			this.getContainer().show();
+			this.removeClass('hidden');
 			this.fireEvent('onShow',this);
 			return this;
 		},
@@ -227,6 +228,7 @@ $JSKK.Class.create
 		{
 //			console.debug('onHide');
 			// this.getContainer().fadeOut(500);
+			this.addClass('hidden');
 			this.getContainer().hide();
 			this.fireEvent('onHide',this);
 			return this;
