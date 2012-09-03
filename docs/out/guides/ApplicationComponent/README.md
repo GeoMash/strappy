@@ -209,8 +209,138 @@ No doubt there will be other non-structural views that you'll need to use which 
 
 ###Base
 
+The base controller is where all your initialization logic lives.
+
+Generally this is where you connect to any APIs (such as your backend's BTL API), wait for initial state to be ready
+
+
+	$JSKK.Class.create
+	(
+		{
+			$namespace:	'Project.component.application.controller',
+			$name:		'Main',
+			$extends:	strappy.mvc.Controller
+		}
+	)
+	(
+		{},
+		{
+			shareMgr:			null,
+			API:				null,
+			stateReady:			false,
+			APIReady:			false,
+			init: function()
+			{
+				this.init.$parent();
+				this.getController('State')	.observe('onReadyState',this.onReadyState.bind(this));
+				
+				this.API=new strappy.data.BTL({url:'/api/'});
+				this.API.onReady
+				(
+					function()
+					{
+						Project.BTL		=this.API;
+						Project.API		=this.API.API;
+						this.APIReady	=true;
+					}.bind(this)
+				);
+				$JSKK.when
+				(
+					function()
+					{
+						return (this.stateReady && this.APIReady);
+					}.bind(this)
+				).isTrue(this.onReady.bind(this));
+			},
+			/**
+			 * Called when the State Controller is ready.
+			 */
+			onReadyState: function()
+			{
+				this.stateReady=true;
+			},
+			/**
+			 * Called when the State Controller and API are both ready.
+			 */
+			onReady: function()
+			{
+				this.shareMgr=new strappy.ShareMgr(this,Coates);
+				this.getStore('State').set('mainReady',true);
+				this.fireEvent('onReady',this);
+				
+				this.getView('Structure').show();
+				
+				Coates.API.user.get
+				(
+					null,
+					{_current:true},
+					function(response)
+					{
+						if (response.success)
+						{
+							this.setSharedState('authenticated',true);
+							this.showMainApplication();
+						}
+						else
+						{
+							this.showLogin();
+						}
+					}.bind(this)
+				);
+			},
+			showLogin: function()
+			{
+				if (!this.getCmp('LoginPanel').isConfigured())
+				{
+					var queue=this.newInitQueue
+					(
+						function()
+						{
+							this.showChildComponent('login');
+						}.bind(this)
+					);
+					queue.add
+					(
+						'login',
+						this.getCmp('LoginPanel'),
+						{
+							attachTo:			'#'+this.getIID(),
+							containerClass:		'coates-local-container',
+							relativeWrapper:	true,
+							children:
+							[
+								{
+									cmp:	Coates.component.Login,
+									ref:	'login',
+									config:
+									{
+										
+									}
+								}
+							]
+						}
+					);
+					queue.execute();
+				}
+				else
+				{
+					this.showChildComponent('LoginPanel');
+				}
+			}
+		}
+	);
+
+
+
+
+
+
+
 
 ###State
+
+
+
 
 
 

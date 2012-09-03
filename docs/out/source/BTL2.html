@@ -42,7 +42,8 @@ $JSKK.Class.create
 		{
 			if (this.config.debug)
 			{
-				this.debugWindow.find('ul').append('&lt;li&gt;'+call+'&lt;/li&gt;');
+				var contents=call+'::('+$.stringify(data)+')::('+$.stringify(query)+')';
+				this.debugWindow.find('ul').append('&lt;li&gt;'+contents+'&lt;/li&gt;');
 			}
 			this.proxy.raw
 			(
