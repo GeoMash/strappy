@@ -17,38 +17,36 @@ $JSKK.Class.create
 		},
 		onViewReady: function()
 		{
-			
-			console.debug($('[data-strappy-route]'));
 			$('[data-strappy-route]').click(this.onClickableRoute.bind(this));
 		},
 		onClickableRoute: function(event)
 		{
-			var section=$(event.currentTarget).data('strappy-route');
-			console.debug(section);
-			if (Object.isString(section))
+			var path=$(event.currentTarget).data('strappy-route');
+			console.debug(path);
+			if (Object.isString(path))
 			{
-				this.goTo(section);
+				this.goTo(path);
 			}
 		},
-		isValidRoute: function(section)
+		isValidRoute: function(path)
 		{
 			//TODO: Regex.
-			return this.routes.inArray(section);
+			return this.routes.inArray(path);
 		},
 		
 		/**
 		 * Used by everything except the state controller
-		 * to set the "section".
+		 * to set the "route".
 		 */
-		goTo: function(section)
+		goTo: function(path)
 		{
-			this.getStore('State').set('section',section);
+			this.getStore('State').set('p',path);
 		},
 		/**
 		 * Used by the state controller to handle changes
-		 * to the "section" state.
+		 * to the "p" state.
 		 */
-		routeTo: function(section)
+		routeTo: function(path)
 		{
 			$JSKK.when
 			(
@@ -60,8 +58,8 @@ $JSKK.Class.create
 			(
 				function()
 				{
-					console.debug('routeTo:',section);
-					var nodes=section.split('/');
+					console.debug('routeTo:',path);
+					var nodes=path.split('/');
 					if (nodes.shift()=='admin')
 					{
 						var	node		=nodes.shift(),
