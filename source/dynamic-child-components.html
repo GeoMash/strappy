@@ -26,16 +26,14 @@
 (
 	{},
 	{
-		onReadyState: function()
+		onGotBaseHTML: function(view)
 		{
-//			var queue=new framework.data.Queue();
-//			queue	.attachProxy(this.getStore('Foo').getProxy())
-//					.attachProxy(this.getStore('Bar').getProxy())
-//					.attachProxy(this.getStore('Baz').getProxy());
-//			
-//			//Make some changes to the stores ...
-//			
-//			queue.execute();
+			var thisChildCmp=null;
+			for (var i=0; i&lt;10; i++)
+			{
+				thisChildCmp=this.getParentComponent().newChildComponent('Application.component.Tile');
+				thisChildCmp.configure({attachTo:view.getContainer()});
+			}
 		}
 	}
 );</pre>

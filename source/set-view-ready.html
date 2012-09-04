@@ -19,23 +19,16 @@
 (
 	{
 		$namespace:	'Application.component.myComponent.controller',
-		$name:		'Default',
-		$extends:	framework.mvc.Controller
+		$name:		'State',
+		$extends:	framework.mvc.stateful.Controller
 	}
 )
 (
 	{},
 	{
-		onReadyState: function()
+		onViewReady: function(signal)
 		{
-//			var queue=new framework.data.Queue();
-//			queue	.attachProxy(this.getStore('Foo').getProxy())
-//					.attachProxy(this.getStore('Bar').getProxy())
-//					.attachProxy(this.getStore('Baz').getProxy());
-//			
-//			//Make some changes to the stores ...
-//			
-//			queue.execute();
+			this.setViewReadyState(signal.getBody().id);
 		}
 	}
 );</pre>

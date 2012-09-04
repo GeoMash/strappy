@@ -18,24 +18,18 @@
   <pre class="prettyprint lang-js">$JSKK.Class.create
 (
 	{
-		$namespace:	'Application.component.myComponent.controller',
-		$name:		'Default',
-		$extends:	framework.mvc.Controller
+		$namespace:	'Application.component.helloWorld.model',
+		$name:		'State',
+		$extends:	framework.mvc.stateful.Model
 	}
 )
 (
 	{},
 	{
-		onReadyState: function()
+		state:
 		{
-//			var queue=new framework.data.Queue();
-//			queue	.attachProxy(this.getStore('Foo').getProxy())
-//					.attachProxy(this.getStore('Bar').getProxy())
-//					.attachProxy(this.getStore('Baz').getProxy());
-//			
-//			//Make some changes to the stores ...
-//			
-//			queue.execute();
+			day:		'MONDAY',
+			dayWindow:	false
 		}
 	}
 );</pre>

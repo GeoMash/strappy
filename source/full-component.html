@@ -18,25 +18,40 @@
   <pre class="prettyprint lang-js">$JSKK.Class.create
 (
 	{
-		$namespace:	'Application.component.myComponent.controller',
-		$name:		'Default',
-		$extends:	framework.mvc.Controller
+		$namespace:	'Application.component',
+		$name:		'MyComponent',
+		$extends:	framework.Component
 	}
 )
 (
-	{},
 	{
-		onReadyState: function()
+		SIGNAL:
 		{
-//			var queue=new framework.data.Queue();
-//			queue	.attachProxy(this.getStore('Foo').getProxy())
-//					.attachProxy(this.getStore('Bar').getProxy())
-//					.attachProxy(this.getStore('Baz').getProxy());
-//			
-//			//Make some changes to the stores ...
-//			
-//			queue.execute();
+			LOGIN_SUCCESS:		'myComponent.login.success',
+			LOGIN_FAILURE:		'myComponent.login.fail'
 		}
+	},
+	{
+		components:
+		{
+			loginForm:		'Application.component.LoginForm',
+			errorWindow:	'Application.component.DialogWindow',
+			successWindow:	'Application.component.DialogWindow'
+		},
+		stores:
+		[
+			'State',
+			'User'
+		],
+		views:
+		[
+			'Default'
+		],
+		controllers:
+		[
+			'State',
+			'Default'
+		]
 	}
 );</pre>
 </body>

@@ -1,0 +1,48 @@
+.wrapper
+{
+    margin-top:50px;
+}
+.left{
+    float: left;
+    height: 1000px;
+    margin-left: 50px;
+    margin-top: 50px;
+    margin-right: 25px;
+    position: relative;
+}
+ul
+{
+    background: -moz-linear-gradient(center top , #F8F8F8 0%, #DDDDDD 100%) repeat scroll 0 0 transparent;
+    border: 1px solid #D2D2D2;
+    border-radius: 5px 5px 5px 5px;
+    box-shadosw: 0 1px 0 #FFFFFF inset, 0 -1px 0 rgba(0, 0, 0, 0.03) inset;
+    height: 40px;
+    list-style: none outside none;
+    padding: 0;
+    width: 270px;
+}
+ul a
+{
+    color: #999999;
+    display: block;
+    font-size: 11px;
+    height: 40px;
+    line-height: 1;
+    padding-top: 6px;
+    text-align: center;
+}
+li
+{
+    border-right: 1px solid #D2D2D2;
+    float: left;
+    height: 40px;
+    width: 89px;
+}
+strong
+{
+    color: #222222;
+    font-weight: 700;
+}
+.x-border-box, .x-border-box * {
+    -moz-box-sizing:none!important;
+}

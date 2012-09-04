@@ -1,0 +1,1 @@
+Ext.data.JsonP.ComponentScaffolding({"guide":"<h1>Component Scaffolding</h1>\n\n<p><strong>Level:</strong> Beginner</p>\n\n<p>Hi there.</p>\n","title":"Fast track your component creation"});

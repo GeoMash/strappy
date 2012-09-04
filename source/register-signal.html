@@ -28,14 +28,19 @@
 	{
 		onReadyState: function()
 		{
-//			var queue=new framework.data.Queue();
-//			queue	.attachProxy(this.getStore('Foo').getProxy())
-//					.attachProxy(this.getStore('Bar').getProxy())
-//					.attachProxy(this.getStore('Baz').getProxy());
-//			
-//			//Make some changes to the stores ...
-//			
-//			queue.execute();
+			this.registerSignals
+			(
+				[Application.component.MyComponent.SIGNAL.LOGIN_SUCCESS,'onLoginSuccess'],
+				[Application.component.MyComponent.SIGNAL.LOGIN_FAILURE,'onLoginFailure']
+			);
+		},
+		onLoginSuccess: function(signal)
+		{
+			//Do somthing here...
+		},
+		onLoginFailure: function(signal)
+		{
+			//Do somthing here...
 		}
 	}
 );</pre>

@@ -18,24 +18,22 @@
   <pre class="prettyprint lang-js">$JSKK.Class.create
 (
 	{
-		$namespace:	'Application.component.myComponent.controller',
+		$namespace:	'Application.component.myComponent.view',
 		$name:		'Default',
-		$extends:	framework.mvc.Controller
+		$extends:	framework.mvc.View
 	}
 )
 (
 	{},
 	{
-		onReadyState: function()
+		onReady: function()
 		{
-//			var queue=new framework.data.Queue();
-//			queue	.attachProxy(this.getStore('Foo').getProxy())
-//					.attachProxy(this.getStore('Bar').getProxy())
-//					.attachProxy(this.getStore('Baz').getProxy());
-//			
-//			//Make some changes to the stores ...
-//			
-//			queue.execute();
+			this.bindStatefulLinks
+			(
+				['[href=&quot;#container-home&quot;]',	'section=home'],
+				['[href=&quot;#container-news&quot;]',	'section=news'],
+				['[href=&quot;#container-about&quot;]',	'section=about']
+			);
 		}
 	}
 );</pre>

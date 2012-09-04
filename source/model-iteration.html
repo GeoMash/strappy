@@ -26,16 +26,18 @@
 (
 	{},
 	{
-		onReadyState: function()
+		generateList: function()
 		{
-//			var queue=new framework.data.Queue();
-//			queue	.attachProxy(this.getStore('Foo').getProxy())
-//					.attachProxy(this.getStore('Bar').getProxy())
-//					.attachProxy(this.getStore('Baz').getProxy());
-//			
-//			//Make some changes to the stores ...
-//			
-//			queue.execute();
+			var HTML=['&lt;ul&gt;'];
+			this.getModel('Default').each
+			(
+				function(item)
+				{
+					HTML.push('&lt;li&gt;&lt;a href=&quot;'+item.url+'&quot;&gt;'+item.name+'&lt;/a&gt;&lt;/li&gt;');
+				}
+			);
+			HTML.push('&lt;/ul&gt;');
+			return HTML.join('');
 		}
 	}
 );</pre>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">Ext.data.JsonP.GettingStarted({&quot;guide&quot;:&quot;&lt;h1&gt;Getting Started&lt;/h1&gt;\n&lt;div class='toc'&gt;\n&lt;p&gt;&lt;strong&gt;Contents&lt;/strong&gt;&lt;/p&gt;\n&lt;ol&gt;\n&lt;li&gt;&lt;a href='#!/guide/GettingStarted-section-1'&gt;Things to Understand&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href='#!/guide/GettingStarted-section-2'&gt;Environment Setup&lt;/a&gt;&lt;/li&gt;\n&lt;/ol&gt;\n&lt;/div&gt;\n\n&lt;p&gt;&lt;strong&gt;Level:&lt;/strong&gt; Beginner&lt;/p&gt;\n\n&lt;h2 id='GettingStarted-section-1'&gt;Things to Understand&lt;/h2&gt;\n\n&lt;p&gt;This is a component-based framework. Each component can be considered as a stand-alone application. They are self-contained MVC triads which act independently of other components.&lt;/p&gt;\n\n&lt;br&gt;\n\n\n&lt;p&gt;This framework has been designed to keep each moving part of a component as isolated as possible. Models, Views, Controllers all communicate through a central signalling mechanism\ncalled a Radio Tower and, with a few exceptions, never directly communicate with one another.&lt;/p&gt;\n\n&lt;br&gt;\n\n\n&lt;p&gt;A few exceptions to this rule:&lt;/p&gt;\n\n&lt;br&gt;\n\n\n&lt;ul&gt;\n&lt;li&gt;Controllers can directly READ and WRITE to a model.&lt;/li&gt;\n&lt;li&gt;Views can directly READ from a modal but CANNOT write.&lt;/li&gt;\n&lt;/ul&gt;\n\n\n&lt;br&gt;\n\n\n&lt;br&gt;\n\n\n&lt;h2 id='GettingStarted-section-2'&gt;Environment Setup&lt;/h2&gt;\n\n&lt;p&gt;You'll need a copy of the framework as well as $JSKK and jQuery. These can be placed and loaded from anywhere within your application but should be loaded in the following order:&lt;/p&gt;\n\n&lt;br&gt;\n\n\n&lt;ol&gt;\n&lt;li&gt;$JSKK&lt;/li&gt;\n&lt;li&gt;jQuery&lt;/li&gt;\n&lt;li&gt;Framework&lt;/li&gt;\n&lt;/ol&gt;\n\n\n&lt;br&gt;\n\n\n&lt;p&gt;Component namespaces start from the root level of your website index. So for example, if your component was \&quot;Application.component.Main\&quot;, your Main.js file would\nbe found at \&quot;/Application/component/Main/Main.js\&quot;.&lt;/p&gt;\n&quot;,&quot;title&quot;:&quot;Getting Started with Strappy&quot;});</pre>
+</body>
+</html>
