@@ -10,7 +10,7 @@
     margin-right: 25px;
     position: relative;
 }
-ul
+ul.downloads
 {
     background: -moz-linear-gradient(center top , #F8F8F8 0%, #DDDDDD 100%) repeat scroll 0 0 transparent;
     border: 1px solid #D2D2D2;
@@ -21,7 +21,7 @@ ul
     padding: 0;
     width: 270px;
 }
-ul a
+ul.downloads a
 {
     color: #999999;
     display: block;
@@ -31,7 +31,7 @@ ul a
     padding-top: 6px;
     text-align: center;
 }
-li
+ul.downloads li
 {
     border-right: 1px solid #D2D2D2;
     float: left;
