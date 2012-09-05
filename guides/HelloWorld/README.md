@@ -346,9 +346,6 @@ JavaScript:
 				// call super
 				this.init.$parent();
 
-				/**
-				 *  set observers
-				 */
 				// let Default view report as soon as it's html template is loaded
 				this.getView('Default')		.observe('onTemplatesLoaded',	this.onTemplatesLoaded.bind(this));
 
@@ -408,11 +405,11 @@ $JSKK.Class.create
 
 			// observer state changes
 			this.bindStateChanges
-				(
-					{
-						isVisible:	'onVisibilityChanged'
-					}
-				);
+			(
+				{
+					isVisible:	'onVisibilityChanged'
+				}
+			);
 		},
 
 		onViewReady: function(view)
