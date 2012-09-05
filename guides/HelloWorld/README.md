@@ -47,8 +47,13 @@ Strappy applications depend on the following three libraries:
 
 Now create three sub directories in your lib folder and name them "jQuery", "JSKK" and "strappy". <br>
 
-Once you have extracted your compressed downloads, locate the minified versions (strappy = "tools/strappy.1.0.0.beta.min"; JSKK = "bin/jskk.min-1.0.1.js") and place them in the appropriate sub directories you just created. <br>
-For jQuery you will simply copy the latest minified source off the jQuery website, create a new .js file and paste the copied source into that file. Name it jquery1.x.x.js and place it in your newly created jQuery folder under lib.
+Once you have extracted your compressed downloads, locate their minified versions,
+<br> 
+	strappy = "tools/strappy.1.0.0.beta.min"
+	JSKK = "bin/jskk.min-1.0.1.js"
+<br>
+... and place them in the appropriate sub directories you just created. <br>
+For jQuery you will simply copy the latest minified source off the jQuery website, create a new .js file and paste the copied source into it. Name it jquery1.x.x.js and place it in your newly created jQuery folder under lib.
 
 Your project outliner window should now look similar to this screenshot:
 
