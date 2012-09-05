@@ -192,13 +192,13 @@ HTML:
 	</div>
 <br>
 
-Now this template will be administered by your view class, which looks like this:
+Now this html template will need to be administered by your view class, which looks like this:
 
-Default.js:
+JavaScript:
 	$JSKK.Class.create
 	(
 		{
-			$namespace:	'HelloWorld.component.button.view',
+			$namespace:	'Application.component.button.view',
 			$name:		'Default',
 			$extends:	strappy.mvc.View
 		}
