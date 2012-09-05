@@ -3,139 +3,145 @@ Hello World
 
 **Level:** Beginner
 
-Preview
+Sneak Peek
 ------------------
 
 This is the "Hello World" guide to your first Strappy component.
-By the end of this tutorial you will have created a button component that, if pressed, displays "Hello World".
+By the end of this tutorial you will have created a button component, 
+which toggles the visibility of an 'h1'-tag containing the string "Hello World". 
 
 
 {@img helloWorld_hidden.png Alt text}
 <br>
-{@img helloWorld_visible.png Alt text}
+<br>
+{@img helloWorld_visible.png Alt text} 
+<br>
 
+Project SetUp
+------------------
 
-Yep! 
+First of all, set up a new project using the IDE of your choice and name it "Hello World".<br>
+You should end up with something that looks more or less like this:
+{@img initialProjectSetupIDEShot.png Alt text} 
 <br>
 
 Dependencies
 ------------------
 
-You'll need $JSKK, jQuery and a copy of the framework. We'll use minified versions of all of these for this demo.
+Strappy applications depend on the following three libraries:
 
-Downloads:
+1. [Strappy framework][1] <br>
+(All the jazz that will enable you to create scaleable and maintainable projects, ranging from simple standalone components to full-blown applications.)
 
-[Strappy framework (ZIP)][1]
 
-[JSKK Classing Engine (ZIP)][2]
+2. [JSKK Classing Engine][2] <br>
+(A classing engine, straight out of our mad lab's coding oven. Strappy is based on JSKK and is the reason why you will be able write OOP without runnig into those little native JS traps. It also comes with a truckload of ready to use utils.)
 
-[jQuery Download Page][3]
 
-Download them and place them in a folder named "lib".
+3. [jQuery Download Page][3] <br>
+(jQuery won't need much of introducing. Strappy depends on it and you will most likely too.)<br>
 
 [1]: https://github.com/SpinifexGroup/strappy/zipball/master
 [2]: https://github.com/melechi/JS-Klass-Kit/zipball/master
 [3]: http://jquery.com/
 
-Now hook up the libraries like in the example below. You should keep this order.
+Now create three sub directories in your lib folder and name them "jQuery", "JSKK" and "strappy". <br>
 
-HTML:
+Once you have extracted your compressed downloads, locate the minified versions (strappy = "framework.min.js"; JSKK = "bin/jskk.min-1.0.1.js") and place them in the appropriate sub directories you just created. <br>
+For jQuery you will simply copy the latest minified source off the jQuery website, create a new .js file and paste the copied source into that file. Name it jquery1.x.x.js and place it in your newly created jQuery folder under lib.
+
+Your project outliner window should now look similar to this screenshot:
+
+{@img dependenciesImportedAndHookedUp.png Alt text} 
+
+Next, hook up those libraries in your "index.html" file. <br>
+NOTE: The order in which those libraries are being imported matters. <br>
+Strappy depends on both - jQuery and JSSK - and therefore needs to be included last.
+
 <br>
 	<html>
 		<head>
 			<title>Strappy - Hello World</title>
 		</head>
 		<body>
-			<script type="text/javascript" src="lib/JS-Klass-Kit/jskk.min-1.0.1.js">		</script>
-			<script type="text/javascript" src="lib/jquery/jquery1.8.0.js">					</script>
-			<script type="text/javascript" src="lib/strappy/strappy.1.1.0.dev.min.js">		</script>
+			<script type="text/javascript" src="lib/JSKK/jskk.min-1.0.1.js"></script>
+			<script type="text/javascript" src="lib/jQuery/jquery1.8.0.js"></script>
+			<script type="text/javascript" src="lib/strappy/framework.min.js"></script>
 		</body>
 	</html>
 <br>
 <br>
 
-This is the absolute basics and won't actually do anything just yet.
 
-Setup Component
+Component SetUp
 ---------------
 
 Now you should create a folder structure for your component. 
 We're going to use the following folder/file structure. 
 Create the folders and files in them.
 Leave the files blank for now.
-
 <br>
-	/
-	/lib/jskk.min-1.0.0.js
-	/lib/jquery.js
-	/lib/framework.min.js
-	/Application/
 	/Application/component/
-	/Application/component/HelloWorld/
-	/Application/component/HelloWorld/HelloWorld.js
-	/Application/component/HelloWorld/controller/
-	/Application/component/HelloWorld/controller/State.js
-	/Application/component/HelloWorld/controller/Default.js
-	/Application/component/HelloWorld/model/
-	/Application/component/HelloWorld/model/State.js
-	/Application/component/HelloWorld/model/Default.js
-	/Application/component/HelloWorld/view/
-	/Application/component/HelloWorld/view/Default.js
-	/Application/component/HelloWorld/view/html/
-	/Application/component/HelloWorld/view/html/default.html
+	/Application/component/button/
+	/Application/component/button/Button.js
+	/Application/component/button/controller/
+	/Application/component/button/controller/State.js
+	/Application/component/button/controller/Default.js
+	/Application/component/button/model/
+	/Application/component/button/store/
+	/Application/component/button/store/State.js
+	/Application/component/button/view/
+	/Application/component/button/view/Default.js
+	/Application/component/button/view/html/
+	/Application/component/button/view/html/default.html
 <br>
 
-
-Pyhton Tool to the rescue
----------------
-
-Doing things by hand can be very satisfying at times...setting up generic components is not one of those things. If you aggree you might as well check out [Component Scaffolding Tool](#!/guide/ComponentScaffolding) for further reading. Our lead developer developed a pyhton tool that ships with strappy, making component creation more fun than catching gummi bears with your mouth.
-
-<br> 
-
-Depending on the IDE you are using, the project should now look something like this: 
+Your IDE project profiler window should now look something like this: 
 
 <br>
-{@img projectSetup.png Alt text}
+{@img manuallyScaffolded.png Alt text}
 <br>
 
-Now you also need to import all parts of your new component MVC. 
-So in your index.html, under your dependency imports, add the following references:
-
-HTML:
+Going back to your index.html, you will of course also need to import all those still empty classes you have just created.
+So beneath your library imports add the following
 <br>
-	<html>
-		<head>
-			<title>Strappy - Hello World</title>
-		</head>
-		<body>
-			// dependencies
-			<script type="text/javascript" src="lib/JS-Klass-Kit/jskk.min-1.0.1.js">						</script>
-			<script type="text/javascript" src="lib/jquery/jquery1.8.0.js">									</script>
-			<script type="text/javascript" src="lib/strappy/strappy.1.1.0.dev.min.js">						</script>
-			<br>
-			// components
-			<script type="text/javascript"  src="Application/component/button/Button.js">                   </script>
-			<script type="text/javascript"  src="Application/component/button/controller/Default.js">       </script>
-			<script type="text/javascript"  src="Application/component/button/controller/State.js">         </script>
-			<script type="text/javascript"  src="Application/component/button/store/Button.js">             </script>
-			<script type="text/javascript"  src="Application/component/button/store/State.js">              </script>
-			<script type="text/javascript"  src="Application/component/button/model/Default.js">            </script>
-			<script type="text/javascript"  src="Application/component/button/model/State.js">              </script>
-			<script type="text/javascript"  src="Application/component/button/view/Default.js">             </script>
-		</body>
-	</html>
+	// libraries
+	// ... not displayed 
+	//
+	// component
+	<script type="text/javascript"  src="Application/component/button/Button.js"></script>
+	<script type="text/javascript"  src="Application/component/button/controller/Default.js"></script>
+	<script type="text/javascript"  src="Application/component/button/controller/State.js"></script>
+	<script type="text/javascript"  src="Application/component/button/store/State.js"></script>
+	// if time implement an object model in order to illustrate component's basic data infrastructure  
+	<script type="text/javascript"  src="Application/component/button/view/Default.js"></script>
 <br>
 
-Next we'll create the base component class. Open "/Application/component/HelloWorld/HelloWorld.js" and place the following code in.
+When opening "index.html" in your browser you should not recive any errors. <br> 
+If you do, you most likely have wired up your dependencies incorrectly or there is a typo in your links. <br> 
+Check everything thoroughly and proceed with the next step - "MVC SetUp".
+
+<br>
+
+MVC SetUp
+------------------
+
+In order to instantiate your component, we will start to implement the bare minimum requirements of your component's MVC triad.
+<br>
+The first thing we will create is our base and configuration class "Button.js". In it you will define it's nature, descent, possible child components as well as default config settings.
+<br>
+We will then work ourselves from the bottom up - starting with the view and its html-template to the StateStore and ending in our Default and State controllers.
+<br>
+Here comes our base class - Button.js 
+
 <br>
 <br>
 	$JSKK.Class.create
 	(
 		{
-			$namespace:	'Application.component',
-			$name:		'HelloWorld',
-			$extends:	framework.Component
+			$namespace: 'HelloWorld.component',
+			$name:      'Button',
+			$extends:   strappy.Component
 		}
 	)
 	(
@@ -152,6 +158,10 @@ Next we'll create the base component class. Open "/Application/component/HelloWo
 			controllers:
 			[
 				'Default'
+			],
+			stores:
+			[
+				// your stores in here
 			]
 		}
 	);
@@ -167,13 +177,8 @@ Next we see the models are defined as an array, followed by views and controller
 you need to access them in either a Controller or View.
 <br>
 
-Filling in your MVC triad
----------------
 
-In order to be able to instantiate your component, we will start to implement the bare minimum requirements by your components MVC triad.
-We start from the bottom up - the view and its template. We'll then work our way up through the State- Store and Model and finally define one Default and one State controller.
 
-<br>
 
 <b>View & HTML Template</b>
 The html template we are creating is a very simple one. It only consists of a wrapping "div" element, which we use to position things, an "input" button to trigger an action and last but not least a "h1" which will output our "Hello World" in this simple example. Now this template is neither realistic nor does it make much sense - all we are after is a proof of concept. I an real world example i twould probably more likely to separate those two elements and make two individual components, which are detached from each other and could be extended or be reused multiple times. Here however, we need only one very specific function and in order to keep the scope of this "Hello World" example to a minimum we favor simplicity over correctness. 
@@ -377,3 +382,9 @@ There's only one more class we have to write and that's the State controller. Th
 If you have foolowed everything correctly you should be able to just call your page inside your favorite web browser (probably IE8) and see the amazing result. 
 
 
+Python Scaffolding Tool
+---------------
+
+Doing things by hand can be very satisfying at times...setting up generic components is not one of those things. If you aggree you might as well check out [Component Scaffolding Tool](#!/guide/ComponentScaffolding) for further reading. Our lead developer developed a pyhton tool that ships with strappy, making component creation more fun than catching gummi bears with your mouth.
+
+<br> 
