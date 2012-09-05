@@ -47,7 +47,7 @@ Strappy applications depend on the following three libraries:
 
 Now create three sub directories in your lib folder and name them "jQuery", "JSKK" and "strappy". <br>
 
-Once you have extracted your compressed downloads, locate the minified versions (strappy = "framework.min.js"; JSKK = "bin/jskk.min-1.0.1.js") and place them in the appropriate sub directories you just created. <br>
+Once you have extracted your compressed downloads, locate the minified versions (strappy = "tools/strappy.1.0.0.beta.min"; JSKK = "bin/jskk.min-1.0.1.js") and place them in the appropriate sub directories you just created. <br>
 For jQuery you will simply copy the latest minified source off the jQuery website, create a new .js file and paste the copied source into that file. Name it jquery1.x.x.js and place it in your newly created jQuery folder under lib.
 
 Your project outliner window should now look similar to this screenshot:
@@ -66,7 +66,7 @@ HTML:
 		<body>
 			<script type="text/javascript" src="lib/JSKK/jskk.min-1.0.1.js"></script>
 			<script type="text/javascript" src="lib/jQuery/jquery1.8.0.js"></script>
-			<script type="text/javascript" src="lib/strappy/framework.min.js"></script>
+			<script type="text/javascript" src="lib/strappy/strappy.1.0.0.beta.min.js"></script>
 		</body>
 	</html>
 <br>
@@ -194,7 +194,7 @@ HTML:
 
 Now this html template will need to be administered by your view class, which looks like this:
 
-JavaScript:
+JAVASCRIPT:
 	$JSKK.Class.create
 	(
 		{
@@ -294,31 +294,31 @@ There's no need to create a state model as this is being handled for us automati
 
 Open your StateStore.js and copy the following code into it.
 
-JavaScript.js
-$JSKK.Class.create
-(
-	{
-		$namespace:	'Application.component.button.store',
-		$name:		'State',
-		$extends:	strappy.data.stateful.Store
-	}
-)
-(
-	{},
-	{
-		data:
+JAVASCRIPT:
+	$JSKK.Class.create
+	(
 		{
-			'public':
+			$namespace:	'Application.component.button.store',
+			$name:		'State',
+			$extends:	strappy.data.stateful.Store
+		}
+	)
+	(
+		{},
+		{
+			data:
 			{
-				// something here
-			},
-			'private':
-			{
-				isVisible: false
+				'public':
+				{
+					// something here
+				},
+				'private':
+				{
+					isVisible: false
+				}
 			}
 		}
-	}
-);
+	);
 
 Our "Hello World" example only has one store - the StateStore. If our component would hold more complex data, like a personal user profile for example requirung multiple different data fields, we could introduce an "User" store, which is linked to a "User" model. This additional store could then aid us in retrieving values out of a record or perform business operations. Here however, we only inquire about one simple private state: visible or hidden. You can also see that we are having two different places to put our state data in: the 'public' and the 'private' section inside the data object.
 Since our component has no interest in sharing it's internal state, we are putting our 'isVisible' property inside 'private'. <br> 
@@ -329,7 +329,7 @@ NOTE: A common mistake which can be difficult to track down is that public and p
 "Hello World" get's two controllers to work with. A State- and a DefaultController. Strappy encourages the use of multiple controllers in order to serve the single responsibility principle. Meaning - if you, as a developer, delegate your specific task to specific controllers, complex components will become easier to maintain, bugs quicker to track down and your code less difficult to read - also for other developers, that might need to revisit your code. 
 Let's see what our Default controller does:
 
-JavaScript:
+JAVASCRIPT:
 	$JSKK.Class.create
 	(
 		{
@@ -383,56 +383,56 @@ We will include one last thing in our DefaultController. Remember how we assigne
 
 There's only one more class we have to write and that's the StateController. Here's the code:
 
-JavaScript:
-$JSKK.Class.create
-(
-	{
-		$namespace:	'Application.component.button.controller',
-		$name:		'State',
-		$extends:	strappy.mvc.stateful.Controller
-	}
-)
-(
-	{},
-	{
-		init: function()
+JAVASCRIPT:
+	$JSKK.Class.create
+	(
 		{
-			this.init.$parent();
-
-
-			// set observers
-			this.getView('Default') .observe('onReady',this.onViewReady.bind(this));
-
-			// observer state changes
-			this.bindStateChanges
-			(
-				{
-					isVisible:	'onVisibilityChanged'
-				}
-			);
-		},
-
-		onViewReady: function(view)
-		{
-			this.setViewReadyState(view.$reflect('name'));
-			if (this.getReadyViews().inArray(view.$reflect('name')))
-			{
-				//All views are ready.
-				this.setReady();
-			}
-		},
-
-		onBeforeChange: function(state,key,value)
-		{
-			return true;
-		},
-
-		onVisibilityChanged: function(value)
-		{
-			this.getView('Default').updateOutlet(value);
+			$namespace:	'Application.component.button.controller',
+			$name:		'State',
+			$extends:	strappy.mvc.stateful.Controller
 		}
-	}
-);
+	)
+	(
+		{},
+		{
+			init: function()
+			{
+				this.init.$parent();
+
+
+				// set observers
+				this.getView('Default') .observe('onReady',this.onViewReady.bind(this));
+
+				// observer state changes
+				this.bindStateChanges
+				(
+					{
+						isVisible:	'onVisibilityChanged'
+					}
+				);
+			},
+
+			onViewReady: function(view)
+			{
+				this.setViewReadyState(view.$reflect('name'));
+				if (this.getReadyViews().inArray(view.$reflect('name')))
+				{
+					//All views are ready.
+					this.setReady();
+				}
+			},
+
+			onBeforeChange: function(state,key,value)
+			{
+				return true;
+			},
+
+			onVisibilityChanged: function(value)
+			{
+				this.getView('Default').updateOutlet(value);
+			}
+		}
+	);
 
 
 The StateController is doing two things in our example: 
