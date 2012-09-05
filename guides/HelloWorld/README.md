@@ -53,14 +53,14 @@ Once you have extracted your compressed downloads, locate their minified version
 	JSKK = "bin/jskk.min-1.0.1.js"
 <br>
 ... and place them in the appropriate sub directories you just created. <br>
-For jQuery you will simply copy the latest minified source off the jQuery website, create a new .js file and paste the copied source into it. Name it jquery1.x.x.js and place it in your newly created jQuery folder under lib.
+For jQuery you will simply copy the latest minified source of the jQuery website, create a new .js file and paste the copied source into it. Name it jquery1.x.x.js and place it in your newly created jQuery folder under lib.
 
 Your project outliner window should now look similar to this screenshot:
 
 {@img dependenciesImportedAndHookedUp.png Alt text} 
 
 Next, hook up those libraries in your "index.html" file. <br>
-NOTE: The order in which those libraries are being imported matters. <br>
+NOTE: The order, in which those libraries are being imported, matters. <br>
 Strappy depends on both - jQuery and JSSK - and therefore needs to be included last.
 
 <b>Index - Index.html</b><br>
