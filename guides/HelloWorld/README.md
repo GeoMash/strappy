@@ -57,7 +57,7 @@ Your project outliner window should now look similar to this screenshot:
 Next, hook up those libraries in your "index.html" file. <br>
 NOTE: The order in which those libraries are being imported matters. <br>
 Strappy depends on both - jQuery and JSSK - and therefore needs to be included last.
-
+HTML:
 <br>
 	<html>
 		<head>
@@ -104,6 +104,7 @@ Your IDE project profiler window should now look something like this:
 
 Going back to your index.html, you will of course also need to import all those still empty classes you have just created.
 So beneath your library imports add the following
+HTML:
 <br>
 	// libraries
 	// ... not displayed 
@@ -130,10 +131,10 @@ Every component you create in Strappy, no matter how small, has it's own "state"
 
 The first thing we will create is our base and configuration class "Button.js". In it you will define it's nature, descent, possible child components as well as default config settings.
 
-We will then work ourselves from the bottom up - starting with the view and its html-template to the StateStore and ending in our Default and State controllers.
+We will then work ourselves from the bottom up - starting with the view and its html-template, over the StateStore and ending in our Default and State controllers.
 
-<b>Your component's base class</b>
 <br>
+<b>Your component's base class</b>
 	$JSKK.Class.create
 	(
 		{
@@ -172,14 +173,15 @@ Inspecting our Button.js class at the very top, we can see that our class is bei
 2. $name:		The "name" is our file name without file extension.
 3. $extends:	Our class extends strappy's base component class.
 
-The third object visible contains four arrays: models, views, controllers and stores. All required classes need to be listed in the appropriate array in order to enable the framework to initialize these classes so that they are ready for use by the time you need to access them in either a Store, Controller or View.
+The third object visible contains four arrays: models, views, controllers and stores. All required classes need to be listed in the appropriate array in order to enable the framework to initialize these classes. That way they are ready for use by the time you need to access them in either a Store, Controller or View.
 
-You also might have noticed, that StateStore and -Controller, even though we made you create a those, are not listed with the array they belong in. Strappy takes care about all State instances and therefore doesn't need you to declare them manually. 
+You also might have noticed, that StateStore and -Controller, even though we made you create a those, are not listed with the array they belong in. Strappy strictly expects those classes to be present in every component and therefore doesn't need you to declare them manually. 
 <br>
 
 
-<b>View & HTML Template</b>
-The html template we are creating is a very simple one. It only consists of a wrapping "div" element, which we use to position things, an "input" button to trigger an action and last but not least a "h1" which will output our "Hello World" in this simple example. Now this template is neither realistic nor does it make much sense - all we are after is a proof of concept. I an real world example i twould probably more likely to separate those two elements and make two individual components, which are detached from each other and could be extended or be reused multiple times. Here however, we need only one very specific function and in order to keep the scope of this "Hello World" example to a minimum we favor simplicity over correctness. 
+<b>View & html-template</b><br>
+The html template we are creating is a very simple one. It only consists of a wrapping "div" element, which we use to position things, an "input" button to trigger an action and last but not least an "h1"-tag which holds our "Hello World" message. Now, this template is neither realistic nor does it make much sense - all we are after is a proof of concept. In a real project, you would probably be more likely to separate those two elements and make two individual components for them. 
+Considering the amount of code needed to create a component, that may seem like an overkill. Soon though, you will experience the advantages, that come with putting in a little more effort at the beginning. Software applications can grow to a considerable amount of components and keeping such a project structured and maintainable, can quickly end up as one big bowl of "Spaghetti-Code". Strappy nicely decouples your components and makes sure you will stay as cool as Heisenberg. 
 
 Ok, here we go. This is your 'default.html':
 
@@ -188,9 +190,8 @@ HTML:
 		<h1 class="hidden myOutlet">HELLO WORLD</h1>
 		<input class="myButton" type="button" value="show me">
 	</div>
-
-
 <br>
+
 Now this template will be administered by your view class, which looks like this:
 
 Default.js:
