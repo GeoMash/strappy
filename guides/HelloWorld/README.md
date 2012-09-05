@@ -281,11 +281,12 @@ A reason to handle this event straight away in your view could be, that an event
 
 <br>
 
-The next two methds - onModelLockChange and syncView - need to be implemented in your view but can stay blank for now since we are not having a situation in which we either need to be notified about a model lock change nor do we need to sync our view with data received from an async call.
+The next two methds, "onModelLockChange" and "syncView", need to be implemented in your view but can stay blank for now, since we are not having a situation in which we either need to be notified about a model lock change nor do we need to sync our view with updated model data.
 
-"updateOutlet" on the other hand is again important to us. this method takes one argument "isVisible", which is a boolean value. "updateOutlet" is going to be called by our state controller class when it receives notification of a model state change. (visible or hidden) In here we are basically doing two things:
+"updateOutlet" on the other hand is again important to us. This method takes one argument "isVisible", which is a boolean value. "updateOutlet" is going to be called by our state controller class when it receives notification of a model state change (visible or hidden). In here we are doing two things:
 
-First we are checking against the supplied argument value (true/false). Secondly, depending on the argument passed on we change the buttons value attribute to label the action taking palce on press as well as adding or removing a css attribute to our h1 tag. this attribute is a class attribute named 'hidden', which will change our elements visibility to either hidden or visible. See style.css.
+1. We are checking against the supplied argument value (true/false). 
+2. Depending on the argument passed in, we change the buttons value attribute to label the action that takes place, when a user presses the button. We are also adding or removing a css attribute to or from our "h1"-tag. This attribute is a class attribute named 'hidden', which will change our element's visibility. See "style.css".
 
 <b>Store & Model</b>
 
