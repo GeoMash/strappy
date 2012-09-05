@@ -288,49 +288,52 @@ The next two methds, "onModelLockChange" and "syncView", need to be implemented 
 1. We are checking against the supplied argument value (true/false). 
 2. Depending on the argument passed in, we change the buttons value attribute to label the action that takes place, when a user presses the button. We are also adding or removing a css attribute to or from our "h1"-tag. This attribute is a class attribute named 'hidden', which will change our element's visibility. See "style.css".
 
-<b>Store & Model</b>
 
+<b>Store & Model</b><br>
 There's no need to create a state model as this is being handled for us automatically by the framework. So the model directory can stay empty.
 
-Store.js
-	$JSKK.Class.create
-	(
+Open your StateStore.js and copy the following code into it.
+
+JavaScript.js
+$JSKK.Class.create
+(
+	{
+		$namespace:	'Application.component.button.store',
+		$name:		'State',
+		$extends:	strappy.data.stateful.Store
+	}
+)
+(
+	{},
+	{
+		data:
 		{
-			$namespace:	'HelloWorld.component.button.store',
-			$name:		'State',
-			$extends:	strappy.data.stateful.Store
-		}
-	)
-	(
-		{},
-		{
-			data:
+			'public':
 			{
-				'public':
-				{
-					// something here
-				},
-				'private':
-				{
-					isVisible: false
-				}
+				// something here
+			},
+			'private':
+			{
+				isVisible: false
 			}
 		}
-	);
+	}
+);
 
-Our "Hello World" example only has one store. The state store. If our component would hold more complex data, like a personal user profile for example with multiple fields, we could introduce an "User" store which is linked to a "User" model. This would aid us in retrieving values out of a record or perform business logic procedures on that record to maybe update that record of a user with a record that lives somewhere on a remote server. Here however, all we wanna know is a particular state of our component: visible or not. you can also see that we are having two different places to put our state data in: the 'public' and the 'private' section inside data{}.
-Since our component has no interest in sharing its internal state, we are putting our 'isVisible' property inside 'private'. NOTE: A common mistake which can be difficult to track down is that public and private are being declared without quotation marks. By convention strappy requires you to use quotations here.
+Our "Hello World" example only has one store - the StateStore. If our component would hold more complex data, like a personal user profile for example requirung multiple different data fields, we could introduce an "User" store, which is linked to a "User" model. This additional store could then aid us in retrieving values out of a record or perform business operations. Here however, we only inquire about one simple private state: visible or hidden. You can also see that we are having two different places to put our state data in: the 'public' and the 'private' section inside the data object.
+Since our component has no interest in sharing it's internal state, we are putting our 'isVisible' property inside 'private'. <br> 
+NOTE: A common mistake which can be difficult to track down is that public and private are being declared without quotation marks. By convention strappy requires you to use quotations here.
 
-<b>Controller</b>
 
-"Hello World" get's two controllers to work with. A State and a Default controller. Both of which are mandatory. Strappy encourages the use of multiple controllers in order to serve the single responsibility principle. Meaning - if you as a developer delegate your specific task to specific controllers, complex components will become easier to maintain, bugs quicker to track and resolve and your code less difficult to read for other developers, that might need to revisit your code. So, having said that let's see what our Default controller does. Here's the code:
+<b>Controller</b><br>
+"Hello World" get's two controllers to work with. A State- and a DefaultController. Strappy encourages the use of multiple controllers in order to serve the single responsibility principle. Meaning - if you, as a developer, delegate your specific task to specific controllers, complex components will become easier to maintain, bugs quicker to track down and your code less difficult to read - also for other developers, that might need to revisit your code. 
+Let's see what our Default controller does:
 
-Default.js
-
+JavaScript:
 	$JSKK.Class.create
 	(
 		{
-			$namespace:		'HelloWorld.component.button.controller',
+			$namespace:		'Application.component.button.controller',
 			$name:			'Default',
 			$extends:		strappy.mvc.Controller
 		}
@@ -374,16 +377,72 @@ Default.js
 		}
 	);
 
-Inside init() we're doing three things. At first we're calling Default Controller's super init() and right after setting two observers on the events templateLoaded and ready. Both events are rather self explanatory.
-
-The first one is being dispatched as soon as the component's template has been loaded. in its event handler "onTemplatesLoaded()", we are appending our view container with the template in question. Note that this does NOT automatically display the template. In order to make it appear on screen you want to call the method show() on it.
+Inside init() we're calling Default Controller's super and right afterwards are setting two observers on the events "templateLoaded" and "ready". 
+The first one is being dispatched as soon as the component's template has been loaded. In its event handler "onTemplatesLoaded()", we are appending our view container with the template we want. <br> 
+NOTE: This does NOT automatically display the template. In order to make it appear on screen you want to call the method show() on it.
 And that's exactly what we're doing in our second event handler "onReadyState()", which marks the component to be ready. 
 
-We will include one last thing in our Default controller. Remember how we assigned a DOM mouse.click event in our Default view at the very beginning? The next method "onButtonClicked()" is its event handler. All we are doing in here is to toggle our component's internal or private state "isVisible/*Boolean*/" through the 'State' store we have set up in the last section "Store & Model". And that's it for our Default controller.
+We will include one last thing in our DefaultController. Remember how we assigned a "mouse.click"-event  to a button instance inside DefaultView? The next method "onButtonClicked()" is it's event handler. All we are doing in here is to toggle our component's private state "isVisible" through the StateStore we have set up in the previous section "Store & Model". And that's already it for our DefaultController.
 
-There's only one more class we have to write and that's the State controller. The state controller is basically doing two things in our example. It checks on all view and flags the component "ready". A state for all other MVC members of that component to react upon. Secondly it will observe state changes, which are being handled by the state store and either orchestrates or, in a simple component like this, directly calls all methods processing this piece of state information.
+There's only one more class we have to write and that's the StateController. Here's the code:
 
-If you have foolowed everything correctly you should be able to just call your page inside your favorite web browser (probably IE8) and see the amazing result. 
+JavaScript:
+$JSKK.Class.create
+(
+	{
+		$namespace:	'Application.component.button.controller',
+		$name:		'State',
+		$extends:	strappy.mvc.stateful.Controller
+	}
+)
+(
+	{},
+	{
+		init: function()
+		{
+			this.init.$parent();
+
+
+			// set observers
+			this.getView('Default') .observe('onReady',this.onViewReady.bind(this));
+
+			// observer state changes
+			this.bindStateChanges
+				(
+					{
+						isVisible:	'onVisibilityChanged'
+					}
+				);
+		},
+
+		onViewReady: function(view)
+		{
+			this.setViewReadyState(view.$reflect('name'));
+			if (this.getReadyViews().inArray(view.$reflect('name')))
+			{
+				//All views are ready.
+				this.setReady();
+			}
+		},
+
+		onBeforeChange: function(state,key,value)
+		{
+			return true;
+		},
+
+		onVisibilityChanged: function(value)
+		{
+			this.getView('Default').updateOutlet(value);
+		}
+	}
+);
+
+
+The StateController is doing two things in our example: 
+1. It checks on all views if they are available and flags the component "ready", if that is the case.  
+2. Secondly it will observe state changes, which are being handled by the StateStore and either passes on this information or, in a simple component like this, calls a method directly on another class that processes that change.
+
+If you have followed everything thoroughly, you should be able to just call your page inside your favorite web browser (probably IE8) and see the result. 
 
 
 Python Scaffolding Tool
