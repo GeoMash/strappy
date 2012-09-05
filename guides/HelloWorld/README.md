@@ -57,6 +57,8 @@ Your project outliner window should now look similar to this screenshot:
 Next, hook up those libraries in your "index.html" file. <br>
 NOTE: The order in which those libraries are being imported matters. <br>
 Strappy depends on both - jQuery and JSSK - and therefore needs to be included last.
+
+<b>Index - Index.html</b><br>
 HTML:
 <br>
 	<html>
@@ -104,6 +106,8 @@ Your IDE project profiler window should now look something like this:
 
 Going back to your index.html, you will of course also need to import all those still empty classes you have just created.
 So beneath your library imports add the following
+
+<b>Index - Index.html</b><br>
 HTML:
 <br>
 	// libraries
@@ -134,7 +138,8 @@ The first thing we will create is our base and configuration class "Button.js". 
 We will then work ourselves from the bottom up - starting with the view and its html-template, over the StateStore and ending in our Default and State controllers.
 
 <br>
-<b>Your component's base class</b>
+<b>Base Class - Button.js</b><br>
+JAVASCRIPT:
 	$JSKK.Class.create
 	(
 		{
@@ -185,6 +190,7 @@ Considering the amount of code needed to create a component, that may seem like 
 
 Ok, here we go. This is your 'default.html':
 
+<b>HTML-template - default.html</b><br>
 HTML:
 	<div class="myHolder">
 		<h1 class="hidden myOutlet">HELLO WORLD</h1>
@@ -194,6 +200,7 @@ HTML:
 
 Now this html template will need to be administered by your view class, which looks like this:
 
+<b>Default View - Default.js</b><br>
 JAVASCRIPT:
 	$JSKK.Class.create
 	(
@@ -294,6 +301,7 @@ There's no need to create a state model as this is being handled for us automati
 
 Open your StateStore.js and copy the following code into it.
 
+<b>State Store - State.js</b><br>
 JAVASCRIPT:
 	$JSKK.Class.create
 	(
@@ -329,6 +337,7 @@ NOTE: A common mistake which can be difficult to track down is that public and p
 "Hello World" get's two controllers to work with. A State- and a DefaultController. Strappy encourages the use of multiple controllers in order to serve the single responsibility principle. Meaning - if you, as a developer, delegate your specific task to specific controllers, complex components will become easier to maintain, bugs quicker to track down and your code less difficult to read - also for other developers, that might need to revisit your code. 
 Let's see what our Default controller does:
 
+<b>Default Controller - Default.js</b><br>
 JAVASCRIPT:
 	$JSKK.Class.create
 	(
@@ -383,6 +392,7 @@ We will include one last thing in our DefaultController. Remember how we assigne
 
 There's only one more class we have to write and that's the StateController. Here's the code:
 
+<b>State Controller - State.js</b><br>
 JAVASCRIPT:
 	$JSKK.Class.create
 	(
