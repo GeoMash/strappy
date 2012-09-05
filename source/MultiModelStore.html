@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='strappy-data-MultiModelStore'>/**
+</span> * @class strappy.data.MultiModelStore
+ * @extends strappy.data.AbstractStore
+ * 
+ * 
+ * @abstract
+ * 
+ */
+$JSKK.Class.create
+(
+	{
+		$namespace:		'strappy.data',
+		$name:			'MultiModelStore',
+		$extends:		strappy.data.AbstractStore,
+		$abstract:		true
+	}
+)
+(
+	{},
+	{
+		BTL:		null,
+		BTL_GET:	null,
+		BTL_SET:	null,
+		model:		null,
+<span id='strappy-data-MultiModelStore-property-data'>		/**
+</span>		 * @property {Array} data initial records to start the store with.
+		 * @private
+		 */
+		data:		[],
+<span id='strappy-data-MultiModelStore-property-records'>		/**
+</span>		 * @property {Array} records Represent an array of
+		 * {@link strappy.mvc.Model model} instances.
+		 * @private
+		 */
+		records:	[],
+<span id='strappy-data-MultiModelStore-method-constructor'>		/**
+</span>		 * @constructor
+		 * Sets up and validates the store.
+		 * 
+		 * @return {strappy.data.MultiModelStore}
+		 */
+		init: function()
+		{
+			this.init.$parent();
+			
+			if (!this.isShared())
+			{
+				if (!Object.isNull(this.model) &amp;&amp; Object.isDefined(this.model))
+				{
+					this.records=this.newRecord(this.data);
+					for (var i=0,j=this.records.length; i&lt;j; i++)
+					{
+						this.bindchangeEvent(this.records[i]);
+					}
+					delete this.data;
+				}
+				else
+				{
+					throw new Error('Store &quot;'+this.$reflect('namespace')+'.'+this.$reflect('name')+'&quot; must be configured with a valid model.');
+				}
+				if (!Object.isNull(this.BTL))
+				{
+					if (Object.isString(this.BTL))
+					{
+						this.BTL	=$JSKK.namespace(this.BTL);
+						this.BTL_GET=$JSKK.namespace(this.BTL_GET);
+						this.BTL_SET=$JSKK.namespace(this.BTL_SET);
+					}
+				}
+			}
+			else
+			{
+				var	shared	=this.getShared(),
+					records	=shared.newRecord(this.data);
+				shared.add(records);
+				for (var i=0,j=records.length; i&lt;j; i++)
+				{
+					this.bindchangeEvent(records[i]);
+				}
+				//Make a reference.
+				this.records=shared.records;
+				
+				if (!Object.isNull(shared.BTL))
+				{
+					if (Object.isString(shared.BTL))
+					{
+						shared.BTL		=$JSKK.namespace(shared.BTL);
+						shared.BTL_GET	=$JSKK.namespace(shared.BTL_GET);
+						shared.BTL_SET	=$JSKK.namespace(shared.BTL_SET);
+					}
+				}
+			}
+		},
+<span id='strappy-data-MultiModelStore-method-newRecord'>		/**
+</span>		 * Creates new model instances based on the attached model
+		 * and returns them.
+		 * 
+		 * Also binds locking events to the new model instances which handles
+		 * chaining model lock change events to the store's
+		 * onModelLockChange event.
+		 * 
+		 * @param {Object} record an object representing the model.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
+		 */
+		newRecord: function(records)
+		{
+			if (!Object.isArray(records))
+			{
+				records=[records];
+			}
+			var	newRecords	=[],
+				index=		0;
+			for (var i=0,j=records.length; i&lt;j; i++)
+			{
+				index=newRecords.push(this.newRecord.$parent(records[i]));
+				newRecords[(index-1)].bindStore(this);
+			}
+			return newRecords;
+		},
+<span id='strappy-data-MultiModelStore-method-each'>		/**
+</span>		 * This method allows you to iterate over each item
+		 * in the store.
+		 * 
+		 * Example:
+	$JSKK.Class.create
+	(
+		{
+			$namespace:	'Application.component.myComponent.controller',
+			$name:		'Default',
+			$extends:	strappy.mvc.Controller
+		}
+	)
+	(
+		{},
+		{
+			generateList: function()
+			{
+				var HTML=['&lt;ul&gt;'];
+				this.getStore('Default').each
+				(
+					function(item)
+					{
+						HTML.push('&lt;li&gt;&lt;a href=&quot;'+item.url+'&quot;&gt;'+item.name+'&lt;/a&gt;&lt;/li&gt;');
+					}
+				);
+				HTML.push('&lt;/ul&gt;');
+				return HTML.join('');
+			}
+		}
+	);
+		 * @param {Function} callback A closure which will be called at each iteration.
+		 * The first parameter of the closure will be the data item.
+		 * @return {strappy.mvc.Model}
+		 */
+		each: function(callback)
+		{
+			this.records.each(callback);
+			return this;
+		},
+<span id='strappy-data-MultiModelStore-method-add'>		/**
+</span>		 * Adds a record to the store.
+		 * 
+		 * Note: The record will be flagged as dirty when it is added to the store.
+		 * 
+		 * @param {Mixed} record The record to be added to the store.
+		 * @return {strappy.mvc.data.MultiModelStore} this
+		 */
+		add: function(records)
+		{
+			if (!Object.isArray(records))
+			{
+				records=[records];
+			}
+			for (var i=0,j=records.length; i&lt;j; i++)
+			{
+				if (!Object.isFunction(records[i].$reflect))
+				{
+					records[i]=this.newRecord(records[i])[0];
+				}
+				// records[i].flagDirty();
+				this.records.push(records[i]);
+				this.bindchangeEvent(records[i]);
+			}
+			this.fireEvent('onChange',this);
+			return this;
+		},
+<span id='strappy-data-MultiModelStore-method-remove'>		/**
+</span>		 * Removes a record from the store.
+		 * @param {Mixed} record The record to be removed from the store.
+		 * @return {strappy.mvc.data.MultiModelStore} this
+		 */
+		remove: function(record)
+		{
+			var newRecords=[];
+			for (var i=0,j=this.records.length; i&lt;j; i++)
+			{
+				if (this.records[i]!=record)
+				{
+					newRecords.push(this.records[i]);
+				}
+			}
+			this.records=newRecords;
+			this.fireEvent('onChange',this);
+			return this;
+		},
+<span id='strappy-data-MultiModelStore-method-removeAll'>		/**
+</span>		 * Removes all records in the store.
+		 * @return {strappy.mvc.data.MultiModelStore} this
+		 */
+		removeAll: function()
+		{
+			this.removeByRange(0,this.records.length);
+			this.fireEvent('onChange');
+			return this;
+		},
+<span id='strappy-data-MultiModelStore-method-removeByRange'>		/**
+</span>		 * Removes a range of records from the store.
+		 * @param {Number} start index of the range to be deleted.
+		 * @param {Number} end index of the range to be deleted.
+		 * @return {strappy.mvc.data.MultiModelStore} this
+		 */
+		removeByRange: function(startIndex,endIndex)
+		{
+			if(startIndex &lt; 0 || startIndex &gt; this.records.length)
+			{
+				// console.log(&quot;StartIndex is out of range.&quot;);
+				return this;
+			}
+
+			if(endIndex &lt; startIndex)
+			{
+				// console.log(&quot;EndIndex is invalid.&quot;);
+				return this;
+			}
+
+			if(endIndex &gt; this.records.length)
+			{
+				// console.log(&quot;EndIndex is out of range.&quot;);
+				return this;
+			}
+			var sliced = this.records.splice(startIndex,endIndex);
+			this.fireEvent('onChange',this);
+			return this;
+		},
+<span id='strappy-data-MultiModelStore-method-getRecordIndexByValue'>		/**
+</span>		 * Returns RecordIndex by key/value pair
+		 * @param {Number} key the property key.
+		 * @param {Number} value the property value.
+		 * @return {strappy.mvc.Model}
+		 */
+		getRecordIndexByValue: function(key, value)
+		{
+			var index = -1;
+			this.each
+			(
+				function(model, i)
+				{
+					if (model.getRecord()[key]==value)
+					{
+						index=i;
+					}
+				}.bind(this)
+			);
+			return index;
+		},
+<span id='strappy-data-MultiModelStore-method-getRecordIndex'>		/**
+</span>		 * Return RecordIndex by record
+		 * @param {Object} record the record.
+		 * @return {strappy.mvc.Model}
+		 */
+		getRecordIndex: function(record)
+		{
+			var index = -1;
+			this.each
+			(
+				function(model, i)
+				{
+					if (model.getRecord()===record)
+					{
+						index=i;
+					}
+				}.bind(this)
+			);
+			return index;
+		},
+<span id='strappy-data-MultiModelStore-method-getAll'>		/**
+</span>		 * Returns all attched model instances (records).
+		 * 
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
+		 */
+		getAll: function()
+		{
+			return this.records;
+		},
+<span id='strappy-data-MultiModelStore-method-getAllFiltered'>		/**
+</span>		 * Returns the specified keys of the attached model instances (records).
+		 * 
+		 * @param  {Array} keys An array of keys to return.
+		 * @flatten {Boolean} flatten If only one key is passed, the returned array can be flattened.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
+		 */
+		getAllFiltered: function(keys,flatten)
+		{
+			if (!Object.isArray(keys))keys=[keys];
+			
+			var records=[];
+			
+			this.each
+			(
+				function(record)
+				{
+					var thisRecord={};
+					for (var i=0,j=keys.length; i&lt;j; i++)
+					{
+						thisRecord[keys[i]]=record.get(keys[i]);
+					}
+					records.push(thisRecord);
+				}
+			);
+			if (flatten &amp;&amp; keys.length)
+			{
+				var flattenedRecords=[];
+				for (var i=0,j=records.length; i&lt;j; i++)
+				{
+					flattenedRecords.push(records[i][keys[0]]);
+				}
+				return flattenedRecords;
+			}
+			else
+			{
+				return records;
+			}
+		},
+<span id='strappy-data-MultiModelStore-method-getCount'>		/**
+</span>		 * Returns the total number of records in this store.
+		 * 
+		 * @return {Number} The total number of records.
+		 */
+		getCount: function()
+		{
+			return this.records.length;
+		},
+<span id='strappy-data-MultiModelStore-method-getAt'>		/**
+</span>		 * Fetches a record based on its index in the store.
+		 * @param {Number} index The index.
+		 * @return {Mixed} The record.
+		 */
+        getAt: function(index)
+		{
+			return this.records[index];
+		},
+<span id='strappy-data-MultiModelStore-method-first'>		/**
+</span>		 * Returns the first attached model.
+		 * 
+		 * @return {strappy.mvc.Model} The model.
+		 */
+		first: function()
+		{
+			return this.getAt(0);
+		},
+<span id='strappy-data-MultiModelStore-method-last'>		/**
+</span>		 * Returns the last attached model.
+		 * 
+		 * @return {strappy.mvc.Model} The model.
+		 */
+		last: function()
+		{
+			return this.getAt(this.records.length-1);
+		},
+		get: function()
+		{
+			
+		},
+		set: function()
+		{
+			
+		},
+<span id='strappy-data-MultiModelStore-method-getById'>		/**
+</span>		 * 
+		 */
+		getById: function(modelId)
+		{
+			var ret=null;
+			this.each
+			(
+				function(record)
+				{
+					if (record.getId()==modelId)
+					{
+						ret=record;
+						return false;
+					}
+				}.bind(this)
+			);
+			return ret;
+		},
+<span id='strappy-data-MultiModelStore-method-find'>		/**
+</span>		 * Finds attached models based on a simple key value search.
+		 * 
+		 * Find all Toms.
+	var toms=this.getStore('Person').find('name','Tom');
+		 * 
+		 * Find all ACTIVE Toms.
+		 * 
+	var activeToms=this.getStore('Person').find
+	(
+		{
+			name:	'Tom',
+			active:	true
+		}
+	);
+		 * 
+		 * @param {String} key The key to search against.
+		 * @param {Mixed} value The value to search for.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
+		 */
+		find: function()
+		{
+			var	args		=$JSKK.toArray(arguments),
+				keyVals		={},
+				records		=[];
+			if (Object.isDefined(args[1]))
+			{
+				keyVals[args.shift()]=args.shift();
+			}
+			else
+			{
+				keyVals=args.shift();
+			}
+			this.each
+			(
+				function(record)
+				{
+					for (var field in keyVals)
+					{
+						if (record.get(field)!=keyVals[field])
+						{
+							return false;
+						}
+					}
+					records.push(record);
+				}.bind(this)
+			);
+			return records;
+		},
+<span id='strappy-data-MultiModelStore-method-findBy'>		/**
+</span>		 * Finds attached models based on custom searching logic provided
+		 * by a callback function which gets passed to this method.
+		 * 
+		 * The function will be called for each model instance in the store.
+		 * The function should return true for evey record that you want returned.
+		 * 
+	var activeToms=this.getStore('Person').findBy
+	(
+		function(model)
+		{
+			if (model.get('name')=='Tom'
+			&amp;&amp; model.get('active'))
+			{
+				return true;
+			}
+		}
+	);
+		 * 
+		 * @param {Function} callback A function to call for each record.
+		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
+		 */
+		findBy: function(callback)
+		{
+			var records=[];
+			this.each
+			(
+				function(record)
+				{
+					if (callback(record))
+					{
+						records.push(record);
+					}
+				}
+			);
+			return records;
+		},
+<span id='strappy-data-MultiModelStore-method-setAll'>		/**
+</span>		 * Sets all the associated models
+		 */
+		setAll: function()
+		{
+			var	args		=$JSKK.toArray(arguments),
+				keyVals		={},
+				transaction	=new strappy.data.Transaction();
+			if (Object.isDefined(args[1]))
+			{
+				keyVals[args.shift()]=args.shift();
+			}
+			else
+			{
+				keyVals=args.shift();
+			}
+			transaction.start();
+			var	thisModel	=null,
+				field		=null;
+			for (var i=0,j=this.records.length; i&lt;j; i++)
+			{
+				thisModel=transaction.attachModel(this.records[i]);
+				thisModel.set(keyVals);
+			}
+			transaction.execute
+			(
+				{
+					onSuccess:	function()
+					{
+						transaction.commit();
+						this.fireEvent('onChange',this);
+					}.bind(this),
+					onFailure: function()
+					{
+						transaction.rollback();
+					}
+				}
+			);
+			return this;
+		},
+//		/**
+//		 * Sets a record at a given index in the store.
+//		 * @param {Number} index The index.
+//		 * @param {Mixed} data The new data to set.
+//		 * 
+//		 */
+//        setAt: function(index,data)
+//		{
+//			data.id=this.records[0].id;
+//			this.records[index]=data;
+//			
+//			this.fireEvent('onChange',this,index,data);
+//		},
+<span id='strappy-data-MultiModelStore-method-sync'>		/**
+</span>		 * This method will fetch all dirty models and attach them to a
+		 * proxy sync request.
+		 * The expected response is a new record set. 
+		 * 
+		 * 
+		 * TODO: Detail this.
+		 */
+		sync: function(data,query)
+		{
+			var target=(this.isShared()?this.getShared():this);
+			
+			if (Object.isAssocArray(target.BTL))
+			{
+				var	changeset	=[];
+				target.getDirty().each
+				(
+					function(model)
+					{
+						var index=changeset.push(model.getRecord())-1;
+						// changeset[index]=target.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
+					}.bind(target)
+				);
+				target.BTL.startQueue();
+				
+				if (changeset.length &amp;&amp; Object.isFunction(target.BTL_SET))
+				{
+					target.BTL_SET(changeset);
+				}
+				target.BTL_GET
+				(
+					data,
+					query,
+					function(records)
+					{
+						target.records=target.newRecord(records);
+						this.records	=target.records;
+						for (var i=0,j=target.records.length; i&lt;j; i++)
+						{
+							target.bindchangeEvent(target.records[i]);
+						}
+						target.fireEvent('onChange',target,records);
+						target.fireEvent('onSync',target,records);
+					}.bind(this)
+				);
+				target.BTL.executeQueue();
+			}
+			else if (target.proxy &amp;&amp; Object.isFunction(target.proxy.sync))
+			{
+				var changeset=[];
+				target.getDirty().each
+				(
+					function(model)
+					{
+						changeset.push(model.getRecord());
+					}
+				);
+				target.proxy.sync
+				(
+					{
+						data:		changeset,
+						onSuccess:	function(response)
+						{
+							target.records=target.newRecord(response.data);
+							this.records	=target.records;
+							for (var i=0,j=target.records.length; i&lt;j; i++)
+							{
+								target.bindchangeEvent(target.records[i]);
+							}
+							target.fireEvent('onChange',target,response);
+							target.fireEvent('onSync',target,response);
+						}.bind(target),
+						onFailure: function(response)
+						{
+							target.fireEvent('onSyncFailed',target,response);
+						}.bind(this)
+					}
+				);
+			}
+			else
+			{
+				throw new Error('The store &quot;'+target.$reflect('namespace')+'.'+target.$reflect('name')+'&quot; cannot be synced as it does not have a syncable proxy attached.');
+			}
+		},
+<span id='strappy-data-MultiModelStore-method-flagAllDirty'>		/**
+</span>		 * Flags all records in the store as being dirty. 
+		 * @return {strappy.data.MultiModelStore} this
+		 */
+		flagAllDirty: function()
+		{
+			this.each
+			(
+				function(record)
+				{
+					record.flagDirty();
+				}
+			);
+		},
+<span id='strappy-data-MultiModelStore-method-flagAllClean'>		/**
+</span>		 * Flags all records in the store as being clean. 
+		 * @return {strappy.data.MultiModelStore} this
+		 */
+		flagAllClean: function()
+		{
+			this.each
+			(
+				function(record)
+				{
+					record.flagClean();
+				}
+			);
+		},
+		isDirty: function()
+		{
+			var target=(this.isShared()?this.getShared():this);
+			return Boolean(target.getDirty().length);
+		},
+<span id='strappy-data-MultiModelStore-method-getDirty'>		/**
+</span>		 * Returns all the attached models which are dirty (have been modified).
+		 * 
+		 * @return {Array} An array of dirty records.
+		 */
+		getDirty: function()
+		{
+			var	target	=(this.isShared()?this.getShared():this),
+				dirty	=[];
+			target.records.each
+			(
+				function(model)
+				{
+					if (model.isDirty())
+					{
+						dirty.push(model);
+					}
+				}
+			);
+			return dirty;
+		},
+<span id='strappy-data-MultiModelStore-method-configureBTL'>		/**
+</span>		 * 
+		 * 
+		 * @see strappy.data.BTL
+		 */
+		configureBTL: function(config)
+		{
+			if (!Object.isAssocArray(config.handler))
+			{
+				throw new Error('Invalid BTL handler assigned with MultiModelStore.configureBTL().');
+			}
+			if (!Object.isFunction(config.get))
+			{
+				throw new Error('Invalid getter assigned with MultiModelStore.configureBTL().');
+			}
+			if (!Object.isFunction(config.set))
+			{
+				throw new Error('Invalid setter assigned with MultiModelStore.configureBTL().');
+			}
+			this.BTL	=config.handler;
+			this.BTL_GET=config.get;
+			this.BTL_SET=config.set;
+			return this;
+		}
+	}
+);</pre>
+</body>
+</html>
