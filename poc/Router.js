@@ -58,15 +58,42 @@ $JSKK.Class.create
 			(
 				function()
 				{
-					console.debug('routeTo:',path);
-					var nodes=path.split('/');
-					if (nodes.shift()=='admin')
+					var	cmp			=this.getParentComponent(),
+						nodes		=path.split('/'),
+						first		=null,
+						remainder	=null,
+						name		=null,
+						controller	=cmp._controllers,
+						action		=null,
+						args		=[];
+					
+					for (var i=0,j=nodes.length; i<j; i++)
 					{
-						var	node		=nodes.shift(),
-							first		=node.substring(0,1),
-							remainder	=node.substring(1),
-							controller	=first.toUpperCase()+remainder;
-						this.getController(controller)[nodes.shift()](nodes.shift());
+						first		=nodes[i].substring(0,1),
+						remainder	=nodes[i].substring(1),
+						name		=first.toUpperCase()+remainder;
+						
+						if (Object.isDefined(controller[name]))
+						{
+							controller	=controller[name];
+							action		=nodes[++i];
+							i++;
+							while (nodes[i])
+							{
+								args.push(nodes[i]);
+								i++;
+							}
+							controller[action].apply(controller,args);
+							break;
+						}
+						else if (Object.isDefined(controller[nodes[i]]))
+						{
+							controller=controller[nodes[i]];
+						}
+						else
+						{
+							return;
+						}
 					}
 				}.bind(this)
 			);
