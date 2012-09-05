@@ -126,20 +126,18 @@ Check everything thoroughly and proceed with the next step - "MVC SetUp".
 MVC SetUp
 ------------------
 
-In order to instantiate your component, we will start to implement the bare minimum requirements of your component's MVC triad.
-<br>
-The first thing we will create is our base and configuration class "Button.js". In it you will define it's nature, descent, possible child components as well as default config settings.
-<br>
-We will then work ourselves from the bottom up - starting with the view and its html-template to the StateStore and ending in our Default and State controllers.
-<br>
-Here comes our base class - Button.js 
+Every component you create in Strappy, no matter how small, has it's own "state" and therefore exists as an independent standalone MVC triad. In order to instantiate your component, we will start to implement the bare minimum requirements of your component's MVC structure.
 
-<br>
+The first thing we will create is our base and configuration class "Button.js". In it you will define it's nature, descent, possible child components as well as default config settings.
+
+We will then work ourselves from the bottom up - starting with the view and its html-template to the StateStore and ending in our Default and State controllers.
+
+<b>Your component's base class</b>
 <br>
 	$JSKK.Class.create
 	(
 		{
-			$namespace: 'HelloWorld.component',
+			$namespace: 'Application.component',
 			$name:      'Button',
 			$extends:   strappy.Component
 		}
@@ -168,16 +166,16 @@ Here comes our base class - Button.js
 <br>
 <br>
 
-Walking through this code we can see that the component follows a convention for the namespace "<Project>.component". The name is the same as the file name,
-which follows the name of the folder "HelloWorld".
-<br>
-Also, it's extending the base component class
-<br>
-Next we see the models are defined as an array, followed by views and controllers. This enables the framework to initialize these classes so that they are ready for use by the time
-you need to access them in either a Controller or View.
-<br>
+Inspecting our Button.js class at the very top, we can see that our class is being created passing in an initial object holding three key value pairs:
 
+1. $namespace:	The namespace convention "Application.component", which resembles the location our component lives in.
+2. $name:		The "name" is our file name without file extension.
+3. $extends:	Our class extends strappy's base component class.
 
+The third object visible contains four arrays: models, views, controllers and stores. All required classes need to be listed in the appropriate array in order to enable the framework to initialize these classes so that they are ready for use by the time you need to access them in either a Store, Controller or View.
+
+You also might have noticed, that StateStore and -Controller, even though we made you create a those, are not listed with the array they belong in. Strappy takes care about all State instances and therefore doesn't need you to declare them manually. 
+<br>
 
 
 <b>View & HTML Template</b>
