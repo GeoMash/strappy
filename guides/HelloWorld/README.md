@@ -110,7 +110,7 @@ Your IDE project profiler window should now look something like this:
 <br>
 
 Going back to your index.html, you will of course also need to import all those still empty classes you have just created.
-So beneath your library imports add the following
+So beneath your library imports add the following:
 
 <b>Index - Index.html</b><br>
 HTML:
@@ -128,8 +128,7 @@ HTML:
 <br>
 
 When opening "index.html" in your browser you should not recive any errors. <br> 
-If you do, you most likely have wired up your dependencies incorrectly or there is a typo in your links. <br> 
-Check everything thoroughly and proceed with the next step - "MVC SetUp".
+If you do, you most likely have wired up your dependencies incorrectly or there is a typo in your links.
 
 <br>
 
