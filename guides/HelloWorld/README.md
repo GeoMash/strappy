@@ -449,6 +449,45 @@ The StateController is doing two things in our example:
 1. It checks on all views if they are available and flags the component "ready", if that is the case.  
 2. Secondly it will observe state changes, which are being handled by the StateStore and either passes on this information or, in a simple component like this, calls a method directly on another class that processes that change.
 
+CSS Reference
+---------------
+
+Copy and paste the following code into your st;e.css file.
+
+<b>StyleSheet - style.css</b><br>
+CSS:
+
+	.hidden {
+	    visibility: hidden;
+	}
+
+	.myHolder {
+	    margin-top: 100px;
+	    width: 100%;
+	    height: 100%;
+	    text-align: center;
+	}
+
+	.myOutlet {
+	    left:0px;
+	    right:0px;
+	    top:0px;
+	    bottom:0px;
+	}
+
+	.myButton {
+	    margin-top: 20px;
+	    left:0px;
+	    right:0px;
+	    top:0px;
+	    bottom:0px;
+	}
+
+	.myButton:hover {
+	    cursor: pointer;
+	}
+
+
 If you have followed everything thoroughly, you should be able to just call your page inside your favorite web browser (probably IE8) and see the result. 
 
 
