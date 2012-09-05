@@ -445,7 +445,7 @@ JAVASCRIPT:
 	);
 
 
-The StateController is doing two things in our example: 
+The StateController is doing two things in our example: <br>
 1. It checks on all views if they are available and flags the component "ready", if that is the case.  
 2. Secondly it will observe state changes, which are being handled by the StateStore and either passes on this information or, in a simple component like this, calls a method directly on another class that processes that change.
 
