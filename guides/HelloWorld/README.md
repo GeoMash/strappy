@@ -31,15 +31,15 @@ Dependencies
 Strappy applications depend on the following three libraries:
 
 1. [Strappy framework][1] <br>
-(All the jazz that will enable you to create scaleable and maintainable projects, ranging from simple standalone components to full-blown applications.)
+(Enables you to create scalable and maintainable projects, ranging from simple standalone components to full-blown applications)
 
 
 2. [JSKK Classing Engine][2] <br>
-(A classing engine, straight out of our mad lab's coding oven. Strappy is based on JSKK and is the reason why you will be able write OOP without runnig into those little native JS traps. It also comes with a truckload of ready to use utils.)
+(A classing engine, straight out of our mad lab's coding oven. Strappy is based on JSKK and is the reason why you will be able write OOP without runnig into those little native JS traps. It also comes with a truckload of ready to use utils)
 
 
 3. [jQuery Download Page][3] <br>
-(jQuery won't need much of introducing. Strappy depends on it and you will most likely too.)<br>
+(jQuery won't need much of an introduction. Strappy depends on it and you will most-likely too)<br>
 
 [1]: https://github.com/SpinifexGroup/strappy/zipball/master
 [2]: https://github.com/melechi/JS-Klass-Kit/zipball/master
@@ -334,7 +334,7 @@ NOTE: A common mistake which can be difficult to track down is that public and p
 
 
 <b>Controller</b><br>
-"Hello World" get's two controllers to work with. A State- and a DefaultController. Strappy encourages the use of multiple controllers in order to serve the single responsibility principle. Meaning - if you, as a developer, delegate your specific task to specific controllers, complex components will become easier to maintain, bugs quicker to track down and your code less difficult to read - also for other developers, that might need to revisit your code. 
+"Hello World" gets two controllers to work with. A State- and a DefaultController. Strappy encourages the use of multiple controllers in order to serve the single responsibility principle. Meaning - if you, as a developer, delegate your specific task to specific controllers, complex components will become easier to maintain, bugs quicker to track down and your code less difficult to read - also for other developers, that might need to revisit your code. 
 Let's see what our Default controller does:
 
 <b>Default Controller - Default.js</b><br>
