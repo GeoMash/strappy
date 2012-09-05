@@ -623,7 +623,10 @@ $JSKK.Class.create
 		 */
 		initControllers: function()
 		{
-			var stateController=null;
+			var stateController	=null,
+				thisController	=null,
+				controllerParts	=[],
+				currentNS		=this._controllers;
 			if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller['State']))
 			{
 				stateController=this._controllers['State']=new this.my.NSObject[this.my.name.lowerFirst()].controller['State'](this);
@@ -638,8 +641,39 @@ $JSKK.Class.create
 				
 				for (var i=0,j=this.controllers.length; i<j; i++)
 				{
-					if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
+					if (this.controllers[i].indexOf('.')!==-1)
 					{
+						controllerParts	=this.controllers[i].split('.');
+						thisController	=this.my.NSObject[this.my.name.lowerFirst()].controller;
+						for (var k=0,l=controllerParts.length; k<l; k++)
+						{
+							if (Object.isDefined(thisController[controllerParts[k]]))
+							{
+								thisController=thisController[controllerParts[k]];
+								if (!Object.isFunction(thisController))
+								{
+									if (Object.isUndefined(currentNS[controllerParts[k]]))
+									{
+										currentNS[controllerParts[k]]={};
+										currentNS=currentNS[controllerParts[k]];
+									}
+								}
+								else
+								{
+									currentNS[controllerParts[k]]=new thisController(this);
+								}
+								continue;
+							}
+							else
+							{
+								throw new Error('Error controller "'+this.controllers[i]+'" not loaded on component "'+this.my.name+'".');
+								break;
+							}
+						}
+					}
+					else if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
+					{
+						
 						this._controllers[this.controllers[i]]=new this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]](this);
 					}
 					else
