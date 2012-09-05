@@ -452,7 +452,7 @@ The StateController is doing two things in our example:
 CSS Reference
 ---------------
 
-Copy and paste the following code into your st;e.css file.
+Copy and paste the following code into your style.css file:
 
 <b>StyleSheet - style.css</b><br>
 CSS:
