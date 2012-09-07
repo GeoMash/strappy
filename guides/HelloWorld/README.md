@@ -109,7 +109,8 @@ Your IDE project profiler window should now look something like this:
 {@img manuallyScaffolded.png Alt text}
 <br>
 
-Going back to your index.html, you will of course also need to import all those still empty classes you have just created.
+Going back to your index.html, you will need to import all those, still empty, .js-files you have just created.
+
 So beneath your library imports add the following:
 
 <b>Index - Index.html</b><br>
