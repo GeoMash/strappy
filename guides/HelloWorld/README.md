@@ -304,7 +304,7 @@ The next two methds, "onModelLockChange" and "syncView", need to be implemented 
 <b>Store & Model</b><br>
 There's no need to create a state model as this is being handled for us automatically by the framework. So the model directory can stay empty.
 
-Open your StateStore.js and copy the following code into it.
+Open your StateStore (State.js) and copy the following code into it.
 
 <b>State Store - State.js</b><br>
 JAVASCRIPT:
@@ -494,6 +494,69 @@ CSS:
 
 
 If you have followed everything thoroughly, you should be able to just call your page inside your favorite web browser (probably IE8) and see the result. 
+
+Bootstrapping the App 
+---------------
+
+Of course we will need to kick off our application somehow. Adjust your index.html according to 
+the following code section and you should be ready to rock.
+
+<b>Index - index.html</b><br>
+HTML:
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Hello World - Example</title>
+
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+		<link rel="stylesheet" type="text/css" href="references/css/style.css" />
+	</head>
+	<body>
+
+	<script type="text/javascript" src="lib/JSKK/jskk.min-1.0.1.js"></script>
+	<script type="text/javascript" src="lib/jQuery/jquery1.8.0.js"></script>
+	<script type="text/javascript" src="lib/strappy/strappy.1.0.0.beta.min.js"></script>
+
+	<script type="text/javascript"  src="Application/component/button/Button.js"></script>
+	<script type="text/javascript"  src="Application/component/button/controller/Default.js"></script>
+	<script type="text/javascript"  src="Application/component/button/controller/State.js"></script>
+	<script type="text/javascript"  src="Application/component/button/store/State.js"></script>
+	<script type="text/javascript"  src="Application/component/button/view/Default.js"></script>
+
+	<script type="text/javascript">
+	$(document).ready
+	(
+		function()
+		{
+			//DEBUG
+			jQuery.event.special.destroyed =
+			{
+				remove: function(o)
+				{
+					if (o.handler)
+					{
+						o.handler();
+					}
+				}
+			};
+
+			$helloWorld = new Application.component.Button();
+			$helloWorld.configure
+			(
+				{
+					attachTo:	'body',
+					buttonClass:'myButton',
+					outletClass:'myOutlet'
+				}
+			);
+		}
+	);
+	</script>
+
+	</body>
+	</html>
+<br>
 
 
 Python Scaffolding Tool
