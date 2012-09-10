@@ -553,7 +553,7 @@ $JSKK.Class.create
 		newChildComponent: function(component,name)
 		{
 			var object=component;
-			if (Object.isFunction(component.$reflect))
+			if (Object.isString(component) || Object.isFunction(component.$reflect))
 			{
 				object=$JSKK.namespace(component);
 			}
