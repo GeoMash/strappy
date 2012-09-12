@@ -795,16 +795,16 @@ $JSKK.Class.create
 		},
 		insertBaseContainer: function()
 		{
-			$(this.getConfig('attachTo') || 'body')[this.getConfig('attachHow') || 'append']
-			(
-				[
-					'&lt;div',
-					' class=&quot;'+this.$reflect('namespace').replace(/\./g,'-')+'-'+this.$reflect('name')+'-container&quot;',
-					' id=&quot;'+this.getIID()+'&quot;',
-					' style=&quot;display:none;&quot;&gt;',
-					'&lt;/div&gt;'
-				].join('')
-			);
+			var container=
+			$([
+				'&lt;div',
+				' class=&quot;'+this.$reflect('namespace').replace(/\./g,'-')+'-'+this.$reflect('name')+'-container&quot;',
+				' id=&quot;'+this.getIID()+'&quot;',
+				' style=&quot;display:none;&quot;&gt;',
+				'&lt;/div&gt;'
+			].join(''));
+			container.data('component',this);
+			$(this.getConfig('attachTo') || 'body')[this.getConfig('attachHow') || 'append'](container);
 			
 		},
 		generateInstanceID: function()

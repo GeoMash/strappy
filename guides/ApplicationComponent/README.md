@@ -1,5 +1,7 @@
 #Building an Application Component
 
+{@img images/ApplicationComponent.png Application Component Overview}
+
 The idea behind creating a main application component is to create the presence of a "core" for your application. A central component which manages core business logic in your front end application.<br>
 
 Depending on how you decide to build your application as a whole will dictate which tools you incorporate into your application component.<br>
@@ -18,6 +20,15 @@ By running that command, you have created the shell for your new application com
 
 Note that you can run this same command for generating other components. You can also concatenate the component names with a comma to generate multiple new components at once.
 Substituting "component" for "model", "view", "controller" or "store" will create those for you too, but be sure to specify which component you're generating it for by providing a "-cmp <componentName>" argument.
+
+Before diving into the meat of the application component, you should take the time to read about Shared Entities and Signalling. There are guides for these, check them out and then return to this guide.
+
+<br>
+* [Shared Entities](#!/guide/SharedEntities)
+* [Signals](#!/guide/Signals)
+<br>
+
+
 
 ##Main Component File
 
@@ -104,71 +115,252 @@ Your new Application.js file should look something like this:
 		}
 	);
 
-An explanation of what we're doing with those static containers will be in the next chapter.
+An explanation of what we're doing with those static containers are explained in the "Signals" guide. You should read that before continuing.
 
-##Signals
 
-###Filtering
+##Global State Store
 
-Signals are predefined here and used throughout your application by components.<br>
-The idea is to prevent direct communication between components. We do this by emitting signals which are caught by whatever components are registered to receive them.<br>
-But a lot of the time you need to control exactly which signals reach what components.
+{@img images/ApplicationComponent_GlobalStateStore.png}
 
-To achieve this, we make the application component behave as a mediator of the signals. Components (application component excluded), emit signals with a destination filter set to "application".
 
-Sender Example (Other Component):
 
-	this.sendSignal
+
+
+
+##Views
+
+{@img images/ApplicationComponent_Views.png}
+
+
+
+
+###Structure
+
+Structural views are those that you use to create an overall layout of your main view. This is then used as a foundation for sub components to be rendered into.
+
+###Dialogue
+
+While not all applications have dialogue windows, the concept is included in this guide for those that do.
+
+Having a specialised view and controller pair for dealing with the showing and hiding of dialogue windows is certainly ideal.
+
+Here are some tips which will help you create a manageable dialogue system.
+
+* Create the contents of each dialogue as a template and define them in your view.
+* Create a set of common dialogue templates.
+* Override the existing getTemplate method with your own and use jquery to modify the templates when they're requested.
+* If you have a specialised component for dialogues, then build a controller to create and manage a single instance of it. This speeds up performance and is generally a better practice.
+
+Example View:
+
+	$JSKK.Class.create
 	(
-		Project.component.Application.Signal.BROWSE,
-		Project.component.Application.Type.SELECT,
 		{
-			key:			this.getConfig('signalKey'),
-			destination:	'application'
+			$namespace:	'Project.component.application.view',
+			$name:		'Dialogue',
+			$extends:	strappy.mvc.View
 		}
-	);
-
-Receiver Example (Application Component):
-
-	this.registerSignals
+	)
 	(
+		{},
 		{
-			onBrowse:
+			templates:
 			{
-				signal:	Project.component.Application.Signal.BROWSE,
-				type:	Project.component.Application.Type.SELECT,
-				filter:
+				UserSettings:			'dialogue-UserSettings.html',
+				CommonSave:				'dialogue-CommonSave.html',
+				CommonConfirmDelete:	'dialogue-CommonConfirmDelete.html',
+				CommonMessage:			'dialogue-CommonMessage.html'
+			},
+			onReady:		function(){},
+			bindDOMEvents:	function(){},
+			syncView:		function(){},
+			getTemplate:	function(template,keyVals)
+			{
+				var	template=this.getTemplate.$parent(template),
+					el		=null;
+				for (var key in keyVals)
 				{
-					destination:	'application',
-					key:			Project.component.Application.Key.LIST_CHANNELS
+					//If input
+					if ((el=this.find('[name="'+key+'"][type]')).length)
+					{
+						el.val(keyVals[key]);
+					}
+					//If other
+					else if ((el=this.find('[name="'+key+'"]')).length)
+					{
+						el.html(keyVals[key]);
+					}
 				}
 			}
 		}
 	);
 
-You can see a couple more items in those examples which haven't been explained yet. We'll get to those in a moment. But first, the important thing to note in these examples is the filtering.
 
-With signal filtering, you can attach any filter you like to a signal, whatever component's register for those signals will only execute their callback methods if their filter matches the filter that was set when emitting the signal.
+###Other
 
-Some other things of note in the above example is the use of "type" and "key".
-
-###Type
-
-Type is another level of filtering. It is in fact the first level of filtering. You don't actually need to specify a type or a filter when emitting a signal but doing so helps to get the message to the right components.
-Usually type is used as the action that was taken which caused the signal to be emitted. So in the above example, the action of "selecting" an item on screen was the cause, so we specify the SELECT type. This could have been "double click" in which case we could specify a DBCLICK type.
-This helps you to control, with precision, what user actions in your application cause which business controls to be executed, ultimately allowing different interactions to result in slightly different behaviours.
-
-###Key
-
-Depending on the size and nature of the application you're building, you may need to create generic components. Generic components are usually reusable components, that is, a component which is initialized multiple times either by the application component or by any number of composite components that you create.
-
-As you can imagine, when a generic component emits a signal, chances are it's going to be the exact same signal as another instance of the same component. This is where signal keys are used.
-
-Signal keys are unique strings which are passed to the component during its configuration phase. This string is then attached to every signal that the component emits.
-As you can see in the above example, components can listen in for those signals and attach a key filter, which means that the listener will always receive signals from the component it was expecting to receive it from.
+No doubt there will be other non-structural views that you'll need to use which don't fit into any sub component. Take what you've learnt about views and apply the same logic here. Just make specialised views for managing these templates and things will be generally easier to manage.
 
 
-...
+##Controllers
+
+{@img images/ApplicationComponent_Controllers.png}
+
+
+
+###Base
+
+The base controller is where all your initialization logic lives.
+
+Generally this is where you connect to any APIs (such as your backend's BTL API), wait for initial state to be ready
+
+
+	$JSKK.Class.create
+	(
+		{
+			$namespace:	'Project.component.application.controller',
+			$name:		'Main',
+			$extends:	strappy.mvc.Controller
+		}
+	)
+	(
+		{},
+		{
+			shareMgr:			null,
+			API:				null,
+			stateReady:			false,
+			APIReady:			false,
+			init: function()
+			{
+				this.init.$parent();
+				this.getController('State')	.observe('onReadyState',this.onReadyState.bind(this));
+				
+				this.API=new strappy.data.BTL({url:'/api/'});
+				this.API.onReady
+				(
+					function()
+					{
+						Project.BTL		=this.API;
+						Project.API		=this.API.API;
+						this.APIReady	=true;
+					}.bind(this)
+				);
+				$JSKK.when
+				(
+					function()
+					{
+						return (this.stateReady && this.APIReady);
+					}.bind(this)
+				).isTrue(this.onReady.bind(this));
+			},
+			/**
+			 * Called when the State Controller is ready.
+			 */
+			onReadyState: function()
+			{
+				this.stateReady=true;
+			},
+			/**
+			 * Called when the State Controller and API are both ready.
+			 */
+			onReady: function()
+			{
+				this.shareMgr=new strappy.ShareMgr(this,Coates);
+				this.getStore('State').set('mainReady',true);
+				this.fireEvent('onReady',this);
+				
+				this.getView('Structure').show();
+				
+				Coates.API.user.get
+				(
+					null,
+					{_current:true},
+					function(response)
+					{
+						if (response.success)
+						{
+							this.setSharedState('authenticated',true);
+							this.showMainApplication();
+						}
+						else
+						{
+							this.showLogin();
+						}
+					}.bind(this)
+				);
+			},
+			showLogin: function()
+			{
+				if (!this.getCmp('LoginPanel').isConfigured())
+				{
+					var queue=this.newInitQueue
+					(
+						function()
+						{
+							this.showChildComponent('login');
+						}.bind(this)
+					);
+					queue.add
+					(
+						'login',
+						this.getCmp('LoginPanel'),
+						{
+							attachTo:			'#'+this.getIID(),
+							containerClass:		'coates-local-container',
+							relativeWrapper:	true,
+							children:
+							[
+								{
+									cmp:	Coates.component.Login,
+									ref:	'login',
+									config:
+									{
+										
+									}
+								}
+							]
+						}
+					);
+					queue.execute();
+				}
+				else
+				{
+					this.showChildComponent('LoginPanel');
+				}
+			}
+		}
+	);
+
+
+
+
+
+
+
+
+###State
+
+
+
+
+
+
+##Routing
+
+A new idea which is not yet built into Strappy is the concept of a router. Routing is a way of controlling the general application flow with regards to moving between views.
+
+While Strappy does not come with an out-of-the-box routing solution, it is very easy to roll your own. Jump on over to the routing guide.
+
+
+##Waiting
+
+
+
+
+##Dealing with Timing Issues
+
+
+
+
 
 ##Generic Components
 
@@ -179,7 +371,10 @@ There are two approaches for this. I'll explain them both, but we'll be using th
 The first option, you can create composite components and consider them as "extensions" to your application component. That is to say, your application component instantiates these components, and these components instantiate subcomponents and manage those in similar ways to which the application component does.
 
 The second option, and the option which we'll be demonstrating in this guide, is by using multiple controllers to handle the various sections of your application.
-This approach reduces the amount of composite components and centralises the business logic by encapsulating the logic specialized controllers, managed by your application component.
+This approach reduces the amount of composite components and centralises the business logic by encapsulating the logic specialised controllers, managed by your application component.
 
 Before continuing, if you have never built a generic component before, please skip over to the guide on creating generic components. Once you've completed that, return here and continue.
 
+<br>
+* [Generic Component](#!/guide/SharedEntities)
+<br>
