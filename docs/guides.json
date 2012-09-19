@@ -52,6 +52,11 @@
 				"name": "CCL_Container",
 				"title": "CCL Container",
 				"description": "A guide for using the CCL Container Component."
+			},
+			{
+				"name": "CCL_Router",
+				"title": "CCL Router",
+				"description": "A guide for using the CCL Router Controller."
 			}
 		]
 	}
