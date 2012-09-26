@@ -246,7 +246,7 @@ $JSKK.Class.create
 		 */
 		isShared: function()
 		{
-			return (!Object.isNull(this.sharedFrom));
+			return (Object.isAssocArray(this.sharedFrom) && Object.isFunction(this.sharedFrom.$reflect));
 		},
 		
 		getShared: function()
