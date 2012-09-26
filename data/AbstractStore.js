@@ -81,7 +81,7 @@ $JSKK.Class.create
 			{
 				this.proxy=new strappy.data.proxy.MemoryProxy();
 			}
-			if (!Object.isNull(this.sharedFrom))
+			if (Object.isString(this.sharedFrom))
 			{
 				this.sharedFrom=$JSKK.namespace(this.sharedFrom);
 			}
