@@ -86,7 +86,6 @@ $JSKK.Class.create
 				}
 				else
 				{
-					console.debug(this.items[this.processPointer]);
 					throw new Error('InitQueue was unable to initalize a component. '
 									+'The component with ref "'+this.items[this.processPointer].name+'" '
 									+'did not have a valid constructor associated with it.');
