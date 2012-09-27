@@ -381,13 +381,25 @@ $JSKK.Class.create
 				function()
 				{
 					this.generateInstanceID();
+					//We wait here so that we're 100% sure that there is a containing element for views to insert into.
+					$JSKK.when
+					(
+						function()
+						{
+							return Boolean($('#'+this.getIID()).length);
+						}.bind(this)
+					).isTrue
+					(
+						function()
+						{
+							this.initChildComponents();
+							this.initStores();
+							this.initViews();
+							this.initControllers();
+							this.fireEvent('onAfterInit',this);
+						}.bind(this)
+					);
 					this.insertBaseContainer();
-					this.initChildComponents();
-					this.initStores();
-					this.initViews();
-					this.initControllers();
-					
-					this.fireEvent('onAfterInit',this);
 				}.bind(this)
 			);
 			
