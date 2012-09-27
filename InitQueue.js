@@ -45,6 +45,10 @@ $JSKK.Class.create
 		},
 		add: function(name,ref,config,callback)
 		{
+			if (Object.isUndefined(ref))
+			{
+				throw new Error('InitQueue failed to add component. "ref" for component was undefined.',$.stringify(arguments));
+			}
 			this.items.push
 			(
 				{
@@ -74,12 +78,12 @@ $JSKK.Class.create
 		processNextItem: function()
 		{
 			this.processPointer++;
+			if (Object.isString(this.items[this.processPointer].ref))
+			{
+				this.items[this.processPointer].ref=$JSKK.namespace(this.items[this.processPointer].ref);
+			}
 			if (!Object.isFunction(this.items[this.processPointer].ref.$reflect))
 			{
-				if (Object.isString(this.items[this.processPointer].ref))
-				{
-					this.items[this.processPointer].ref=$JSKK.namespace(this.items[this.processPointer].ref);
-				}
 				if (Object.isFunction(this.items[this.processPointer].ref))
 				{
 					this.items[this.processPointer].ref=new this.items[this.processPointer].ref();
