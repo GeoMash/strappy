@@ -53,8 +53,15 @@ $JSKK.Class.create
 			return this;
 		},
 		_onDone: function(config,response)
-		{
-			(config.onComplete || $JSKK.emptyFunction)(response);
+		{console.debug('RESPONSE',response)
+			if (response.success)
+			{
+				(config.onSuccess || $JSKK.emptyFunction)(response);
+			}
+			else
+			{
+				(config.onFailure || $JSKK.emptyFunction)(response);
+			}
 		}
 	}
 )

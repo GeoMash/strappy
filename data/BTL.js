@@ -15,7 +15,8 @@ $JSKK.Class.create
 		$name:		'BTL',
 		$uses:
 		[
-			$JSKK.trait.Configurable
+			$JSKK.trait.Configurable,
+			$JSKK.trait.Observable
 		]
 	}
 )
@@ -39,9 +40,19 @@ $JSKK.Class.create
 						data:		data || null,
 						query:		query || null
 					},
-					onComplete: function(response)
+					onSuccess: function(response)
 					{
-						if (Object.isFunction(callback))callback(response);
+						if (this.fireEvent('onAnySuccess',this,response)!==false)
+						{
+							if (Object.isFunction(callback))callback(response);
+						}
+					}.bind(this),
+					onFailure: function(response)
+					{
+						if (this.fireEvent('onAnyFailure',this,response)!==false)
+						{
+							if (Object.isFunction(callback))callback(response);
+						}
 					}.bind(this)
 				}
 			);
@@ -53,12 +64,17 @@ $JSKK.Class.create
 			/**
 			 * @cfg url
 			 */
-			url:	'',
-			debug:	false,
+			url:		'',
+			debug:		false,
 			/**
 			 * @cfg proxy
 			 */
-			proxy:	strappy.data.proxy.BTL
+			proxy:		strappy.data.proxy.BTL
+		},
+		events:
+		{
+			onAnySuccess:	true,
+			onAnyFailure:	true
 		},
 		/**
 		 *  @property ready
