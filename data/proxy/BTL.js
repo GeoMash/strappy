@@ -53,7 +53,7 @@ $JSKK.Class.create
 			return this;
 		},
 		_onDone: function(config,response)
-		{console.debug('RESPONSE',response)
+		{
 			if (response.success)
 			{
 				(config.onSuccess || $JSKK.emptyFunction)(response);
