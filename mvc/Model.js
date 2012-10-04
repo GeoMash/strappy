@@ -130,8 +130,9 @@ $JSKK.Class.create
 				(
 					this.getRecord(),
 					null,
-					function(record)
+					function(response)
 					{
+						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
 						this.set(record[0]);
 						this.flagClean();
@@ -148,8 +149,9 @@ $JSKK.Class.create
 				(
 					null,
 					query,
-					function(record)
+					function(response)
 					{
+						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
 						this.set(record[0]);
 						this.flagClean();
