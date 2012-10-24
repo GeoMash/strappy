@@ -40,6 +40,45 @@ $JSKK.Class.create
 (
 	{},
 	{
+		/**
+		* @property {strappy.mvc.stateful.State} currentState
+		* 
+		* A reference to a State object extending the abstract State class. 
+		* ie. Active/Inactive. A state object offers a common interface through which stateController 
+		* can controlle their state machine through a single gate.
+		* 
+		*
+		* Example: 
+		* 
+		* "SomeStateController" instantiates two StateSubclasses "Active" and "Inactive" and stores them 
+		* as instance variables (_inactive: & _active:) After instantiating both States and assigning them
+		* it will default set the currentState property to "Inactive".
+		* Next, "SomeStateController" receives an application's public or private state update. It now checks 
+		* if a condition is being met that would trigger a transition to "Active" State like so:
+		*
+		*	Code:
+		*	onStateUpdateHandler: function(value) // public state observer handler
+		*	{ 
+		*		
+		*		if(value == cool)	{ this.currentState.activate() } 
+		*		else 				{ this.currentState.deactivate() } 		
+		*	}
+		*/
+		_currentState: null, 
+		
+		setCurrentState: function(newState)
+		{
+			this._currentState = newState;
+			console.warn("CurrentState has changed for: ", this, " and now is: ", this._currentState);
+		},
+		getCurrentState: function()
+		{	
+			return this._currentState;
+		},
+
+
+
+
 		events:
 		{
 			onBeforeReadyState:	true,
