@@ -22,14 +22,14 @@ $JSKK.Class.create
 		 */
 		init: function(stateController)
 		{
-			console.warn(stateController);
 			this._stateController = stateController;
 		},
 		/**
+		 * NOTE: Might no be needed. Initially intended to perform activityChecks.
 		 * Tests wether or not the current state should be active or inactive
 		 * Check wether that test is needed after introducing the "State Pattern"
 		 */
-		isActive: $JSKK.Class.ABSTRACT_METHOD,
+		//isActive: $JSKK.Class.ABSTRACT_METHOD,
 
 		/**
 		 * An abstract method to activate a component
