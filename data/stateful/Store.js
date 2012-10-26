@@ -160,17 +160,22 @@ $JSKK.Class.create
 		 */
 		setReady: function(ready)
 		{
+			var mapping=null;
 			this.ready=ready;
 			if (ready)
 			{
 				var globalState=this.getStateMgr().getState();
 				for (var globalItem in globalState)
 				{
-					for (var localItem in this.state)
+					for (var localItem in this.data['public'])
 					{
-						if (localItem==globalItem)
+						if(localItem==globalItem)
 						{
-							this.state[localItem]=globalState[globalItem];
+							mapping=this.stateMap[localItem];
+							if(this.record.get(mapping)[localItem] != globalState[globalItem])
+							{
+								this.record.get(mapping)[localItem]=globalState[globalItem];
+							}
 							break;
 						}
 					}
