@@ -46,7 +46,6 @@
 			},
 			stores:
 			[
-				'State',
 				'User'
 			],
 			views:
@@ -55,7 +54,6 @@
 			],
 			controllers:
 			[
-				'State',
 				'Default'
 			]
 		}
@@ -80,82 +78,7 @@ $JSKK.Class.create
 	}
 )
 (
-	{
-		/**
-		 * @deprecated Use {@link strappy.InitQueue} instead.
-		 */
-		initQueue: function(queue,callback)
-		{
-			console.warn('use of strappy.Component.initQueue is deprecated. Use strappy.InitQueue instead.');
-			var	args		=$JSKK.toArray(arguments);
-			
-			if (Object.isDefined(args[1]))
-			{
-				if (Object.isFunction(args.last()))
-				{
-					callback=args.pop();
-				}
-				queue=args;
-			}
-			
-			var	index		=-1,
-				length		=queue.length,
-				cmp			=null,
-				processNext	=function()
-				{
-					index++;
-					if (Object.isUndefined(queue[index]))
-					{
-						if (Object.isFunction(callback))callback();
-						return;
-					}
-					if (Object.isArray(queue[index]))
-					{
-						if (!Object.isFunction(queue[index][0].$reflect))
-						{
-							cmp=new queue[index][0]();
-						}
-						else
-						{
-							cmp=queue[index][0];
-						}
-						if (Object.isAssocArray(queue[index][1]))
-						{
-							cmp.observeOnce
-							(
-								'onAfterInit',
-								function(index)
-								{
-									cmp.getController('State').observeOnce
-									(
-										'onReadyState',
-										function()
-										{
-											processNext();
-										}
-									);
-								}.bind(this,index)
-							);
-						}
-						else
-						{
-							processNext();
-						}
-						
-						cmp.configure(queue[index][1]);
-					}
-					else
-					{
-						if (!Object.isAssocArray(queue[index]))
-						{
-							new queue[index]();
-						}
-						processNext();
-					}
-				};
-			processNext();
-		}
-	},
+	{},
 	{
 		events:
 		{
@@ -179,7 +102,7 @@ $JSKK.Class.create
 		browser:
 		{
 			name:		null,
-			version:	null
+			version:		null
 		},
 		/**
 		 * @property components Specifiy a list of child components.
