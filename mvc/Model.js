@@ -77,7 +77,7 @@ $JSKK.Class.create
 		 */
 		init: function(record)
 		{
-			if (Object.isDefined(record))
+			if (Object.isDefined(record) && !Object.isNull(record))
 			{
 				this.record=Object.clone(this.fields);
 				for (var field in this.fields)
@@ -130,8 +130,9 @@ $JSKK.Class.create
 				(
 					this.getRecord(),
 					null,
-					function(record)
+					function(response)
 					{
+						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
 						this.set(record[0]);
 						this.flagClean();
@@ -148,8 +149,9 @@ $JSKK.Class.create
 				(
 					null,
 					query,
-					function(record)
+					function(response)
 					{
+						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
 						this.set(record[0]);
 						this.flagClean();

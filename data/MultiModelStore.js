@@ -566,8 +566,9 @@ $JSKK.Class.create
 				(
 					data,
 					query,
-					function(records)
+					function(response)
 					{
+						var records=response.data;
 						target.records=target.newRecord(records);
 						this.records	=target.records;
 						for (var i=0,j=target.records.length; i<j; i++)
