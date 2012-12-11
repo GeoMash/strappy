@@ -217,7 +217,7 @@ Card Layout Example:
 						if (ref=='card')
 						{
 							//Switch to the blue card in the
-							this.getController('Default').sendSignal
+							this.sendSignal
 							(
 								strappy.CCL.Signal.SWITCH,
 								strappy.CCL.Type.INSTRUCTION,
@@ -231,7 +231,7 @@ Card Layout Example:
 						else if (ref=='card.blue')
 						{
 							//Switch to the green card in the inner card layout.
-							this.getController('Default').sendSignal
+							this.sendSignal
 							(
 								strappy.CCL.Signal.SWITCH,
 								strappy.CCL.Type.INSTRUCTION,

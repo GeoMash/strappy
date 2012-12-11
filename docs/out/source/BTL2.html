@@ -32,7 +32,8 @@ $JSKK.Class.create
 		$name:		'BTL',
 		$uses:
 		[
-			$JSKK.trait.Configurable
+			$JSKK.trait.Configurable,
+			$JSKK.trait.Observable
 		]
 	}
 )
@@ -40,11 +41,11 @@ $JSKK.Class.create
 	{
 		APIMethod: function(call,data,query,callback)
 		{
-			if (this.config.debug)
-			{
-				var contents=call+'::('+$.stringify(data)+')::('+$.stringify(query)+')';
-				this.debugWindow.find('ul').append('&lt;li&gt;'+contents+'&lt;/li&gt;');
-			}
+			// if (this.config.debug)
+			// {
+			// 	var contents=call+'::('+$.stringify(data)+')::('+$.stringify(query)+')';
+			// 	this.debugWindow.find('ul').append('&lt;li&gt;'+contents+'&lt;/li&gt;');
+			// }
 			this.proxy.raw
 			(
 				{
@@ -56,9 +57,19 @@ $JSKK.Class.create
 						data:		data || null,
 						query:		query || null
 					},
-					onComplete: function(response)
+					onSuccess: function(response)
 					{
-						if (Object.isFunction(callback))callback(response);
+						if (this.fireEvent('onAnySuccess',this,response)!==false)
+						{
+							if (Object.isFunction(callback))callback(response);
+						}
+					}.bind(this),
+					onFailure: function(response)
+					{
+						if (this.fireEvent('onAnyFailure',this,response)!==false)
+						{
+							if (Object.isFunction(callback))callback(response);
+						}
 					}.bind(this)
 				}
 			);
@@ -70,12 +81,17 @@ $JSKK.Class.create
 <span id='strappy-data-BTL-cfg-url'>			/**
 </span>			 * @cfg url
 			 */
-			url:	'',
-			debug:	false,
+			url:		'',
+			debug:		false,
 <span id='strappy-data-BTL-cfg-proxy'>			/**
 </span>			 * @cfg proxy
 			 */
-			proxy:	strappy.data.proxy.BTL
+			proxy:		strappy.data.proxy.BTL
+		},
+		events:
+		{
+			onAnySuccess:	true,
+			onAnyFailure:	true
 		},
 <span id='strappy-data-BTL-property-ready'>		/**
 </span>		 *  @property ready
@@ -101,24 +117,24 @@ $JSKK.Class.create
 		 */
 		init: function()
 		{
-			if (this.config.debug)
-			{
-				this.debugWindow=$('&lt;div id=&quot;strappy-BTL-debugWindow&quot;&gt;&lt;h2&gt;BTL Requests&lt;/h2&gt;&lt;ul&gt;&lt;/ul&gt;&lt;/div&gt;');
-				this.debugWindow.css
-				(
-					{
-						position:		'absolute',
-						top:			0,
-						left:			0,
-						zIndex:			100000,
-						width:			600,
-						height:			400,
-						overflow:		'auto',
-						backgroundColor:'#58595B'
-					}	
-				);
-				$('body').append(this.debugWindow);
-			}
+			// if (this.config.debug)
+			// {
+			// 	this.debugWindow=$('&lt;div id=&quot;strappy-BTL-debugWindow&quot;&gt;&lt;h2&gt;BTL Requests&lt;/h2&gt;&lt;ul&gt;&lt;/ul&gt;&lt;/div&gt;');
+			// 	this.debugWindow.css
+			// 	(
+			// 		{
+			// 			position:		'absolute',
+			// 			top:			0,
+			// 			left:			0,
+			// 			zIndex:			100000,
+			// 			width:			600,
+			// 			height:			400,
+			// 			overflow:		'auto',
+			// 			backgroundColor:'#58595B'
+			// 		}	
+			// 	);
+			// 	$('body').append(this.debugWindow);
+			// }
 			this.proxy=new this.config.proxy({url:this.config.url});
 			this.getServiceAPI();
 		},

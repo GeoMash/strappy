@@ -98,7 +98,7 @@ $JSKK.Class.create
 			{
 				this.proxy=new strappy.data.proxy.MemoryProxy();
 			}
-			if (!Object.isNull(this.sharedFrom))
+			if (Object.isString(this.sharedFrom))
 			{
 				this.sharedFrom=$JSKK.namespace(this.sharedFrom);
 			}
@@ -263,7 +263,7 @@ $JSKK.Class.create
 		 */
 		isShared: function()
 		{
-			return (!Object.isNull(this.sharedFrom));
+			return (Object.isAssocArray(this.sharedFrom) &amp;&amp; Object.isFunction(this.sharedFrom.$reflect));
 		},
 		
 		getShared: function()
