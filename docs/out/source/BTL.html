@@ -71,7 +71,14 @@ $JSKK.Class.create
 		},
 		_onDone: function(config,response)
 		{
-			(config.onComplete || $JSKK.emptyFunction)(response);
+			if (response.success)
+			{
+				(config.onSuccess || $JSKK.emptyFunction)(response);
+			}
+			else
+			{
+				(config.onFailure || $JSKK.emptyFunction)(response);
+			}
 		}
 	}
 )</pre>

@@ -45,6 +45,10 @@ $JSKK.Class.create
 		},
 		add: function(name,ref,config,callback)
 		{
+			if (Object.isUndefined(ref))
+			{
+				throw new Error('InitQueue failed to add component. "ref" for component was undefined.',$.stringify(arguments));
+			}
 			this.items.push
 			(
 				{
@@ -74,19 +78,18 @@ $JSKK.Class.create
 		processNextItem: function()
 		{
 			this.processPointer++;
+			if (Object.isString(this.items[this.processPointer].ref))
+			{
+				this.items[this.processPointer].ref=$JSKK.namespace(this.items[this.processPointer].ref);
+			}
 			if (!Object.isFunction(this.items[this.processPointer].ref.$reflect))
 			{
-				if (Object.isString(this.items[this.processPointer].ref))
-				{
-					this.items[this.processPointer].ref=$JSKK.namespace(this.items[this.processPointer].ref);
-				}
 				if (Object.isFunction(this.items[this.processPointer].ref))
 				{
 					this.items[this.processPointer].ref=new this.items[this.processPointer].ref();
 				}
 				else
 				{
-					console.debug(this.items[this.processPointer]);
 					throw new Error('InitQueue was unable to initalize a component. '
 									+'The component with ref "'+this.items[this.processPointer].name+'" '
 									+'did not have a valid constructor associated with it.');

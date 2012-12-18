@@ -47,6 +47,16 @@
 				"name": "ComponentQueue",
 				"title": "How to use the Component Queue",
 				"description": "A guide for using the Component Queue feature of Strappy."
+			},
+			{
+				"name": "CCL_Container",
+				"title": "CCL Container",
+				"description": "A guide for using the CCL Container Component."
+			},
+			{
+				"name": "CCL_Router",
+				"title": "CCL Router",
+				"description": "A guide for using the CCL Router Controller."
 			}
 		]
 	}

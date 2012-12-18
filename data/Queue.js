@@ -127,13 +127,13 @@ $JSKK.Class.create
 				request=this.getRequest(response[i].sequence);
 				if (response[i].success)
 				{
-					if (Object.isFunction(request.onComplete))	request.onComplete(response[i].data);
-					if (Object.isFunction(request.onSuccess))	request.onSuccess(response[i].data);
+					if (Object.isFunction(request.onComplete))	request.onComplete(response[i]);
+					if (Object.isFunction(request.onSuccess))	request.onSuccess(response[i]);
 				}
 				else
 				{
-					if (Object.isFunction(request.onComplete))	request.onComplete(response[i].data);
-					if (Object.isFunction(request.onFailure))	request.onFailure(response[i].data);
+					if (Object.isFunction(request.onComplete))	request.onComplete(response[i]);
+					if (Object.isFunction(request.onFailure))	request.onFailure(response[i]);
 				}
 			}
 		},

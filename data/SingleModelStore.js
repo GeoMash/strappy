@@ -130,8 +130,9 @@ $JSKK.Class.create
 				(
 					data,
 					query,
-					function(records)
+					function(response)
 					{
+						var records=response.data;
 						target.record=target.newRecord(records[0]);
 						target.fireEvent('onChange',target,records[0]);
 						target.fireEvent('onSync',target,records[0]);
