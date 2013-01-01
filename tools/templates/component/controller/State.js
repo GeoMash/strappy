@@ -20,11 +20,7 @@ $JSKK.Class.create
 		},
 		onViewReady: function(view)
 		{
-			this.setViewReadyState(view.$reflect('name'));
-			if (this.getReadyViews().inArray(view.$reflect('name')))
-			{
-				this.setReady();
-			}
+			this.setReady();
 		}
 	}
 );
