@@ -1,0 +1,3 @@
+[submodule "ccl"]
+	path = ccl
+	url = git://github.com/melechi/strappy-CCL.git
