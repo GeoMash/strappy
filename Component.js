@@ -734,6 +734,10 @@ $JSKK.Class.create
 		 */
 		initStores: function()
 		{
+			if (!Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store))
+			{
+				throw new Error('No Stores are loaded. Your component needs at least a state store.');
+			}
 			if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store['State']))
 			{
 				this._stores['State']=new this.my.NSObject[this.my.name.lowerFirst()].store['State'](this);
