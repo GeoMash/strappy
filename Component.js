@@ -75,6 +75,7 @@ $JSKK.Class.create
 		$name:		'Component',
 		$uses:
 		[
+			$JSKK.trait.Configurable,
 			$JSKK.trait.Observable
 		]
 	}
@@ -93,14 +94,6 @@ $JSKK.Class.create
 			onStateChange:			true,
 			onBeforeReadyState:		true,
 			onReadyState:			true
-		},
-		/**
-		 * @cfg attachTo The DOM element that this component will attach itself to. (required)
-		 */
-		config:
-		{
-			attachTo:	null,
-			attachHow:	'append'
 		},
 		/**
 		 * @property browser Contains browser information.
@@ -271,17 +264,23 @@ $JSKK.Class.create
 		 * 
 		 * @private
 		 */
-		state:
+		_state:
 		{
 			'public':	{},
-			'private':	{}
+			/**
+			 * @cfg attachTo The DOM element that this component will attach itself to. (required)
+			 */
+			'private':
+			{
+				attachTo:	null,
+				attachHow:	'append'
+			}
 		},
 		/**
 		 * @property {Object} stateMap A reference object for mapped private and public state properties.
 		 * @private
 		 */
 		stateMap:{},
-		
 		
 		/**
 		 * @constructor
@@ -295,6 +294,7 @@ $JSKK.Class.create
 		 * Note: The constructor automatically calls {@link strappy.Component#reconfigure reconfigure}
 		 * when it is done.
 		 * 
+		 * @param initState - The state in which this component should be initalised with.
 		 * @return {strappy.Component}
 		 */
 		init: function()
@@ -323,40 +323,27 @@ $JSKK.Class.create
 			this.initStateMgr();
 			this.initViewCache();
 			this.generateInstanceID();
+			this.initState(this.config);
 			
-			$JSKK.when(this.isConfigured.bind(this)).isTrue
+			//We wait here so that we're 100% sure that there is a containing element for views to insert into.
+			$JSKK.when
 			(
 				function()
 				{
-					this.generateInstanceID();
-					//We wait here so that we're 100% sure that there is a containing element for views to insert into.
-					$JSKK.when
-					(
-						function()
-						{
-							return Boolean($('#'+this.getIID()).length);
-						}.bind(this)
-					).isTrue
-					(
-						function()
-						{
-							this.initChildComponents();
-							this.initStateStore();
-							this.initStores();
-							this.initViews();
-							this.initControllers();
-							this.fireEvent('onAfterInit',this);
-						}.bind(this)
-					);
-					this.insertBaseContainer();
+					return Boolean($('#'+this.getIID()).length);
+				}.bind(this)
+			).isTrue
+			(
+				function()
+				{
+					this.initChildComponents();
+					this.initStores();
+					this.initViews();
+					this.initControllers();
+					this.fireEvent('onAfterInit',this);
 				}.bind(this)
 			);
-			
-			if (Object.isFunction(this.initCmp))
-			{
-				this.initCmp();
-			}
-			this.readyForConfig=true;
+			this.insertBaseContainer();
 		},
 		/**
 		 * Initalizes the component's conneciton to the Radio Tower.
@@ -688,11 +675,11 @@ $JSKK.Class.create
 				{
 					mapping=this.stateMap[key];
 					//Ignore if the value is the same.
-					if (this.state[mapping][key]==keyVals[key])continue;
+					if (this._state[mapping][key]==keyVals[key])continue;
 					//Keep going otherwise...
 					if (this.fireEvent('onBeforeStateChange',this,key,keyVals[key])!==false)
 					{
-						this.state[mapping][key]=keyVals[key];
+						this._state[mapping][key]=keyVals[key];
 						if (mapping==this.$reflect('self').ACCESS_PUBLIC)
 						{
 							updateState		=true;
@@ -703,6 +690,7 @@ $JSKK.Class.create
 				}
 				else
 				{
+					console.trace();
 					throw new Error('Error - state property "'+key+'" has not been configured for component "'+this.my.name+'".');
 				}
 			}
@@ -714,12 +702,20 @@ $JSKK.Class.create
 		},
 		getState: function(key)
 		{
-			return this.state[this.stateMap[key]][key];
+			if (Object.isDefined(this.stateMap[key]))
+			{
+				return this._state[this.stateMap[key]][key];
+			}
+			else
+			{
+				console.trace();
+				throw new Error('Error - state property "'+key+'" has not been configured for component "'+this.my.name+'".');
+			}
 		},
 		resetState: function()
 		{
-			this.setState(this.state['private']);
-			this.setState(this.state['public']);
+			this.setState(this._state['private']);
+			this.setState(this._state['public']);
 			return this;
 		},
 		/**
@@ -727,13 +723,13 @@ $JSKK.Class.create
 		 * 
 		 * @private
 		 */
-		initStateStore: function()
+		initState: function(state)
 		{
-			
+			console.debug('initState',state,this._state);
 			var	self=this.$reflect('self'),
 				item=null;
 			
-			for (item in this.state[self.ACCESS_PRIVATE])
+			for (item in this._state[self.ACCESS_PRIVATE])
 			{
 				this.stateMap[item]=self.ACCESS_PRIVATE;
 			}
@@ -741,6 +737,29 @@ $JSKK.Class.create
 			{
 				this.stateMap[item]=self.ACCESS_PUBLIC;
 			}
+			for (item in this.state[self.ACCESS_PRIVATE])
+			{
+				this.stateMap[item]=self.ACCESS_PRIVATE;
+			}
+			
+			for (item in state)
+			{
+				this.stateMap[item]=self.ACCESS_PRIVATE;
+			}
+			
+			//Apply the initial state.
+			Object.extend(this._state['public'],this.state['public']);
+			Object.extend(this._state['private'],this.state['private']);
+			Object.extend(this._state['private'],state);
+			
+			
+			delete this.state;
+			
+			this.fireEvent('onConfigured',this);
+			
+			
+			// this.sendSignal(strappy.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
+					
 		},
 		/**
 		 * Initializes all the stores associated with this component.
@@ -793,7 +812,7 @@ $JSKK.Class.create
 				// 	{
 				// 		if (localItem==globalItem)
 				// 		{
-				// 			this.state[localItem]=globalState[globalItem];
+				// 			this._state[localItem]=globalState[globalItem];
 				// 			break;
 				// 		}
 				// 	}
@@ -886,83 +905,33 @@ $JSKK.Class.create
 			return (this.$reflect('namespace')+'.'+this.$reflect('name')).replace(/\./g,'-');
 		},
 		/**
-		 * Configures this component with new configuration properties.
-		 * 
-		 * @param {Object} newConfig The new configuration object.
-		 * @return {void}
-		 */
-		configure: function(newConfig)
-		{
-			$JSKK.when(this,'readyForConfig').isTrue
-			(
-				function()
-				{
-					if (Object.isDefined(this.config))
-					{
-						Object.extend(this.config,newConfig);
-					}
-					else
-					{
-						this.config=newConfig;
-					}
-					this._configured=true;
-					this.fireEvent('onConfigured',this);
-					this.sendSignal(strappy.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
-				}.bind(this)
-			);
-		},
-		/**
-		 * Call this method to force the component to reconfigure itself.
-		 * 
-		 * This essentially calls the {@link }
-		 * 
-		 * @return {void}
-		 */
-		reconfigure: function()
-		{
-			$JSKK.when(this,'readyForConfig').isTrue
-			(
-				function()
-				{
-					this.configure(this.config);
-//					this.sendSignal(strappy.Signal.CMP_DO_RECONFIGURE,{component:this.my.name});
-				}.bind(this)
-			);
-		},
-		/**
-		 * A helper method to determine if this component has been configured.
-		 * 
-		 * @return {Boolean} true if this component has been configured.
-		 */
-		isConfigured: function()
-		{
-			return this._configured;
-		},
-		/**
 		 * Fetches a config item associated with this component.
 		 * 
 		 * @return {Mixed} The config item's value. 
 		 */
 		getConfig:		function(key)
 		{
-			if (Object.isDefined(key))
-			{
-				var	parts	=key.split('.'),
-					object	=this.config;
-				for (var i=0,j=parts.length; i<j; i++)
-				{
-					if (Object.isDefined(object[parts[i]]))
-					{
-						object=object[parts[i]];
-					}
-					else
-					{
-						return null;
-					}
-				}
-				return object;
-			}
-			return this.config;
+			console.warn('Use of getConfig depricated as of Strappy 1.2. Use getState instead.');
+			// if (Object.isDefined(key))
+			// {
+			// 	var	parts	=key.split('.'),
+			// 		object	=this.config;
+			// 	for (var i=0,j=parts.length; i<j; i++)
+			// 	{
+			// 		if (Object.isDefined(object[parts[i]]))
+			// 		{
+			// 			object=object[parts[i]];
+			// 		}
+			// 		else
+			// 		{
+			// 			return null;
+			// 		}
+			// 	}
+			// 	return object;
+			// }
+			// return this.config;
+			
+			return this.getState(key);
 		},
 		/**
 		 * Calculates the ID of this component based off of
@@ -1011,6 +980,20 @@ $JSKK.Class.create
 			{
 				throw new Error('Class '+this.className+' attempted to fire an empty signal.');
 			}
+		},
+		/**
+		 * @deprecated
+		 */
+		configure: function()
+		{
+			console.warn('The use of configure() is depricated as of Strappy 1.2. Pass "state" config into the Component construtor instead.');
+		},
+		/**
+		 * @deprecated
+		 */
+		reconfigure: function()
+		{
+			console.warn('The use of reconfigure() is depricated as of Strappy 1.2. Use the new state management instead.');
 		}
 	}
 );
