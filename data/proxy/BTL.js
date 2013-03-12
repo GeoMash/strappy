@@ -37,7 +37,7 @@ $JSKK.Class.create
 						contentType:	'application/json',
 						processData:	false,
 						url:			config.url,
-						data:			$.stringify(config.data) || {}
+						data:			JSON.stringify(config.data) || {}
 					}
 				)
 				.done(this._onDone.bind(this,config))

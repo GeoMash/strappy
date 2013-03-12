@@ -81,86 +81,18 @@ $JSKK.Class.create
 )
 (
 	{
-		/**
-		 * @deprecated Use {@link strappy.InitQueue} instead.
-		 */
-		initQueue: function(queue,callback)
-		{
-			console.warn('use of strappy.Component.initQueue is deprecated. Use strappy.InitQueue instead.');
-			var	args		=$JSKK.toArray(arguments);
-			
-			if (Object.isDefined(args[1]))
-			{
-				if (Object.isFunction(args.last()))
-				{
-					callback=args.pop();
-				}
-				queue=args;
-			}
-			
-			var	index		=-1,
-				length		=queue.length,
-				cmp			=null,
-				processNext	=function()
-				{
-					index++;
-					if (Object.isUndefined(queue[index]))
-					{
-						if (Object.isFunction(callback))callback();
-						return;
-					}
-					if (Object.isArray(queue[index]))
-					{
-						if (!Object.isFunction(queue[index][0].$reflect))
-						{
-							cmp=new queue[index][0]();
-						}
-						else
-						{
-							cmp=queue[index][0];
-						}
-						if (Object.isAssocArray(queue[index][1]))
-						{
-							cmp.observeOnce
-							(
-								'onAfterInit',
-								function(index)
-								{
-									cmp.getController('State').observeOnce
-									(
-										'onReadyState',
-										function()
-										{
-											processNext();
-										}
-									);
-								}.bind(this,index)
-							);
-						}
-						else
-						{
-							processNext();
-						}
-						
-						cmp.configure(queue[index][1]);
-					}
-					else
-					{
-						if (!Object.isAssocArray(queue[index]))
-						{
-							new queue[index]();
-						}
-						processNext();
-					}
-				};
-			processNext();
-		}
+		ACCESS_PRIVATE:	'private',
+		ACCESS_PUBLIC:	'public'
 	},
 	{
 		events:
 		{
-			onConfigured:	true,
-			onAfterInit:	true
+			onConfigured:			true,
+			onAfterInit:			true,
+			onBeforeStateChange:	true,
+			onStateChange:			true,
+			onBeforeReadyState:		true,
+			onReadyState:			true
 		},
 		/**
 		 * @cfg attachTo The DOM element that this component will attach itself to. (required)
@@ -330,10 +262,26 @@ $JSKK.Class.create
 		 */
 		readyForConfig:	false,
 		/**
-		 * [_iid description]
 		 * @type {Boolean}
+		 * @private
 		 */
 		_iid:			null,
+		
+		/**
+		 * 
+		 * @private
+		 */
+		state:
+		{
+			'public':	{},
+			'private':	{}
+		},
+		/**
+		 * @property {Object} stateMap A reference object for mapped private and public state properties.
+		 * @private
+		 */
+		stateMap:{},
+		
 		
 		/**
 		 * @constructor
@@ -393,6 +341,7 @@ $JSKK.Class.create
 						function()
 						{
 							this.initChildComponents();
+							this.initStateStore();
 							this.initStores();
 							this.initViews();
 							this.initControllers();
@@ -500,9 +449,7 @@ $JSKK.Class.create
 		initChildComponents: function()
 		{
 			var parts		=null,
-				config		=null,
-				object		=null;//,
-				// queue		=[];
+				object		=null;
 			for (var component in this.components)
 			{
 				parts		=this.components[component].split('.');
@@ -527,10 +474,8 @@ $JSKK.Class.create
 					throw new Error('Error! component "'+this.components[component]+'" not loaded.');
 					break;
 				}
-				// queue.push(object);
 				this.components[component]=new object();
 			}
-			// this.$reflect('self').initQueue(queue);
 		},
 		/**
 		 * Creates a new child component.
@@ -635,36 +580,26 @@ $JSKK.Class.create
 		 */
 		initControllers: function()
 		{
-			var stateController=null;
-			if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller['State']))
-			{
-				stateController=this._controllers['State']=new this.my.NSObject[this.my.name.lowerFirst()].controller['State'](this);
-				stateController.observeOnce
-				(
-					'onBeforeReadyState',
-					function()
-					{
-						this.sendSignal(strappy.Signal.COMPONENT_IS_READY,'component',{origin:this.getIID()},this);
-					}.bind(this)
-				);
-				
-				for (var i=0,j=this.controllers.length; i<j; i++)
+			this.observeOnce
+			(
+				'onBeforeReadyState',
+				function()
 				{
-					if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
-					{
-						this._controllers[this.controllers[i]]=new this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]](this);
-					}
-					else
-					{
-						throw new Error('Error controller "'+this.controllers[i]+'" not loaded on component "'+this.my.name+'".');
-						break;
-					}
-				}
-			}
-			else
+					this.sendSignal(strappy.Signal.COMPONENT_IS_READY,'component',{origin:this.getIID()},this);
+				}.bind(this)
+			);
+			
+			for (var i=0,j=this.controllers.length; i<j; i++)
 			{
-				throw new Error('State controller has not been loaded for component "'+this.my.name+'". '
-								+'A component MUST have a state store and controller.');
+				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
+				{
+					this._controllers[this.controllers[i]]=new this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]](this);
+				}
+				else
+				{
+					throw new Error('Error controller "'+this.controllers[i]+'" not loaded on component "'+this.my.name+'".');
+					break;
+				}
 			}
 		},
 		/**
@@ -680,6 +615,11 @@ $JSKK.Class.create
 			if (Object.isDefined(this._controllers[controller]))
 			{
 				return this._controllers[controller];
+			}
+			else if (controller=='State')
+			{
+				console.warn('State controllers and stores are deprecated. All stateful related things are now part of component.');
+				return this;
 			}
 			else
 			{
@@ -727,6 +667,81 @@ $JSKK.Class.create
 				throw new Error('Error - view "'+view+'" has not been initilized on component "'+this.my.name+'".');
 			}
 		},
+		setState: function()
+		{
+			var	args		=$JSKK.toArray(arguments),
+				keyVals		={},
+				mapping		=null,
+				updateState	=false,
+				newState	={};
+			if (Object.isDefined(args[1]))
+			{
+				keyVals[args.shift()]=args.shift();
+			}
+			else
+			{
+				keyVals=args.shift();
+			}
+			for (var key in keyVals)
+			{
+				if (Object.isDefined(this.stateMap[key]))
+				{
+					mapping=this.stateMap[key];
+					//Ignore if the value is the same.
+					if (this.state[mapping][key]==keyVals[key])continue;
+					//Keep going otherwise...
+					if (this.fireEvent('onBeforeStateChange',this,key,keyVals[key])!==false)
+					{
+						this.state[mapping][key]=keyVals[key];
+						if (mapping==this.$reflect('self').ACCESS_PUBLIC)
+						{
+							updateState		=true;
+							newState[key]	=keyVals[key];
+						}
+						this.fireEvent('onStateChange',this,key,keyVals[key]);
+					}
+				}
+				else
+				{
+					throw new Error('Error - state property "'+key+'" has not been configured for component "'+this.my.name+'".');
+				}
+			}
+			if (updateState)
+			{
+				this.stateMgr.updateState(newState,true);
+			}
+			return this;
+		},
+		getState: function(key)
+		{
+			return this.state[this.stateMap[key]][key];
+		},
+		resetState: function()
+		{
+			this.setState(this.state['private']);
+			this.setState(this.state['public']);
+			return this;
+		},
+		/**
+		 * Initalizes the state store for this component.
+		 * 
+		 * @private
+		 */
+		initStateStore: function()
+		{
+			
+			var	self=this.$reflect('self'),
+				item=null;
+			
+			for (item in this.state[self.ACCESS_PRIVATE])
+			{
+				this.stateMap[item]=self.ACCESS_PRIVATE;
+			}
+			for (item in this.state[self.ACCESS_PUBLIC])
+			{
+				this.stateMap[item]=self.ACCESS_PUBLIC;
+			}
+		},
 		/**
 		 * Initializes all the stores associated with this component.
 		 * 
@@ -734,32 +749,67 @@ $JSKK.Class.create
 		 */
 		initStores: function()
 		{
-			if (!Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store))
+			for (var i=0,j=this.stores.length; i<j; i++)
 			{
-				throw new Error('No Stores are loaded. Your component needs at least a state store.');
-			}
-			if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store['State']))
-			{
-				this._stores['State']=new this.my.NSObject[this.my.name.lowerFirst()].store['State'](this);
-				for (var i=0,j=this.stores.length; i<j; i++)
+				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
+				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]]))
 				{
-					if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
-					&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]]))
-					{
-						this._stores[this.stores[i]]=new this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]](this);
-					}
-					else
-					{
-						throw new Error('Error - store "'+this.stores[i]+'" not loaded for component "'+this.my.name+'".');
-						break;
-					}
+					this._stores[this.stores[i]]=new this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]](this);
+				}
+				else
+				{
+					throw new Error('Error - store "'+this.stores[i]+'" not loaded for component "'+this.my.name+'".');
+					break;
 				}
 			}
-			else
+		},
+		/**
+		 * This method will set the ready state of the component to true.
+		 * 
+		 * @return {strappy.Component}
+		 */
+		setReady:		function()
+		{
+			this.ready=true;
+			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
 			{
-				throw new Error('State store has not been loaded for component "'+this.my.name+'". '
-								+'A component MUST have a state store and controller.');
+				var globalState=this.stateMgr.getState();
+				for (var item in globalState)
+				{
+					if (this.canManageStateItem(item))
+					{
+						var oldValue=this.getState(item);
+						if (!this.setState(item,globalState[item]))
+						{
+							var restoredState	={};
+							restoredState[item]	=oldValue;
+							this.stateMgr.updateState(restoredState,true);
+						}
+					}
+				}
+				// for (var globalItem in globalState)
+				// {
+				// 	for (var localItem in this.state)
+				// 	{
+				// 		if (localItem==globalItem)
+				// 		{
+				// 			this.state[localItem]=globalState[globalItem];
+				// 			break;
+				// 		}
+				// 	}
+				// }
+				this.fireEvent('onReadyState',this,true);
 			}
+			return this;
+		},
+		/**
+		 * Checks to see if the component has been flagged as statefully ready.
+		 * 
+		 * @return {Boolean} True if ready.
+		 */
+		isReady: function()
+		{
+			return this.ready;
 		},
 		/**
 		 * Attaches a shared store to the component as a locally referenced and used store.
@@ -772,6 +822,17 @@ $JSKK.Class.create
 		{
 			this._stores[localRef]=$JSKK.namespace(sharedRef);
 			return this;
+		},
+		/**
+		 * Checks to see if the passed in state item
+		 * can be managed by this store.
+		 * 
+		 * @param  {String} item The name of the state item to check against.
+		 * @return {Boolean} True if it can be managed by this store.
+		 */
+		canManageStateItem: function(item)
+		{
+			return this.stateMap[item]==this.$reflect('self').ACCESS_PUBLIC;
 		},
 		/**
 		 * Returns an associated store which is pre-defined in this

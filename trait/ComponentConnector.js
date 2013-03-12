@@ -30,10 +30,19 @@ $JSKK.Trait.create
 		},
 		/**
 		 * Returns the parent component associated with the class using this trait.
-		 * 
+		 * @depricated - see cmp()
 		 * @return {strappy.Component} the parent component.
 		 */
 		getParentComponent: function()
+		{
+			return this._component;
+		},
+		/**
+		 * Returns the parent component associated with the class using this trait.
+		 * 
+		 * @return {strappy.Component} the parent component.
+		 */
+		cmp: function()
 		{
 			return this._component;
 		},
@@ -45,7 +54,7 @@ $JSKK.Trait.create
 		 */
 		getCmpName: function()
 		{
-			return this.getParentComponent().my.name;
+			return this.cmp().my.name;
 		},
 		/**
 		 * Returns the Radio Tower singleton.
@@ -54,7 +63,7 @@ $JSKK.Trait.create
 		 */
 		getRadioTower: function()
 		{
-			return this.getParentComponent().radioTower;
+			return this.cmp().radioTower;
 		},
 		/**
 		 * Returns the State Manager singleton.
@@ -63,7 +72,7 @@ $JSKK.Trait.create
 		 */
 		getStateMgr: function()
 		{
-			return this.getParentComponent().stateMgr;
+			return this.cmp().stateMgr;
 		},
 		/**
 		 * Gets the ID of the class which implemented this trait.
@@ -82,7 +91,7 @@ $JSKK.Trait.create
 		 */
 		getSafeID: function()
 		{
-			return this.getParentComponent().getSafeID(cmp);
+			return this.cmp().getSafeID(cmp);
 		},
 		/**
 		 * Get's a child component of the associated parent component.
@@ -96,7 +105,7 @@ $JSKK.Trait.create
 		 */
 		getCmp: function(cmp)
 		{
-			return this.getParentComponent().getCmp(cmp);
+			return this.cmp().getCmp(cmp);
 		},
 		/**
 		 * Checks to see if a child component exists.
@@ -106,7 +115,7 @@ $JSKK.Trait.create
 		 */
 		hasChildCmp: function(cmp)
 		{
-			return Object.isDefined(this.getParentComponent().components[cmp]);
+			return Object.isDefined(this.cmp().components[cmp]);
 		},
 		/**
 		 * Fetches a model from the parent component.
@@ -116,7 +125,7 @@ $JSKK.Trait.create
 		 */
 		getStore: function(store)
 		{
-			return this.getParentComponent().getStore(store);
+			return this.cmp().getStore(store);
 		},
 		/**
 		 * Fetches a controller from the parent component.
@@ -126,7 +135,7 @@ $JSKK.Trait.create
 		 */
 		getController: function(controller)
 		{
-			return this.getParentComponent().getController(controller);
+			return this.cmp().getController(controller);
 		},
 		/**
 		 * Fetches a view from the parent component.
@@ -136,7 +145,7 @@ $JSKK.Trait.create
 		 */
 		getView: function(view)
 		{
-			return this.getParentComponent().getView(view);
+			return this.cmp().getView(view);
 		},
 		/**
 		 * Fetches the View Cache.
@@ -145,7 +154,7 @@ $JSKK.Trait.create
 		 */
 		getViewCache: function()
 		{
-			return this.getParentComponent().getViewCache();
+			return this.cmp().getViewCache();
 		},
 		/**
 		 * Gets the value of a config property.
@@ -155,7 +164,7 @@ $JSKK.Trait.create
 		 */
 		getConfig: function(key)
 		{
-			return this.getParentComponent().getConfig(key);
+			return this.cmp().getConfig(key);
 		},
 		/**
 		 * Gets the instance ID (IID) of the component.
@@ -164,7 +173,7 @@ $JSKK.Trait.create
 		 */
 		getIID: function()
 		{
-			return this.getParentComponent().getIID();
+			return this.cmp().getIID();
 		},
 		/**
 		 * A helper function for creating a CSS selctor to be passed to the
@@ -243,7 +252,15 @@ $JSKK.Trait.create
 		 */
 		newInitQueue: function(onAllReady,onItemReady)
 		{
-			return this.getParentComponent().newInitQueue(onAllReady,onItemReady);
+			return this.cmp().newInitQueue(onAllReady,onItemReady);
+		},
+		setState: function()
+		{
+			return this.cmp().setState.apply(this.cmp(),arguments);
+		},
+		getState: function(key)
+		{
+			return this.cmp().getState(key);
 		}
 	}
 );
