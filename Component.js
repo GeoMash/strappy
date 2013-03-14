@@ -300,6 +300,7 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.my.name		=this.$reflect('name');
+			this.my.fullName	=this.$reflect('namespace')+'.'+this.$reflect('name');
 			this.my.namespace	=this.$reflect('namespace').split('.');
 			
 			if (Object.isUndefined(window.strappy.$components))
@@ -907,11 +908,12 @@ $JSKK.Class.create
 		/**
 		 * Fetches a config item associated with this component.
 		 * 
+		 * @deprecated
 		 * @return {Mixed} The config item's value. 
 		 */
 		getConfig:		function(key)
 		{
-			console.warn('Use of getConfig depricated as of Strappy 1.2. Use getState instead.');
+			console.warn('Use of getConfig deprecated as of Strappy 1.2. Use getState instead.');
 			// if (Object.isDefined(key))
 			// {
 			// 	var	parts	=key.split('.'),
@@ -986,14 +988,14 @@ $JSKK.Class.create
 		 */
 		configure: function()
 		{
-			console.warn('The use of configure() is depricated as of Strappy 1.2. Pass "state" config into the Component construtor instead.');
+			console.warn('The use of configure() is deprecated as of Strappy 1.2. Pass "state" config into the Component construtor instead.');
 		},
 		/**
 		 * @deprecated
 		 */
 		reconfigure: function()
 		{
-			console.warn('The use of reconfigure() is depricated as of Strappy 1.2. Use the new state management instead.');
+			console.warn('The use of reconfigure() is deprecated as of Strappy 1.2. Use the new state management instead.');
 		}
 	}
 );
