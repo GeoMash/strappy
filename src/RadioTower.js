@@ -18,7 +18,7 @@ $JSKK.Class.create
 		$name:		'RadioTower',
 		$uses:
 		[
-			$JSKK.trait.Observable
+			'$JSKK.trait.Observable'
 		]
 	}
 )

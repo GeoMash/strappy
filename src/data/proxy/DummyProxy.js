@@ -9,7 +9,7 @@ $JSKK.Class.create
 	{
 		$namespace:	'strappy.data.proxy',
 		$name:		'DummyProxy',
-		$extends:	strappy.data.proxy.MemoryProxy
+		$extends:	'strappy.data.proxy.MemoryProxy'
 	}
 )
 (

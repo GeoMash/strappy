@@ -16,8 +16,8 @@ $JSKK.Class.create
 		$abstract:	true,
 		$uses:
 		[
-			$JSKK.trait.Configurable,
-			$JSKK.trait.Observable
+			'$JSKK.trait.Configurable',
+			'$JSKK.trait.Observable'
 		]
 	}
 )

@@ -12,7 +12,7 @@ $JSKK.Class.create
 		$name:		'Model',
 		$uses:
 		[
-			$JSKK.trait.Observable
+			'$JSKK.trait.Observable'
 		]
 	}
 )

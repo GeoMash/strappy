@@ -11,7 +11,7 @@ $JSKK.Class.create
 	{
 		$namespace:	'strappy.data.proxy',
 		$name:		'BTL',
-		$extends:	strappy.data.proxy.AbstractProxy
+		$extends:	'strappy.data.proxy.AbstractProxy'
 	}
 )
 (

@@ -24,9 +24,9 @@ $JSKK.Class.create
 		$abstract:		true,
 		$uses:
 		[
-			strappy.trait.ComponentConnector,
-			strappy.trait.signal.Bindable,
-			$JSKK.trait.Observable
+			'strappy.trait.ComponentConnector',
+			'strappy.trait.signal.Bindable',
+			'$JSKK.trait.Observable'
 		]
 	}
 )

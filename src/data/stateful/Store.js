@@ -15,7 +15,7 @@ $JSKK.Class.create
 	{
 		$namespace:	'strappy.data.stateful',
 		$name:		'Store',
-		$extends:	strappy.data.SingleModelStore
+		$extends:	'strappy.data.SingleModelStore'
 	}
 )
 (

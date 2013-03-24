@@ -24,7 +24,7 @@ $JSKK.Class.create
 		$name:			'StateMgr',
 		$uses:
 		[
-			strappy.trait.signal.Send
+			'strappy.trait.signal.Send'
 		]
 	}
 )

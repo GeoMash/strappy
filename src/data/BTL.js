@@ -15,8 +15,8 @@ $JSKK.Class.create
 		$name:		'BTL',
 		$uses:
 		[
-			$JSKK.trait.Configurable,
-			$JSKK.trait.Observable
+			'$JSKK.trait.Configurable',
+			'$JSKK.trait.Observable'
 		]
 	}
 )

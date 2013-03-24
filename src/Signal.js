@@ -26,7 +26,7 @@ $JSKK.Class.create
 		$name:			'Signal',
 		$uses:
 		[
-			strappy.trait.signal.Send
+			'strappy.trait.signal.Send'
 		]
 	}
 )

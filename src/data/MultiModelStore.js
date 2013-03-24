@@ -11,7 +11,7 @@ $JSKK.Class.create
 	{
 		$namespace:		'strappy.data',
 		$name:			'MultiModelStore',
-		$extends:		strappy.data.AbstractStore,
+		$extends:		'strappy.data.AbstractStore',
 		$abstract:		true
 	}
 )

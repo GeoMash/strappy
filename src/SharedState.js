@@ -9,7 +9,7 @@ $JSKK.Class.create
 	{
 		$namespace:	'strappy',
 		$name:		'SharedState',
-		$extends:	strappy.data.stateful.Store
+		$extends:	'strappy.data.stateful.Store'
 	}
 )
 (

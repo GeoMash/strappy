@@ -13,7 +13,7 @@ $JSKK.Class.create
 		$name:		'InitQueue',
 		$uses:
 		[
-			$JSKK.trait.Observable
+			'$JSKK.trait.Observable'
 		]
 	}
 )

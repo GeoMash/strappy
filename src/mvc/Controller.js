@@ -29,10 +29,10 @@ $JSKK.Class.create
 		$abstract:	true,
 		$uses:
 		[
-			strappy.trait.ComponentConnector,
-			strappy.trait.signal.Receive,
-			strappy.trait.signal.Send,
-			$JSKK.trait.Observable
+			'strappy.trait.ComponentConnector',
+			'strappy.trait.signal.Receive',
+			'strappy.trait.signal.Send',
+			'$JSKK.trait.Observable'
 		]
 	}
 )

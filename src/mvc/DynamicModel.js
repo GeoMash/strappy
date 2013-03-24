@@ -10,7 +10,7 @@ $JSKK.Class.create
 	{
 		$namespace:	'strappy.mvc',
 		$name:		'DynamicModel',
-		$extends:	strappy.mvc.Model
+		$extends:	'strappy.mvc.Model'
 	}
 )
 (
