@@ -604,6 +604,10 @@ $JSKK.Class.create
 			);
 			var	length	=this.controllers.length,
 				done	=0;
+			if (!length)
+			{
+				callback();
+			}
 			for (var i=0; i<length; i++)
 			{
 				$JSKK.require
@@ -653,6 +657,10 @@ $JSKK.Class.create
 		{
 			var	length	=this.views.length,
 				done	=0;
+			if (!length)
+			{
+				callback();
+			}
 			for (var i=0; i<length; i++)
 			{
 				$JSKK.require
@@ -826,6 +834,10 @@ $JSKK.Class.create
 		{
 			var	length	=this.stores.length,
 				done	=0;
+			if (!length)
+			{
+				callback();
+			}
 			for (var i=0; i<length; i++)
 			{
 				$JSKK.require
