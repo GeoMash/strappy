@@ -167,21 +167,27 @@ $JSKK.Class.create
 		 */
 		add: function(records)
 		{
-			if (!Object.isArray(records))
-			{
-				records=[records];
-			}
-			for (var i=0,j=records.length; i<j; i++)
-			{
-				if (!Object.isFunction(records[i].$reflect))
+			$JSKK.when(this,'ready').isTrue
+			(
+				function()
 				{
-					records[i]=this.newRecord(records[i])[0];
-				}
-				// records[i].flagDirty();
-				this.records.push(records[i]);
-				this.bindchangeEvent(records[i]);
-			}
-			this.fireEvent('onChange',this);
+					if (!Object.isArray(records))
+					{
+						records=[records];
+					}
+					for (var i=0,j=records.length; i<j; i++)
+					{
+						if (!Object.isFunction(records[i].$reflect))
+						{
+							records[i]=this.newRecord(records[i])[0];
+						}
+						// records[i].flagDirty();
+						this.records.push(records[i]);
+						this.bindchangeEvent(records[i]);
+					}
+					this.fireEvent('onChange',this);
+				}.bind(this)
+			);
 			return this;
 		},
 		/**
