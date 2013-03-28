@@ -261,6 +261,18 @@ $JSKK.Trait.create
 		getState: function(key)
 		{
 			return this.cmp().getState(key);
+		},
+		getPublicState: function()
+		{
+			return this.cmp().getPublicState();
+		},
+		getPrivateState: function()
+		{
+			return this.cmp().getPrivateState();
+		},
+		sendSignal: function(name,type,filter,body)
+		{
+			return this.cmp().sendSignal(name,type,filter,body);
 		}
 	}
 );
