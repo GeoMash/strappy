@@ -56,21 +56,17 @@ $JSKK.Class.create
         */
 		init: function()
 		{
-			var	cmp=this.getParentComponent();
-			$JSKK.when(cmp.isConfigured.bind(cmp)).isTrue
+			var	cmp=this.cmp();
+			cmp.observe
 			(
+				'onReadyState',
 				function()
 				{
 					this.fetchTemplateContent
 					(
 						function()
 						{
-							//Bind the state stuff before firing the onReady event.
-							if ((this.stateStore=this.getStore('State')))
-							{
-								this.stateStore.observe('onChange',this.onStateChange.bind(this));
-							}
-							
+							this.observe('onStateChange',this.onStateChange.bind(this));
 							this._ready=true;
 							/*
 							 * The following two lines need to be in this order so that
@@ -78,6 +74,7 @@ $JSKK.Class.create
 							 * controller flags the component as ready.
 							 */
 							this.onReady();
+							this.bindDOMEvents();
 							this.fireEvent('onReady',this);
 						}.bind(this)
 					);
@@ -172,7 +169,7 @@ $JSKK.Class.create
 		 * 
 		 * @abstract
 		 */
-		onStoreChange:	$JSKK.emptyFunction,
+		onStateChange:	$JSKK.emptyFunction,
 		/**
 		 * An abstract method to be implemented by extending classes.
 		 * 
