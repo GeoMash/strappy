@@ -76,7 +76,8 @@ $JSKK.Class.create
 		$uses:
 		[
 			'$JSKK.trait.Configurable',
-			'$JSKK.trait.Observable'
+			'$JSKK.trait.Observable',
+			'strappy.trait.signal.Send',
 		]
 	}
 )
@@ -218,7 +219,8 @@ $JSKK.Class.create
 		 * @property _configured A flag to indicate weather or not this component has been configured.
 		 * @private
 		 */
-		_configured:	false,
+		// _configured:	false,
+		config:{},
 		/**
 		 * @property my A special object containing information relevant to this class.
 		 * @property my.name The name of this class.
@@ -260,6 +262,18 @@ $JSKK.Class.create
 		 */
 		_iid:			null,
 		
+		state:
+		{
+			'public':	{},
+			/**
+			 * @cfg attachTo The DOM element that this component will attach itself to. (required)
+			 */
+			'private':
+			{
+				attachTo:	null,
+				attachHow:	'append'
+			}
+		},
 		/**
 		 * 
 		 * @private
@@ -267,9 +281,6 @@ $JSKK.Class.create
 		_state:
 		{
 			'public':	{},
-			/**
-			 * @cfg attachTo The DOM element that this component will attach itself to. (required)
-			 */
 			'private':
 			{
 				attachTo:	null,
@@ -302,6 +313,7 @@ $JSKK.Class.create
 			this.my.name		=this.$reflect('name');
 			this.my.fullName	=this.$reflect('namespace')+'.'+this.$reflect('name');
 			this.my.namespace	=this.$reflect('namespace').split('.');
+			this.my.childSpace	=this.$reflect('namespace');
 			
 			if (Object.isUndefined(window.strappy.$components))
 			{
@@ -338,14 +350,28 @@ $JSKK.Class.create
 				function()
 				{
 					this.initChildComponents();
-					this.initStores();
-					this.initViews();
-					this.initControllers();
-					this.fireEvent('onAfterInit',this);
+					var	complete	=0,
+						onComplete	=function()
+						{
+							if (++complete==3)
+							{
+								this.fireEvent('onAfterInit',this);
+								this.onAfterInit();
+								for (var controller in this._controllers)
+								{
+									this._controllers[controller].onAfterCmpInit();
+								}
+							}
+						}.bind(this)
+					
+					this.initStores(onComplete);
+					this.initViews(onComplete);
+					this.initControllers(onComplete);
 				}.bind(this)
 			);
 			this.insertBaseContainer();
 		},
+		onAfterInit:	$JSKK.emptyFunction,
 		/**
 		 * Initalizes the component's conneciton to the Radio Tower.
 		 * 
@@ -566,7 +592,7 @@ $JSKK.Class.create
 		 * 
 		 * @private
 		 */
-		initControllers: function()
+		initControllers: function(callback)
 		{
 			this.observeOnce
 			(
@@ -576,18 +602,22 @@ $JSKK.Class.create
 					this.sendSignal(strappy.Signal.COMPONENT_IS_READY,'component',{origin:this.getIID()},this);
 				}.bind(this)
 			);
-			
-			for (var i=0,j=this.controllers.length; i<j; i++)
+			var	length	=this.controllers.length,
+				done	=0;
+			for (var i=0; i<length; i++)
 			{
-				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]]))
-				{
-					this._controllers[this.controllers[i]]=new this.my.NSObject[this.my.name.lowerFirst()].controller[this.controllers[i]](this);
-				}
-				else
-				{
-					throw new Error('Error controller "'+this.controllers[i]+'" not loaded on component "'+this.my.name+'".');
-					break;
-				}
+				$JSKK.require
+				(
+					this.my.childSpace+'.controller.'+this.controllers[i],
+					function(controller)
+					{
+						this._controllers[controller]=new this.my.NSObject.controller[controller](this);
+						if (++done==length)
+						{
+							callback();
+						}
+					}.bind(this,this.controllers[i])
+				);
 			}
 		},
 		/**
@@ -619,22 +649,40 @@ $JSKK.Class.create
 		 * 
 		 * @private
 		 */
-		initViews: function()
+		initViews: function(callback)
 		{
-			for (var i=0,j=this.views.length; i<j; i++)
+			var	length	=this.views.length,
+				done	=0;
+			for (var i=0; i<length; i++)
 			{
-				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
-				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view)
-				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]]))
-				{
-					this._views[this.views[i]]=new this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]](this);
-				}
-				else
-				{
-					throw new Error('Error - view "'+this.views[i]+'" not loaded on component "'+this.my.name+'".');
-					break;
-				}
+				$JSKK.require
+				(
+					this.my.childSpace+'.view.'+this.views[i],
+					function(view)
+					{
+						this._views[view]=new this.my.NSObject.view[view](this);
+						if (++done==length)
+						{
+							callback();
+						}
+					}.bind(this,this.views[i])
+				);
 			}
+			// for (var i=0,j=this.views.length; i<j; i++)
+			// {
+				
+			// 	if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
+			// 	&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view)
+			// 	&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]]))
+			// 	{
+			// 		this._views[this.views[i]]=new this.my.NSObject[this.my.name.lowerFirst()].view[this.views[i]](this);
+			// 	}
+			// 	else
+			// 	{
+			// 		throw new Error('Error - view "'+this.views[i]+'" not loaded on component "'+this.my.name+'".');
+			// 		break;
+			// 	}
+			// }
 		},
 		/**
 		 * Returns an associated view which is pre-defined in this
@@ -713,10 +761,18 @@ $JSKK.Class.create
 				throw new Error('Error - state property "'+key+'" has not been configured for component "'+this.my.name+'".');
 			}
 		},
+		getPublicState: function()
+		{
+			return this._state['public'];
+		},
+		getPrivateState: function()
+		{
+			return this._state['private'];
+		},
 		resetState: function()
 		{
-			this.setState(this._state['private']);
-			this.setState(this._state['public']);
+			this.setState(this.state['private']);
+			this.setState(this.state['public']);
 			return this;
 		},
 		/**
@@ -726,7 +782,7 @@ $JSKK.Class.create
 		 */
 		initState: function(state)
 		{
-			console.debug('initState',state,this._state);
+			// console.debug('initState',state,this._state);
 			var	self=this.$reflect('self'),
 				item=null;
 			
@@ -753,8 +809,7 @@ $JSKK.Class.create
 			Object.extend(this._state['private'],this.state['private']);
 			Object.extend(this._state['private'],state);
 			
-			
-			delete this.state;
+			// delete this.state;
 			
 			this.fireEvent('onConfigured',this);
 			
@@ -767,20 +822,24 @@ $JSKK.Class.create
 		 * 
 		 * @private
 		 */
-		initStores: function()
+		initStores: function(callback)
 		{
-			for (var i=0,j=this.stores.length; i<j; i++)
+			var	length	=this.stores.length,
+				done	=0;
+			for (var i=0; i<length; i++)
 			{
-				if (Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()])
-				&& Object.isDefined(this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]]))
-				{
-					this._stores[this.stores[i]]=new this.my.NSObject[this.my.name.lowerFirst()].store[this.stores[i]](this);
-				}
-				else
-				{
-					throw new Error('Error - store "'+this.stores[i]+'" not loaded for component "'+this.my.name+'".');
-					break;
-				}
+				$JSKK.require
+				(
+					this.my.childSpace+'.store.'+this.stores[i],
+					function(stores)
+					{
+						this._stores[stores]=new this.my.NSObject.store[stores](this);
+						if (++done==length)
+						{
+							callback();
+						}
+					}.bind(this,this.stores[i])
+				);
 			}
 		},
 		/**
@@ -790,6 +849,7 @@ $JSKK.Class.create
 		 */
 		setReady:		function()
 		{
+			if (this.ready)return;
 			this.ready=true;
 			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
 			{
@@ -884,7 +944,7 @@ $JSKK.Class.create
 				'</div>'
 			].join(''));
 			container.data('component',this);
-			$(this.getConfig('attachTo') || 'body')[this.getConfig('attachHow') || 'append'](container);
+			$(this.getState('attachTo') || 'body')[this.getState('attachHow') || 'append'](container);
 			
 		},
 		generateInstanceID: function()
@@ -953,35 +1013,39 @@ $JSKK.Class.create
 		 * See {@link strappy.trait.signal.Send#sendSignal}
 		 * @private
 		 */
-		sendSignal: function(name,type,filter,body)
+// 		sendSignal: function(name,type,filter,body)
+// 		{
+// //			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
+// 			if (!Object.isEmpty(name))
+// 			{
+// 				$JSKK.when(this,'radioTower').isAssocArray
+// 				(
+// 					function()
+// 					{
+// 						this.radioTower.fireEvent
+// 						(
+// 							name,
+// 							new strappy.Signal
+// 							(
+// 								{
+// 									name:	name,
+// 									body:	body,
+// 									type:	type,
+// 									filter:	filter
+// 								}
+// 							)
+// 						);
+// 					}.bind(this)
+// 				);
+// 			}
+// 			else
+// 			{
+// 				throw new Error('Class '+this.className+' attempted to fire an empty signal.');
+// 			}
+// 		},
+		getRadioTower: function()
 		{
-//			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
-			if (!Object.isEmpty(name))
-			{
-				$JSKK.when(this,'radioTower').isAssocArray
-				(
-					function()
-					{
-						this.radioTower.fireEvent
-						(
-							name,
-							new strappy.Signal
-							(
-								{
-									name:	name,
-									body:	body,
-									type:	type,
-									filter:	filter
-								}
-							)
-						);
-					}.bind(this)
-				);
-			}
-			else
-			{
-				throw new Error('Class '+this.className+' attempted to fire an empty signal.');
-			}
+			return this.radioTower;
 		},
 		/**
 		 * @deprecated
