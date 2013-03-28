@@ -69,6 +69,8 @@ $JSKK.Class.create
 		
 		transactions:	[],
 		
+		ready:			false,
+		
 		/**
 		 * @constructor
 		 * Sets up and validates the store.
@@ -87,7 +89,24 @@ $JSKK.Class.create
 			}
 			if (Object.isString(this.model))
 			{
-				this.model=$JSKK.namespace(this.model);
+				try
+				{
+					this.model=$JSKK.strToObject(this.model);
+					this.ready=true;
+				}
+				catch(e)
+				{
+					$JSKK.require
+					(
+						this.model,
+						function()
+						{
+							this.model=$JSKK.namespace(this.model);
+							this.ready=true;
+						}.bind(this)
+					);
+				}
+				
 			}
 		},
 		/**
