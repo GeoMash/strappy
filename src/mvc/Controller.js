@@ -31,7 +31,7 @@ $JSKK.Class.create
 		[
 			'strappy.trait.ComponentConnector',
 			'strappy.trait.signal.Receive',
-			'strappy.trait.signal.Send',
+			// 'strappy.trait.signal.Send',
 			'$JSKK.trait.Observable'
 		]
 	}
@@ -68,6 +68,7 @@ $JSKK.Class.create
 				}
 			);
 		},
+		onAfterCmpInit:	$JSKK.emptyFunction,
 		/**
 		 * This method will be called when a component fires a {@link strappy.Signal.CMP_DO_RECONFIGURE Do Reconfigure}
 		 * signal.
