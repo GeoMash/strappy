@@ -42,54 +42,60 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.init.$parent();
-			
-			if (!this.isShared())
-			{
-				if (!Object.isNull(this.model) && Object.isDefined(this.model))
+			$JSKK.when(this,'ready').isTrue
+			(
+				function()
 				{
-					this.records=this.newRecord(this.data);
-					for (var i=0,j=this.records.length; i<j; i++)
+					if (!this.isShared())
 					{
-						this.bindchangeEvent(this.records[i]);
+						
+						if (!Object.isNull(this.model) && Object.isDefined(this.model))
+						{
+							this.records=this.newRecord(this.data);
+							for (var i=0,j=this.records.length; i<j; i++)
+							{
+								this.bindchangeEvent(this.records[i]);
+							}
+							delete this.data;
+						}
+						else
+						{
+							throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
+						}
+						if (!Object.isNull(this.BTL))
+						{
+							if (Object.isString(this.BTL))
+							{
+								this.BTL	=$JSKK.namespace(this.BTL);
+								this.BTL_GET=$JSKK.namespace(this.BTL_GET);
+								this.BTL_SET=$JSKK.namespace(this.BTL_SET);
+							}
+						}
 					}
-					delete this.data;
-				}
-				else
-				{
-					throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
-				}
-				if (!Object.isNull(this.BTL))
-				{
-					if (Object.isString(this.BTL))
+					else
 					{
-						this.BTL	=$JSKK.namespace(this.BTL);
-						this.BTL_GET=$JSKK.namespace(this.BTL_GET);
-						this.BTL_SET=$JSKK.namespace(this.BTL_SET);
+						var	shared	=this.getShared(),
+							records	=shared.newRecord(this.data);
+						shared.add(records);
+						for (var i=0,j=records.length; i<j; i++)
+						{
+							this.bindchangeEvent(records[i]);
+						}
+						//Make a reference.
+						this.records=shared.records;
+						
+						if (!Object.isNull(shared.BTL))
+						{
+							if (Object.isString(shared.BTL))
+							{
+								shared.BTL		=$JSKK.namespace(shared.BTL);
+								shared.BTL_GET	=$JSKK.namespace(shared.BTL_GET);
+								shared.BTL_SET	=$JSKK.namespace(shared.BTL_SET);
+							}
+						}
 					}
-				}
-			}
-			else
-			{
-				var	shared	=this.getShared(),
-					records	=shared.newRecord(this.data);
-				shared.add(records);
-				for (var i=0,j=records.length; i<j; i++)
-				{
-					this.bindchangeEvent(records[i]);
-				}
-				//Make a reference.
-				this.records=shared.records;
-				
-				if (!Object.isNull(shared.BTL))
-				{
-					if (Object.isString(shared.BTL))
-					{
-						shared.BTL		=$JSKK.namespace(shared.BTL);
-						shared.BTL_GET	=$JSKK.namespace(shared.BTL_GET);
-						shared.BTL_SET	=$JSKK.namespace(shared.BTL_SET);
-					}
-				}
-			}
+				}.bind(this)
+			);
 		},
 		/**
 		 * Creates new model instances based on the attached model
