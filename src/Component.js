@@ -337,7 +337,6 @@ $JSKK.Class.create
 			this.initViewCache();
 			this.generateInstanceID();
 			this.initState(this.config);
-			
 			//We wait here so that we're 100% sure that there is a containing element for views to insert into.
 			$JSKK.when
 			(
@@ -521,7 +520,7 @@ $JSKK.Class.create
 	);
 		 * 
 		 */
-		newChildComponent: function(component,name)
+		newChildComponent: function(component,name,config)
 		{
 			var object=component;
 			if (Object.isString(component))
@@ -532,7 +531,7 @@ $JSKK.Class.create
 			{
 				if (!Object.isDefined(this.components[component]))
 				{
-					var cmp=new object();
+					var cmp=new object(config);
 					if (Object.isUndefined(name))
 					{
 						if (!Object.isArray(this.components[component]))
@@ -765,9 +764,13 @@ $JSKK.Class.create
 			}
 			else
 			{
-				console.trace();
-				throw new Error('Error - state property "'+key+'" has not been configured for component "'+this.my.name+'".');
+				return null;
 			}
+			// else
+			// {
+			// 	console.trace();
+			// 	throw new Error('Error - state property "'+key+'" has not been configured for component "'+this.my.name+'".');
+			// }
 		},
 		getPublicState: function()
 		{
