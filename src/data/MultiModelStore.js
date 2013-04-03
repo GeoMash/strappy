@@ -18,10 +18,11 @@ $JSKK.Class.create
 (
 	{},
 	{
-		BTL:		null,
-		BTL_GET:	null,
-		BTL_SET:	null,
-		model:		null,
+		BTL:			null,
+		BTL_GET:		null,
+		BTL_GET_QUERY:	null,
+		BTL_SET:		null,
+		model:			null,
 		/**
 		 * @property {Array} data initial records to start the store with.
 		 * @private
@@ -573,6 +574,10 @@ $JSKK.Class.create
 				if (changeset.length && Object.isFunction(target.BTL_SET))
 				{
 					target.BTL_SET(changeset);
+				}
+				if (Object.isUndefined(query))
+				{
+					query=target.BTL_GET_QUERY;
 				}
 				target.BTL_GET
 				(
