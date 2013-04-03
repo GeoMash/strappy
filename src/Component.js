@@ -945,6 +945,7 @@ $JSKK.Class.create
 			}
 			else
 			{
+				console.trace();
 				throw new Error('Error - store "'+store+'" has not been initilized for component "'+this.my.name+'".');
 			}
 		},
