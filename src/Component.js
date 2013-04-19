@@ -354,12 +354,22 @@ $JSKK.Class.create
 						{
 							if (++complete==3)
 							{
-								this.fireEvent('onAfterInit',this);
-								this.onAfterInit();
+								var	view		=null,
+									thisView	=null,
+									conroller	=null;
 								for (var controller in this._controllers)
 								{
 									this._controllers[controller].onAfterCmpInit();
 								}
+								for (var view in this._views)
+								{
+									this._views[view].onAfterCmpInit();
+									this._views[view].bindDOMEvents();
+									this._views[view]._ready=true;
+									this._views[view].fireEvent('onReady',view);
+								}
+								this.fireEvent('onAfterInit',this);
+								this.onAfterInit();
 							}
 						}.bind(this)
 					
@@ -849,10 +859,16 @@ $JSKK.Class.create
 					function(stores)
 					{
 						this._stores[stores]=new this.my.NSObject.store[stores](this);
-						if (++done==length)
-						{
-							callback();
-						}
+						$JSKK.when(this._stores[stores],'ready').isTrue
+						(
+							function()
+							{
+								if (++done==length)
+								{
+									callback();
+								}
+							}
+						);
 					}.bind(this,this.stores[i])
 				);
 			}
@@ -868,6 +884,7 @@ $JSKK.Class.create
 			this.ready=true;
 			if (this.fireEvent('onBeforeReadyState',this,true)!==false)
 			{
+				
 				var globalState=this.stateMgr.getState();
 				for (var item in globalState)
 				{

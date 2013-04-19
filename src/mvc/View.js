@@ -56,30 +56,48 @@ $JSKK.Class.create
         */
 		init: function()
 		{
-			var	cmp=this.cmp();
-			cmp.observe
-			(
-				'onReadyState',
-				function()
-				{
-					this.fetchTemplateContent
-					(
-						function()
-						{
-							this.observe('onStateChange',this.onStateChange.bind(this));
-							this._ready=true;
+			// var	cmp=this.cmp();
+			// cmp.observe
+			// (
+			// 	'onReadyState',
+			// 	function()
+			// 	{
+			// 		this.fetchTemplateContent
+			// 		(
+			// 			function()
+			// 			{
+			// 				this.observe('onStateChange',this.onStateChange.bind(this));
+			// 				this._ready=true;
 							/*
 							 * The following two lines need to be in this order so that
 							 * the view has a chance to set itself up before the state
 							 * controller flags the component as ready.
 							 */
-							this.onReady();
-							this.bindDOMEvents();
-							this.fireEvent('onReady',this);
-						}.bind(this)
-					);
+			// 				this.onReady();
+			// 				this.bindDOMEvents();
+			// 				this.fireEvent('onReady',this);
+			// 			}.bind(this)
+			// 		);
+			// 	}.bind(this)
+			// );
+			this.fetchTemplateContent
+			(
+				function()
+				{
+					// this.observe('onStateChange',this.onStateChange.bind(this));
+					// this._ready=true;
+					/*
+					 * The following two lines need to be in this order so that
+					 * the view has a chance to set itself up before the state
+					 * controller flags the component as ready.
+					 */
+					// this.onReady();
+					// this.bindDOMEvents();
+					// console.debug(this.$reflect('namespace'),'VIEW READY');
+					// this.fireEvent('onReady',this);
 				}.bind(this)
 			);
+			this.observe('onStateChange',this.onStateChange.bind(this));
 		},
 		fetchTemplateContent: function(onComplete)
 		{
@@ -155,6 +173,7 @@ $JSKK.Class.create
 		{
 			return this.templates[template];
 		},
+		onAfterCmpInit:	$JSKK.emptyFunction,
 		/**
 		 * 
 		 * @abstract
