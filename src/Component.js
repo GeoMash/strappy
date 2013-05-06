@@ -271,7 +271,9 @@ $JSKK.Class.create
 			'private':
 			{
 				attachTo:	null,
-				attachHow:	'append'
+				attachHow:	'append',
+				ref:		null,
+				fullRef:	null
 			}
 		},
 		/**
@@ -284,7 +286,9 @@ $JSKK.Class.create
 			'private':
 			{
 				attachTo:	null,
-				attachHow:	'append'
+				attachHow:	'append',
+				ref:		null,
+				fullRef:	null
 			}
 		},
 		/**
@@ -348,6 +352,10 @@ $JSKK.Class.create
 			(
 				function()
 				{
+					if (!this.getState('ref'))
+					{
+						this.setState('ref',this.my.fullName);
+					}
 					this.initChildComponents();
 					var	complete	=0,
 						onComplete	=function()
@@ -530,7 +538,7 @@ $JSKK.Class.create
 	);
 		 * 
 		 */
-		newChildComponent: function(component,name,config)
+		newChildComponent: function(component,name,config,observers)
 		{
 			var object=component;
 			if (Object.isString(component))
@@ -541,7 +549,7 @@ $JSKK.Class.create
 			{
 				if (!Object.isDefined(this.components[component]))
 				{
-					var cmp=new object(config);
+					var cmp=new object(config,observers);
 					if (Object.isUndefined(name))
 					{
 						if (!Object.isArray(this.components[component]))
@@ -608,7 +616,16 @@ $JSKK.Class.create
 				'onBeforeReadyState',
 				function()
 				{
-					this.sendSignal(strappy.Signal.COMPONENT_IS_READY,'component',{origin:this.getIID()},this);
+					this.sendSignal
+					(
+						strappy.Signal.COMPONENT_IS_READY,
+						'component',
+						{
+							origin:	this.getIID(),
+							ref:	this.ref
+						},
+						this
+					);
 				}.bind(this)
 			);
 			var	length	=this.controllers.length,
