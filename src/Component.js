@@ -695,10 +695,22 @@ $JSKK.Class.create
 					function(view)
 					{
 						this._views[view]=new this.my.NSObject.view[view](this);
-						if (++done==length)
-						{
-							callback();
-						}
+						$JSKK.when
+						(
+							function()
+							{
+								return this._views[view]._templatesReady;
+							}.bind(this)
+						).isTrue
+						(
+							function()
+							{
+								if (++done==length)
+								{
+									callback();
+								}
+							}
+						);
 					}.bind(this,this.views[i])
 				);
 			}
@@ -1110,6 +1122,22 @@ $JSKK.Class.create
 		reconfigure: function()
 		{
 			console.warn('The use of reconfigure() is deprecated as of Strappy 1.2. Use the new state management instead.');
+		},
+		getRef: function()
+		{
+			return this.getState('ref');
+		},
+		getFullRef: function()
+		{
+			return this.getState('fullRef');
+		},
+		eachChildCmp: function(callback)
+		{
+			for (var component in this.components)
+			{
+				callback(this.components[component],component);
+			}
+			return this;
 		}
 	}
 );

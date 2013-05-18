@@ -40,7 +40,7 @@ $JSKK.Class.create
 			onShow:				true,
 			onHide:				true
 		},
-		
+		_templatesReady:false,
 		_ready:			false,
 		_stateBindings:	{},
 		templates:		{},
@@ -56,45 +56,11 @@ $JSKK.Class.create
         */
 		init: function()
 		{
-			// var	cmp=this.cmp();
-			// cmp.observe
-			// (
-			// 	'onReadyState',
-			// 	function()
-			// 	{
-			// 		this.fetchTemplateContent
-			// 		(
-			// 			function()
-			// 			{
-			// 				this.observe('onStateChange',this.onStateChange.bind(this));
-			// 				this._ready=true;
-							/*
-							 * The following two lines need to be in this order so that
-							 * the view has a chance to set itself up before the state
-							 * controller flags the component as ready.
-							 */
-			// 				this.onReady();
-			// 				this.bindDOMEvents();
-			// 				this.fireEvent('onReady',this);
-			// 			}.bind(this)
-			// 		);
-			// 	}.bind(this)
-			// );
 			this.fetchTemplateContent
 			(
 				function()
 				{
-					// this.observe('onStateChange',this.onStateChange.bind(this));
-					// this._ready=true;
-					/*
-					 * The following two lines need to be in this order so that
-					 * the view has a chance to set itself up before the state
-					 * controller flags the component as ready.
-					 */
-					// this.onReady();
-					// this.bindDOMEvents();
-					// console.debug(this.$reflect('namespace'),'VIEW READY');
-					// this.fireEvent('onReady',this);
+					this._templatesReady=true;
 				}.bind(this)
 			);
 			this.observe('onStateChange',this.onStateChange.bind(this));
@@ -140,10 +106,16 @@ $JSKK.Class.create
 							requestPath,
 							function(requestPath,template,response)
 							{
-								this.getViewCache().set(requestPath,response);
 								this.templates[template]=response;
+								this.getViewCache().set(requestPath,response);
 								doneTemplates++;
 							}.bind(this,requestPath,template)
+						).fail
+						(
+							function()
+							{
+								console.warn('Missing template! "'+requestPath+'" could not be loaded. Module will not initialize!');
+							}.bind(this)
 						);
 					}
 				}
