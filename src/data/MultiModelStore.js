@@ -116,7 +116,7 @@ $JSKK.Class.create
 				records=[records];
 			}
 			var	newRecords	=[],
-				index=		0;
+				index		=0;
 			for (var i=0,j=records.length; i<j; i++)
 			{
 				index=newRecords.push(this.newRecord.$parent(records[i]));
@@ -199,6 +199,10 @@ $JSKK.Class.create
 				{
 					records[i]=this.newRecord(records[i])[0];
 				}
+				else
+				{
+					records[i].bindStore(this);
+				}
 				// records[i].flagDirty();
 				this.records.push(records[i]);
 				this.bindchangeEvent(records[i]);
@@ -211,7 +215,7 @@ $JSKK.Class.create
 		 * @param {Mixed} record The record to be removed from the store.
 		 * @return {strappy.data.MultiModelStore} this
 		 */
-		remove: function(record)
+		remove: function(record,supressEvent)
 		{
 			var newRecords=[];
 			for (var i=0,j=this.records.length; i<j; i++)
@@ -222,7 +226,10 @@ $JSKK.Class.create
 				}
 			}
 			this.records=newRecords;
-			this.fireEvent('onChange',this);
+			if (!supressEvent)
+			{
+				this.fireEvent('onChange',this);
+			}
 			return this;
 		},
 		/**
@@ -231,8 +238,8 @@ $JSKK.Class.create
 		 */
 		removeAll: function()
 		{
-			this.removeByRange(0,this.records.length);
-			this.fireEvent('onChange');
+			this.removeByRange(0,this.records.length,true);
+			this.fireEvent('onChange',this);
 			return this;
 		},
 		/**
@@ -241,7 +248,7 @@ $JSKK.Class.create
 		 * @param {Number} end index of the range to be deleted.
 		 * @return {strappy.data.MultiModelStore} this
 		 */
-		removeByRange: function(startIndex,endIndex)
+		removeByRange: function(startIndex,endIndex,supressEvent)
 		{
 			if(startIndex < 0 || startIndex > this.records.length)
 			{
@@ -261,7 +268,10 @@ $JSKK.Class.create
 				return this;
 			}
 			var sliced = this.records.splice(startIndex,endIndex);
-			this.fireEvent('onChange',this);
+			if (!supressEvent)
+			{
+				this.fireEvent('onChange',this);
+			}
 			return this;
 		},
 		/**
