@@ -21,6 +21,7 @@ define
 		'./SharedState',
 		'./StateMgr',
 		'./mvc/Model',
+		'./mvc/DynamicModel',
 		'./mvc/ViewCache',
 		'./mvc/View',
 		'./mvc/Controller',
