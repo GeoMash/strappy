@@ -30,6 +30,7 @@ $JSKK.Class.create
 			onChange:		true,
 			onLockChange:	true
 		},
+		_storeChangeEvent:	{},
 		/**
 		 * @property {Boolean} dirty A flag to show weather or not the model instance has been modified
 		 * since it was last synced.
@@ -119,7 +120,7 @@ $JSKK.Class.create
 		{
 			return this.store;
 		},
-		BTLSync: function()
+		BTLSync: function(callback)
 		{
 			var	store	=this.getStore(),
 				target	=(store.isShared()?store.getShared():store);
@@ -134,10 +135,14 @@ $JSKK.Class.create
 					{
 						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
-						this.set(record[0]);
+						this.set(record);
 						this.flagClean();
 						this.fireEvent('onSync',this,record);
 						this.fireEvent('onChange',this,record);
+						if (Object.isFunction(callback))
+						{
+							callback(this);
+						}
 					}.bind(this)
 				);
 			}
@@ -157,6 +162,10 @@ $JSKK.Class.create
 						this.flagClean();
 						this.fireEvent('onSync',this,record);
 						this.fireEvent('onChange',this,record);
+						if (Object.isFunction(callback))
+						{
+							callback(this);
+						}
 					}.bind(this)
 				);
 			}
