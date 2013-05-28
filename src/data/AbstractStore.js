@@ -139,69 +139,75 @@ $JSKK.Class.create
 		},
 		bindchangeEvent: function(record)
 		{
-			record.observe
-			(
-				'onChange',
-				function(model)
+			var fullStoreName=this.$reflect('namespace')+'.'+this.$reflect('name');
+			if (Object.isUndefined(record._storeChangeEvent[fullStoreName]))
+			{
+				record._storeChangeEvent[fullStoreName]=this.onModelChange.bind(this);
+			}
+			else
+			{
+				record.unobserve('onChange',record._storeChangeEvent[fullStoreName]);
+			}
+			record.observe('onChange',record._storeChangeEvent[fullStoreName]);
+		},
+		onModelChange: function(model)
+		{
+			/*
+			 * Check if the model is in a transaction.
+			 * 
+			 * If the model is not in a transaction, fire the
+			 * onModelChange and onChange events.
+			 * 
+			 * If the model is in a transaction, find the transaction
+			 * and check if it is the last model in the transaction.
+			 * 
+			 * 	*	If it is not the last model in the transaction,
+			 * 		only remove the model from the transaction's model list.
+			 * 		
+			 * 	*	If it is the last model in the transaction, remove the
+			 * 		model from the transaction's model list and remove the
+			 * 		transaction from the transaction list.
+			 * 		Then fire the onChange event.
+			 * 		
+			 */
+			if (this.isModelInAnyTransaction(model))
+			{
+				var index=false;
+				for (var i=0,j=this.transactions.length; i<j; i++)
 				{
-					/*
-					 * Check if the model is in a transaction.
-					 * 
-					 * If the model is not in a transaction, fire the
-					 * onModelChange and onChange events.
-					 * 
-					 * If the model is in a transaction, find the transaction
-					 * and check if it is the last model in the transaction.
-					 * 
-					 * 	*	If it is not the last model in the transaction,
-					 * 		only remove the model from the transaction's model list.
-					 * 		
-					 * 	*	If it is the last model in the transaction, remove the
-					 * 		model from the transaction's model list and remove the
-					 * 		transaction from the transaction list.
-					 * 		Then fire the onChange event.
-					 * 		
-					 */
-					if (this.isModelInAnyTransaction(model))
+					if (index)break;
+					for (var k=0,l=this.transactions[i].models.length; k<l; k++)
 					{
-						var index=false;
-						for (var i=0,j=this.transactions.length; i<j; i++)
+						if (this.transactions[i].models[k]==model)
 						{
-							if (index)break;
-							for (var k=0,l=this.transactions[i].models.length; k<l; k++)
-							{
-								if (this.transactions[i].models[k]==model)
-								{
-									index=i;
-									break;
-								}
-							}
+							index=i;
+							break;
 						}
-						if (index!==false)
-						{
-							if (this.transactions[index].models.length===1)
-							{
-								this.releaseModelFromTransaction(model,this.transactions[index].transaction);
-								this.releaseTransaction(this.transactions[index].transaction);
-								this.fireEvent('onChange',this,model);
-							}
-							else
-							{
-								this.releaseModelFromTransaction(model,this.transactions[index].transaction);
-							}
-						}
-						else
-						{
-							throw new Error('Unable to locate a model within a transaction. BTW, this should never happen! IOW - You\'re screwed :)');
-						}
+					}
+				}
+				if (index!==false)
+				{
+					if (this.transactions[index].models.length===1)
+					{
+						this.releaseModelFromTransaction(model,this.transactions[index].transaction);
+						this.releaseTransaction(this.transactions[index].transaction);
+						this.fireEvent('onChange',this,model);
 					}
 					else
 					{
-						this.fireEvent('onModelChange',this,model);
-						// this.fireEvent('onChange',this,model);
+						this.releaseModelFromTransaction(model,this.transactions[index].transaction);
 					}
-				}.bind(this)
-			);
+				}
+				else
+				{
+					throw new Error('Unable to locate a model within a transaction. BTW, this should never happen! IOW - You\'re screwed :)');
+				}
+			}
+			else
+			{
+				this.fireEvent('onModelChange',this,model);
+				// this.fireEvent('onChange',this,model);
+			}
 		},
 		/**
 		 * Returns the attached model (not an instance of it).
