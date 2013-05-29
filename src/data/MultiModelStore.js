@@ -573,7 +573,7 @@ $JSKK.Class.create
 		 * 
 		 * TODO: Detail this.
 		 */
-		sync: function(data,query)
+		sync: function(data,query,callback)
 		{
 			var target=(this.isShared()?this.getShared():this);
 			
@@ -594,7 +594,7 @@ $JSKK.Class.create
 				{
 					target.BTL_SET(changeset);
 				}
-				if (Object.isUndefined(query))
+				if (Object.isUndefined(query) || Object.isNull(query))
 				{
 					query=target.BTL_GET_QUERY;
 				}
@@ -613,6 +613,10 @@ $JSKK.Class.create
 						}
 						target.fireEvent('onChange',target,records);
 						target.fireEvent('onSync',target,records);
+						if (Object.isFunction(callback))
+						{
+							callback(this);
+						}
 					}.bind(this)
 				);
 				target.BTL.executeQueue();
