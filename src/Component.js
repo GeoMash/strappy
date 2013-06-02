@@ -746,6 +746,7 @@ $JSKK.Class.create
 			}
 			else
 			{
+				console.trace();
 				throw new Error('Error - view "'+view+'" has not been initilized on component "'+this.my.name+'".');
 			}
 		},
