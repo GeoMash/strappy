@@ -1,3 +1,3 @@
 [submodule "src/ccl"]
 	path = src/ccl
-	url = https://github.com:melechi/strappy-CCL.git
+	url = https://github.com/melechi/strappy-CCL.git
