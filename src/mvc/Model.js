@@ -249,7 +249,26 @@ $JSKK.Class.create
 		 */
         get: function(key)
 		{
-			return this.record[key];
+			if (key.indexOf('.')===-1)
+			{
+				return this.record[key];
+			}
+			else
+			{
+				keyParts=key.split('.');
+				value=this.record;
+				for (var i=0,j=keyParts.length;  i<j; i++)
+				{
+					value=value[keyParts[i]];
+					if (Object.isUndefined(value))
+					{
+						value=null;
+						break;
+					}
+				}
+				return value;
+			}
+			
 			
 			
 			// if (this.lockState==strappy.mvc.Model.LOCK_NONE
@@ -317,8 +336,32 @@ $JSKK.Class.create
 			}
 			for (var field in keyVals)
 			{
-				this.record[field]=keyVals[field];
+				if (field.indexOf('.')===-1)
+				{
+					this.record[field]=keyVals[field];
+				}
+				else
+				{console.debug(1);
+					var	fieldParts	=field.split('.'),
+						object		=this.record;
+					for (var i=0,j=fieldParts.length;  i<j; i++)
+					{console.debug('object:',object);
+						if (Object.isUndefined(object[fieldParts[i]]))
+						{
+							break;
+						}
+						if ((i+1)!=j)
+						{
+							object=object[fieldParts[i]];
+						}
+					}
+					// console.debug('set',object,keyVals[field],field);
+					object[fieldParts[j-1]]=keyVals[field];
+				}
 			}
+			
+			
+			
 			this.flagDirty();
 			// if (this.lockState==strappy.mvc.Model.LOCK_NONE || this.isClone())
 			// {
