@@ -341,11 +341,11 @@ $JSKK.Class.create
 					this.record[field]=keyVals[field];
 				}
 				else
-				{console.debug(1);
+				{
 					var	fieldParts	=field.split('.'),
 						object		=this.record;
 					for (var i=0,j=fieldParts.length;  i<j; i++)
-					{console.debug('object:',object);
+					{
 						if (Object.isUndefined(object[fieldParts[i]]))
 						{
 							break;
