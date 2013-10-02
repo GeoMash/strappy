@@ -17,6 +17,10 @@ $JSKK.Class.create
 		[
 			'$JSKK.trait.Configurable',
 			'$JSKK.trait.Observable'
+		],
+		$requires:
+		[
+			'strappy.data.proxy.BTL'
 		]
 	}
 )
