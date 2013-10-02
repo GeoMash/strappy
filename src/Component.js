@@ -77,7 +77,7 @@ $JSKK.Class.create
 		[
 			'$JSKK.trait.Configurable',
 			'$JSKK.trait.Observable',
-			'strappy.trait.signal.Send',
+			'strappy.trait.signal.Send'
 		]
 	}
 )
@@ -495,6 +495,7 @@ $JSKK.Class.create
 						}
 						else
 						{
+							console.trace();
 							throw new Error('Error! component "'+this.components[component]+'" not loaded.');
 							break;
 						}
@@ -502,6 +503,7 @@ $JSKK.Class.create
 				}
 				else
 				{
+					console.trace();
 					throw new Error('Error! component "'+this.components[component]+'" not loaded.');
 					break;
 				}
@@ -567,6 +569,7 @@ $JSKK.Class.create
 			}
 			else
 			{
+				console.trace();
 				throw new Error('Error! component "'+this.components[component]+'" not loaded.');
 			}
 		},
@@ -671,6 +674,7 @@ $JSKK.Class.create
 			}
 			else
 			{
+				console.trace();
 				throw new Error('Error - controller "'+controller+'" has not been initilized on component "'+this.my.name+'".');
 			}
 		},
@@ -981,7 +985,7 @@ $JSKK.Class.create
 		 * components "models" property.
 		 * 
 		 * @param {String} store The name of the store to get.
-		 * @throws 
+		 * @throws Error Store not initialized.
 		 * @return {strappy.mvc.Model} The requested store if it has been defined.
 		 */
 		getStore: function(store)
