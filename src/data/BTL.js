@@ -73,7 +73,7 @@ $JSKK.Class.create
 			/**
 			 * @cfg proxy
 			 */
-			proxy:		strappy.data.proxy.BTL
+			proxy:		null
 		},
 		events:
 		{
@@ -104,6 +104,10 @@ $JSKK.Class.create
 		 */
 		init: function()
 		{
+			if (Object.isUndefined(this.config.proxy) || Object.isNull(this.config.proxy))
+			{
+				this.config.proxy=strappy.data.proxy.BTL;
+			}
 			// if (this.config.debug)
 			// {
 			// 	this.debugWindow=$('<div id="strappy-BTL-debugWindow"><h2>BTL Requests</h2><ul></ul></div>');
