@@ -30,6 +30,7 @@ $JSKK.Class.create
 			config.url=this.config.url;
 			if (this.fireEvent('onBeforeRequest',this,config)!==false)
 			{
+				var seen=[];
 				$.ajax
 				(
 					{
@@ -37,7 +38,22 @@ $JSKK.Class.create
 						contentType:	'application/json',
 						processData:	false,
 						url:			config.url,
-						data:			JSON.stringify(config.data) || {}
+						data:			JSON.stringify
+										(
+											config.data,
+											function(key, val)
+											{
+												if (typeof val == "object")
+												{
+													if (seen.indexOf(val) >= 0)
+													{
+														return;
+													}
+													seen.push(val);
+												}
+												return val;
+											}
+										) || {}
 					}
 				)
 				.done(this._onDone.bind(this,config))
