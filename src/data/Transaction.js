@@ -134,8 +134,8 @@ $JSKK.Class.create
 		attachModel: function(model)
 		{
 			if (Object.isDefined(model)
-			&& Object.isFunction(model.$reflect)
-			&& (model.$reflect('extends')==strappy.mvc.Model || model.$reflect('extends')==strappy.mvc.DynamicModel))
+			&& Object.isFunction(model.$reflect))
+//			&& (model.$reflect('extends')==strappy.mvc.Model || model.$reflect('extends')==strappy.mvc.DynamicModel))
 			{
 				/**
 				 * If the model has an attached store, inform it that
