@@ -114,6 +114,14 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 *
+		 */
+		detachFromStore: function()
+		{
+			this.store.remove(this);
+			return this;
+		},
+		/**
 		 * 
 		 */
 		getStore: function()
