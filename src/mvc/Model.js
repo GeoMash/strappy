@@ -332,8 +332,9 @@ $JSKK.Class.create
 		 */
         set: function()
 		{
-			var	args		=$JSKK.toArray(arguments),
-				keyVals		={};
+			var	args			=$JSKK.toArray(arguments),
+				keyVals			={},
+				someValueChanged=false;
 			if (Object.isDefined(args[1]))
 			{
 				keyVals[args.shift()]=args.shift();
@@ -346,7 +347,11 @@ $JSKK.Class.create
 			{
 				if (field.indexOf('.')===-1)
 				{
-					this.record[field]=keyVals[field];
+					if (this.record[field]!==keyVals[field])
+					{
+						this.record[field]=keyVals[field];
+						someValueChanged=true;
+					}
 				}
 				else
 				{
@@ -364,13 +369,17 @@ $JSKK.Class.create
 						}
 					}
 					// console.debug('set',object,keyVals[field],field);
-					object[fieldParts[j-1]]=keyVals[field];
+					if (object[fieldParts[j-1]]!==keyVals[field])
+					{
+						object[fieldParts[j-1]]=keyVals[field];
+						someValueChanged=true;
+					}
 				}
 			}
-			
-			
-			
-			this.flagDirty();
+			if (someValueChanged)
+			{
+				this.flagDirty();
+			}
 			// if (this.lockState==strappy.mvc.Model.LOCK_NONE || this.isClone())
 			// {
 			// 	var	args		=$JSKK.toArray(arguments),
@@ -393,7 +402,7 @@ $JSKK.Class.create
 			// {
 			// 	throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents any modification.');
 			// }
-			if (this.lockState==strappy.mvc.Model.LOCK_NONE && !this.isClone())
+			if (this.lockState==strappy.mvc.Model.LOCK_NONE && !this.isClone() && someValueChanged)
 			{
 				this.fireEvent('onChange',this);
 			}
