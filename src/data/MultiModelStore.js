@@ -57,7 +57,8 @@ $JSKK.Class.create
 							this.records=this.newRecord(this.data);
 							for (var i=0,j=this.records.length; i<j; i++)
 							{
-								this.bindchangeEvent(this.records[i]);
+								this.bindChangeEvent(this.records[i]);
+								this.bindRemoveEvent(this.records[i]);
 							}
 							delete this.data;
 						}
@@ -93,7 +94,8 @@ $JSKK.Class.create
 						shared.add(records);
 						for (var i=0,j=records.length; i<j; i++)
 						{
-							this.bindchangeEvent(records[i]);
+							this.bindChangeEvent(records[i]);
+							this.bindRemoveEvent(records[i]);
 						}
 						//Make a reference.
 						this.records=shared.records;
@@ -229,7 +231,8 @@ $JSKK.Class.create
 				}
 				// records[i].flagDirty();
 				this.records.push(records[i]);
-				this.bindchangeEvent(records[i]);
+				this.bindChangeEvent(records[i]);
+				this.bindRemoveEvent(records[i]);
 			}
 			this.fireEvent('onChange',this);
 			return this;
@@ -261,7 +264,9 @@ $JSKK.Class.create
 			this.records=newRecords;
 			if (!supressEvent)
 			{
+				record.fireEvent('onRemove',record,this);
 				this.fireEvent('onChange',this);
+				this.fireEvent('onModelRemove',this,record);
 			}
 			return this;
 		},
@@ -271,16 +276,6 @@ $JSKK.Class.create
 		 */
 		removeAll: function()
 		{
-			var	target=(this.isShared()?this.getShared():this);
-			target.BTL.startQueue();
-			if (Object.isFunction(target.BTL_REMOVE))
-			{
-				for (var i=0,j=this.records.length; i<j; i++)
-				{
-					target.BTL_REMOVE({_type:records[i].get('_type'),id:records[i].getId()},null);
-				}
-				target.BTL.executeQueue();
-			}
 			this.removeByRange(0,this.records.length,true);
 			this.fireEvent('onChange',this);
 			return this;
@@ -310,9 +305,24 @@ $JSKK.Class.create
 				// console.log("EndIndex is out of range.");
 				return this;
 			}
-			var sliced = this.records.splice(startIndex,endIndex);
+			var	sliced	=this.records.splice(startIndex,endIndex),
+				target	=(this.isShared()?this.getShared():this);
+			if (Object.isFunction(target.BTL_REMOVE))
+			{
+				target.BTL.startQueue();
+				for (var i=0,j=sliced.length; i<j; i++)
+				{
+					target.BTL_REMOVE({_type:sliced[i].get('_type'),id:sliced[i].getId()},null);
+				}
+				target.BTL.executeQueue();
+			}
 			if (!supressEvent)
 			{
+				for (var i=0,j=sliced.length; i<j; i++)
+				{
+					sliced[i].fireEvent('onRemove',record,this);
+					this.fireEvent('onModelRemove',this,sliced[i]);
+				}
 				this.fireEvent('onChange',this);
 			}
 			return this;
@@ -652,7 +662,8 @@ $JSKK.Class.create
 						this.records	=target.records;
 						for (var i=0,j=target.records.length; i<j; i++)
 						{
-							target.bindchangeEvent(target.records[i]);
+							target.bindChangeEvent(target.records[i]);
+							target.bindRemoveEvent(target.records[i]);
 						}
 						target.fireEvent('onChange',target,records);
 						target.fireEvent('onSync',target,records);
@@ -684,7 +695,8 @@ $JSKK.Class.create
 							this.records	=target.records;
 							for (var i=0,j=target.records.length; i<j; i++)
 							{
-								target.bindchangeEvent(target.records[i]);
+								target.bindChangeEvent(target.records[i]);
+								target.bindRemoveEvent(target.records[i]);
 							}
 							target.fireEvent('onChange',target,response);
 							target.fireEvent('onSync',target,response);

@@ -28,9 +28,11 @@ $JSKK.Class.create
 			onSync:			true,
 			onFailedSync:	true,
 			onChange:		true,
+			onRemove:		true,
 			onLockChange:	true
 		},
 		_storeChangeEvent:	{},
+		_storeRemoveEvent:	{},
 		/**
 		 * @property {Boolean} dirty A flag to show weather or not the model instance has been modified
 		 * since it was last synced.

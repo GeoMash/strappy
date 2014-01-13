@@ -37,7 +37,8 @@ $JSKK.Class.create
 				if (!Object.isNull(this.model) && Object.isDefined(this.model))
 				{
 					this.record=this.newRecord(this.data);
-					this.bindchangeEvent(this.record);
+					this.bindChangeEvent(this.record);
+					this.bindRemoveEvent(this.record);
 					delete this.data;
 				}
 				else
@@ -70,7 +71,8 @@ $JSKK.Class.create
 				var	shared=this.getShared(),
 					record=shared.newRecord(this.data);
 				this.getShared().add(records);
-				this.bindchangeEvent(record);
+				this.bindChangeEvent(record);
+				this.bindRemoveEvent(record);
 				//Make a reference.
 				this.record=shared.record;
 				if (Object.isString(shared.BTL))
