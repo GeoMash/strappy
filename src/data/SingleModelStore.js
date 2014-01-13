@@ -17,9 +17,12 @@ $JSKK.Class.create
 (
 	{},
 	{
-		BTL:		null,
-		BTL_GET:	null,
-		BTL_SET:	null,
+		BTL:			null,
+		BTL_GET:		null,
+		BTL_GET_QUERY:	null,
+		BTL_SET:		null,
+		BTL_REMOVE:		null,
+		BTL_CHECK:		null,
 		/**
 		 * @constructor
 		 * Sets up and validates the store.
@@ -41,13 +44,24 @@ $JSKK.Class.create
 				{
 					throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
 				}
-				if (!Object.isNull(this.BTL))
+				if (Object.isString(this.BTL))
 				{
-					if (Object.isString(this.BTL))
+					this.BTL=$JSKK.namespace(this.BTL);
+					if (Object.isString(this.BTL_GET))
 					{
-						this.BTL	=$JSKK.namespace(this.BTL);
 						this.BTL_GET=$JSKK.namespace(this.BTL_GET);
-						this.BTL_SET=$JSKK.namespace(this.BTL_SET);
+					}
+					if (Object.isString(this.BTL_SET))
+					{
+						this.BTL_SET=$JSKK.namespace(this.BTL_REMOVE);
+					}
+					if (Object.isString(this.BTL_REMOVE))
+					{
+						this.BTL_REMOVE=$JSKK.namespace(this.BTL_REMOVE);
+					}
+					if (Object.isString(this.BTL_CHECK))
+					{
+						this.BTL_CHECK=$JSKK.namespace(this.BTL_CHECK);
 					}
 				}
 			}
@@ -59,13 +73,24 @@ $JSKK.Class.create
 				this.bindchangeEvent(record);
 				//Make a reference.
 				this.record=shared.record;
-				if (!Object.isNull(shared.BTL))
+				if (Object.isString(shared.BTL))
 				{
-					if (Object.isString(shared.BTL))
+					shared.BTL=$JSKK.namespace(shared.BTL);
+					if (Object.isString(shared.BTL_GET))
 					{
-						shared.BTL		=$JSKK.namespace(shared.BTL);
-						shared.BTL_GET	=$JSKK.namespace(shared.BTL_GET);
-						shared.BTL_SET	=$JSKK.namespace(shared.BTL_SET);
+						shared.BTL_GET=$JSKK.namespace(shared.BTL_GET);
+					}
+					if (Object.isString(shared.BTL_SET))
+					{
+						shared.BTL_SET=$JSKK.namespace(shared.BTL_SET);
+					}
+					if (Object.isString(shared.BTL_REMOVE))
+					{
+						shared.BTL_REMOVE=$JSKK.namespace(shared.BTL_REMOVE);
+					}
+					if (Object.isString(shared.BTL_CHECK))
+					{
+						shared.BTL_CHECK=$JSKK.namespace(shared.BTL_CHECK);
 					}
 				}
 			}

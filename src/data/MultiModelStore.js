@@ -22,6 +22,8 @@ $JSKK.Class.create
 		BTL_GET:		null,
 		BTL_GET_QUERY:	null,
 		BTL_SET:		null,
+		BTL_REMOVE:		null,
+		BTL_CHECK:		null,
 		model:			null,
 		/**
 		 * @property {Array} data initial records to start the store with.
@@ -63,13 +65,24 @@ $JSKK.Class.create
 						{
 							throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
 						}
-						if (!Object.isNull(this.BTL))
+						if (Object.isString(this.BTL))
 						{
-							if (Object.isString(this.BTL))
+							this.BTL=$JSKK.namespace(this.BTL);
+							if (Object.isString(this.BTL_GET))
 							{
-								this.BTL	=$JSKK.namespace(this.BTL);
 								this.BTL_GET=$JSKK.namespace(this.BTL_GET);
+							}
+							if (Object.isString(this.BTL_SET))
+							{
 								this.BTL_SET=$JSKK.namespace(this.BTL_SET);
+							}
+							if (Object.isString(this.BTL_REMOVE))
+							{
+								this.BTL_REMOVE=$JSKK.namespace(this.BTL_REMOVE);
+							}
+							if (Object.isString(this.BTL_CHECK))
+							{
+								this.BTL_CHECK=$JSKK.namespace(this.BTL_CHECK);
 							}
 						}
 					}
@@ -85,13 +98,24 @@ $JSKK.Class.create
 						//Make a reference.
 						this.records=shared.records;
 						
-						if (!Object.isNull(shared.BTL))
+						if (Object.isString(shared.BTL))
 						{
-							if (Object.isString(shared.BTL))
+							shared.BTL=$JSKK.namespace(shared.BTL);
+							if (Object.isString(shared.BTL_GET))
 							{
-								shared.BTL		=$JSKK.namespace(shared.BTL);
-								shared.BTL_GET	=$JSKK.namespace(shared.BTL_GET);
-								shared.BTL_SET	=$JSKK.namespace(shared.BTL_SET);
+								shared.BTL_GET=$JSKK.namespace(shared.BTL_GET);
+							}
+							if (Object.isString(shared.BTL_SET))
+							{
+								shared.BTL_SET=$JSKK.namespace(shared.BTL_SET);
+							}
+							if (Object.isString(shared.BTL_REMOVE))
+							{
+								shared.BTL_REMOVE=$JSKK.namespace(shared.BTL_REMOVE);
+							}
+							if (Object.isString(shared.BTL_CHECK))
+							{
+								shared.BTL_CHECK=$JSKK.namespace(shared.BTL_CHECK);
 							}
 						}
 					}
@@ -212,12 +236,21 @@ $JSKK.Class.create
 		},
 		/**
 		 * Removes a record from the store.
+		 * 
+		 * NOTE: This will auto remove the record form the server if
+		 * it is attached to a BTL_REMOVE method.
+		 * 
 		 * @param {Mixed} record The record to be removed from the store.
 		 * @return {strappy.data.MultiModelStore} this
 		 */
 		remove: function(record,supressEvent)
 		{
-			var newRecords=[];
+			var	target		=(this.isShared()?this.getShared():this),
+				newRecords	=[];
+			if (Object.isFunction(target.BTL_REMOVE))
+			{
+				target.BTL_REMOVE({_type:record.get('_type'),id:record.getId()},null);
+			}
 			for (var i=0,j=this.records.length; i<j; i++)
 			{
 				if (this.records[i]!=record)
@@ -238,6 +271,16 @@ $JSKK.Class.create
 		 */
 		removeAll: function()
 		{
+			var	target=(this.isShared()?this.getShared():this);
+			target.BTL.startQueue();
+			if (Object.isFunction(target.BTL_REMOVE))
+			{
+				for (var i=0,j=this.records.length; i<j; i++)
+				{
+					target.BTL_REMOVE({_type:records[i].get('_type'),id:records[i].getId()},null);
+				}
+				target.BTL.executeQueue();
+			}
 			this.removeByRange(0,this.records.length,true);
 			this.fireEvent('onChange',this);
 			return this;
