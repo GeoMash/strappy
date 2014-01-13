@@ -137,6 +137,7 @@ $JSKK.Class.create
 			target.BTL.startQueue();
 			if (this.isDirty())
 			{
+				this.flagClean();
 				target.BTL_SET
 				(
 					this.getRecord(),
@@ -146,7 +147,6 @@ $JSKK.Class.create
 						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
 						this.set(record);
-						this.flagClean();
 						this.fireEvent('onSync',this,record);
 						this.fireEvent('onChange',this,record);
 						if (Object.isFunction(callback))
@@ -160,6 +160,7 @@ $JSKK.Class.create
 			{
 				var query={};
 				query[this.idField]=this.getId();
+				this.flagClean();
 				target.BTL_GET
 				(
 					null,
@@ -169,7 +170,6 @@ $JSKK.Class.create
 						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
 						this.set(record[0]);
-						this.flagClean();
 						this.fireEvent('onSync',this,record);
 						this.fireEvent('onChange',this,record);
 						if (Object.isFunction(callback))
