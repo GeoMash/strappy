@@ -570,7 +570,7 @@ $JSKK.Class.create
 			else
 			{
 				console.trace();
-				throw new Error('Error! component "'+this.components[component]+'" not loaded.');
+				throw new Error('Error! component "'+component+'" not loaded.');
 			}
 		},
 		newInitQueue: function(onAllReady,onItemReady)
