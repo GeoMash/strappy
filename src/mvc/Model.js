@@ -76,6 +76,11 @@ $JSKK.Class.create
 		 */
 		lockState:	'none',
 		/**
+		 * @property {Boolean] eventsEnabled True to allow events and false to block them from being fired.
+		 * @private
+		 */
+		eventsEnabled: true,
+		/**
 		 * 
 		 */
 		init: function(record)
@@ -147,8 +152,11 @@ $JSKK.Class.create
 						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
 						this.set(record);
-						this.fireEvent('onSync',this,record);
-						this.fireEvent('onChange',this,record);
+						if (this.eventsEnabled)
+						{
+							this.fireEvent('onSync',this,record);
+							this.fireEvent('onChange',this,record);
+						}
 						if (Object.isFunction(callback))
 						{
 							callback(this);
@@ -170,8 +178,11 @@ $JSKK.Class.create
 						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
 						this.set(record[0]);
-						this.fireEvent('onSync',this,record);
-						this.fireEvent('onChange',this,record);
+						if (this.eventsEnabled)
+						{
+							this.fireEvent('onSync',this,record);
+							this.fireEvent('onChange',this,record);
+						}
 						if (Object.isFunction(callback))
 						{
 							callback(this);
@@ -212,7 +223,7 @@ $JSKK.Class.create
 							}
 							
 							
-							if (!this.isClone())
+							if (!this.isClone() && this.eventsEnabled)
 							{
 								this.fireEvent('onSync',this);
 								this.fireEvent('onChange',this);
@@ -227,7 +238,7 @@ $JSKK.Class.create
 						}.bind(this),
 						onFailure: function()
 						{
-							if (!this.isClone())
+							if (!this.isClone() && this.eventsEnabled)
 							{
 								this.fireEvent('onFailedSync',this);
 							}
@@ -406,7 +417,10 @@ $JSKK.Class.create
 			// }
 			if (this.lockState==strappy.mvc.Model.LOCK_NONE && !this.isClone() && someValueChanged)
 			{
-				this.fireEvent('onChange',this);
+				if (this.eventsEnabled)
+				{
+					this.fireEvent('onChange',this);
+				}
 			}
 		},
 		/**
@@ -459,7 +473,7 @@ $JSKK.Class.create
 			if (['none','readonly','full'].inArray(lockType))
 			{
 				this.lockState=lockType;
-				if (supressEvent!==true && !this.isClone())
+				if (supressEvent!==true && !this.isClone() && this.eventsEnabled)
 				{
 					this.fireEvent('onLockChange',this,this.lockState);
 				}
@@ -538,6 +552,24 @@ $JSKK.Class.create
 		{
 			delete this.phantom;
 			this.phantom=null;
+			return this;
+		},
+		/**
+		 * Enables events to be fired on this model.
+		 * @return {strappy.mvc.Model} this
+		 */
+		enableEvents: function()
+		{
+			this.eventsEnabled=true;
+			return this;
+		},
+		/**
+		 * Disables events to be fired on this model.
+		 * @return {strappy.mvc.Model} this
+		 */
+		disableEvents: function()
+		{
+			this.eventsEnabled=false;
 			return this;
 		}
 	}
