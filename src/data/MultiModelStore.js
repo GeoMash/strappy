@@ -276,8 +276,10 @@ $JSKK.Class.create
 		 */
 		removeAll: function()
 		{
-			this.removeByRange(0,this.records.length,true);
-			this.fireEvent('onChange',this);
+//			this.removeByRange(0,this.records.length,true);
+//			this.fireEvent('onChange',this);
+			
+			this.removeByRange(0,this.records.length);
 			return this;
 		},
 		/**
@@ -320,7 +322,7 @@ $JSKK.Class.create
 			{
 				for (var i=0,j=sliced.length; i<j; i++)
 				{
-					sliced[i].fireEvent('onRemove',record,this);
+					sliced[i].fireEvent('onRemove',sliced[i],this);
 					this.fireEvent('onModelRemove',this,sliced[i]);
 				}
 				this.fireEvent('onChange',this);
