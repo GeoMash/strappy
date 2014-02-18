@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='strappy-data-Queue'>/**
+</span> * @class strappy.data.Queue
+ * 
+ * This class is used by other data communication classes
+ * to provide a means to queue up requests via proxies.
+ * 
+ * @uses strappy.mvc.Model
+ */
+$JSKK.Class.create
+(
+	{
+		$namespace:		'strappy.data',
+		$name:			'Queue'
+	}
+)
+(
+	{},
+	{
+<span id='strappy-data-Queue-property-proxies'>		/**
+</span>		 * @property proxies Contains a list of attached proxies.
+		 * @private
+		 */
+		proxies:		[],
+<span id='strappy-data-Queue-property-requests'>		/**
+</span>		 * @property requests Contains a list of captured requests.
+		 * @private
+		 */
+		requests:		{},
+<span id='strappy-data-Queue-property-executing'>		/**
+</span>		 * @property executing A flag to determin weather or not the queued items are being run or not.
+		 * @private
+		 */
+		executing:		false,
+<span id='strappy-data-Queue-property-nextSequence'>		/**
+</span>		 * @property nextSequence Incremental sequencing number.
+		 * @private
+		 */
+		nextSequence:	1,
+<span id='strappy-data-Queue-method-attachProxy'>		/**
+</span>		 * This method attaches a proxy to the queue object. Any request
+		 * the proxy makes will be intercepted and stored in the request queue
+		 * until the {@link strappy.data.Queue.execute() execute} method is called.
+		 * @param {strappy.data.proxy.AbstractProxy} proxy 
+		 * @return {strappy.data.Queue} this
+		 */
+		attachProxy: function(proxy)
+		{
+			if (!this.proxies.inArray(proxy))
+			{
+				this.proxies.push(proxy);
+				proxy.observe
+				(
+					'onBeforeRequest',
+					function(proxy,request)
+					{
+						if (this.executing)return true;
+//						console.debug('onBeforeRequest',request);
+						if (Object.isDefined(request.url))
+						{
+							if (Object.isUndefined(this.requests[request.url]))
+							{
+								this.requests[request.url]=[];
+							}
+							request.sequence=this.nextSequence++;
+							request.proxy	=proxy;
+							if (!Object.isDefined(request.data))
+							{
+								request.data=null;
+							}
+							this.requests[request.url].push(request);
+							delete request.url;
+						}
+						return false;
+					}.bind(this)
+				);
+//				console.debug('PROXY',proxy);
+			}
+			return this;
+		},
+<span id='strappy-data-Queue-method-execute'>		/**
+</span>		 * Executes the queue, running all queued requests as a single batched request.
+		 * 
+		 * @return {strappy.data.Queue} this
+		 */
+		execute: function()
+		{
+			this.executing	=true;
+			var	url			=null,
+				requests	=[];
+			for (url in this.requests)
+			{
+				for (var i=0,j=this.requests[url].length; i&lt;j; i++)
+				{
+					if (Object.isUndefined(this.requests[url][i].data.timestamp))
+					{
+						this.requests[url][i].data.timestamp=Date.parse(new Date());
+					}
+					this.requests[url][i].data.sequence=this.requests[url][i].sequence;
+					
+					requests.push
+					(
+						this.requests[url][i].data
+					);
+				}
+				
+				this.requests[url][0].proxy.raw
+				(
+					{
+						data:		requests,
+						onSuccess:	this.__onDone.bind(this),
+						onFailure:	this.__onDone.bind(this),
+						onComplete:	this.__onDone.bind(this)
+					}
+				);
+			}
+			return this;
+		},
+<span id='strappy-data-Queue-method-__onDone'>		/**
+</span>		 * 
+		 * @private 
+		 */
+		__onDone: function(response)
+		{
+			var request=null;
+			for (var i=0,j=response.length; i&lt;j; i++)
+			{
+				request=this.getRequest(response[i].sequence);
+				if (response[i].success)
+				{
+					if (Object.isFunction(request.onComplete))	request.onComplete(response[i]);
+					if (Object.isFunction(request.onSuccess))	request.onSuccess(response[i]);
+				}
+				else
+				{
+					if (Object.isFunction(request.onComplete))	request.onComplete(response[i]);
+					if (Object.isFunction(request.onFailure))	request.onFailure(response[i]);
+				}
+			}
+		},
+<span id='strappy-data-Queue-method-push'>		/**
+</span>		 * Pushes a raw request object into the queue.
+		 * 
+		 * @param {Object} request A raw request object. Note that this must
+		 * also include a &quot;url&quot; property.
+		 * 
+		 * @return {strappy.data.Queue} this
+		 */
+		push: function(request)
+		{
+			this.requests[request.url].push(request);
+			delete request.url;
+			return this;
+		},
+<span id='strappy-data-Queue-method-getRequest'>		/**
+</span>		 * Fetches a request based on its assigned sequence number.
+		 * 
+		 * @param {Number} sequence The sequence number for the request.
+		 * @return {Mixed} The request object if found, or null.
+		 */
+		getRequest: function(sequence)
+		{
+			for (var url in this.requests)
+			{
+				for (var i=0,j=this.requests[url].length; i&lt;j; i++)
+				{
+					if (this.requests[url][i].sequence==sequence)
+					{
+						return this.requests[url][i];
+					}
+				}
+			}
+			return null;
+		}
+	}
+);</pre>
+</body>
+</html>

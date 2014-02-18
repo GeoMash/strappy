@@ -1,0 +1,3 @@
+[submodule "src/ccl"]
+	path = src/ccl
+	url = ssh://git@git.geomash.com:21122/open-source/strappy-ccl.git

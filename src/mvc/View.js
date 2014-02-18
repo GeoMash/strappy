@@ -1,0 +1,334 @@
+/**
+ * @class strappy.mvc.View
+ * 
+ * TODO:
+ * 
+ * Explanation & Examples.
+ * 
+ * @mixins strappy.trait.ComponentConnector
+ * @mixins strappy.trait.signal.Bindable
+ * @mixins $JSKK.trait.Observable
+ * @abstract
+ * 
+ * @uses strappy.trait.ComponentConnector
+ * @uses strappy.trait.signal.Bindable
+ * @uses $JSKK.trait.Observable
+ * @uses strappy.mvc.ViewCache
+ * 
+ */
+$JSKK.Class.create
+(
+	{
+		$namespace:		'strappy.mvc',
+		$name:			'View',
+		$abstract:		true,
+		$uses:
+		[
+			'strappy.trait.ComponentConnector',
+			'strappy.trait.signal.Bindable',
+			'$JSKK.trait.Observable'
+		]
+	}
+)
+(
+	{},
+	{
+		events:
+		{
+			onTemplatesLoaded:	true,
+			onReady:			true,
+			onShow:				true,
+			onHide:				true
+		},
+		_templatesReady:false,
+		_ready:			false,
+		_stateBindings:	{},
+		templates:		{},
+		element:		null,
+		stateStore:		null,
+        // TODO: COMPOSITE PATTERN -> See bottom off this Class
+        // children: [],
+
+        /**
+        * @constructor
+        * 
+        * 
+        */
+		init: function()
+		{
+			this.fetchTemplateContent
+			(
+				function()
+				{
+					this._templatesReady=true;
+				}.bind(this)
+			);
+			this.observe('onStateChange',this.onStateChange.bind(this));
+		},
+		fetchTemplateContent: function(onComplete)
+		{
+			var	numTemplates	=0,
+				doneTemplates	=0;
+			
+			for (var template in this.templates)
+			{
+				numTemplates++;
+			}
+			
+			for (var template in this.templates)
+			{
+				var requestPath	=(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.templates[template];
+				if (!this.getViewCache().exists(requestPath)
+				|| this.getViewCache().isFetching(requestPath))
+				{
+					if (this.getViewCache().isFetching(requestPath))
+					{
+						$JSKK.when
+						(
+							function()
+							{
+								return this.getViewCache().isFetching(requestPath);
+							}.bind(this)
+						).isFalse
+						(
+							function(requestPath,template)
+							{
+								this.templates[template]=this.getViewCache().get(requestPath);
+								doneTemplates++;
+							}.bind(this,requestPath,template)
+						);
+					}
+					else
+					{
+						this.getViewCache().setFetching(requestPath);
+						$.get
+						(
+							requestPath,
+							function(requestPath,template,response)
+							{
+								this.templates[template]=response;
+								this.getViewCache().set(requestPath,response);
+								doneTemplates++;
+							}.bind(this,requestPath,template)
+						).fail
+						(
+							function()
+							{
+								console.warn('Missing template! "'+requestPath+'" could not be loaded. Module will not initialize!');
+							}.bind(this)
+						);
+					}
+				}
+				else
+				{
+					this.templates[template]=this.getViewCache().get(requestPath);
+					doneTemplates++;
+				}
+			}
+			
+			$JSKK.when
+			(
+				function()
+				{
+					return (numTemplates==doneTemplates);
+				}
+			).isTrue
+			(
+				function()
+				{
+					this.fireEvent('onTemplatesLoaded',this);
+					onComplete();
+				}.bind(this)
+			);
+		},
+		getTemplate: function(template)
+		{
+			return this.templates[template];
+		},
+		onAfterCmpInit:	$JSKK.emptyFunction,
+		/**
+		 * 
+		 * @abstract
+		 */
+		onReady:		$JSKK.emptyFunction,
+		/**
+		 * 
+		 * @abstract
+		 */
+		onViewInit: 	$JSKK.emptyFunction,
+		/**
+		 * 
+		 * @abstract
+		 */
+		onStateChange:	$JSKK.emptyFunction,
+		/**
+		 * An abstract method to be implemented by extending classes.
+		 * 
+		 * This method should be used to asure the view state is always in sync
+		 * with any stores associated with it.
+		 * 
+		 * @return
+		 */
+		syncView:		$JSKK.Class.ABSTRACT_METHOD,
+		/**
+		 * An abstract method to be implemented by extending classes.
+		 * 
+		 * This method should be used to make calls to
+		 * {@link strappy.mvc.View.bindDOMEvent bindDOMEvent}.
+		 * 
+		 * @return
+		 */
+		bindDOMEvents:		$JSKK.Class.ABSTRACT_METHOD,
+//		bindEventToSignal: function()
+//		{
+//			// empty function
+//		},
+		/**
+		 * 
+		 */
+		getContainerClass: function()
+		{
+			return '.'+this.getSafeID();
+		},
+		/**
+		 * 
+		 */
+		getContainer: function()
+		{
+			return $('#'+this.getIID());
+		},
+		/**
+		 * 
+		 */
+		show: function()
+		{
+//			console.debug('onShow');
+			// this.getContainer().fadeIn(500);
+			this.getContainer().show();
+			this.getContainer().removeClass('hidden');
+			this.fireEvent('onShow',this);
+			return this;
+		},
+		/**
+		 * 
+		 */
+		hide: function()
+		{
+//			console.debug('onHide');
+			// this.getContainer().fadeOut(500);
+			this.getContainer().addClass('hidden');
+			this.getContainer().hide();
+			this.fireEvent('onHide',this);
+			return this;
+		},
+		/**
+		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {strappy.mvc.View} this
+		 */
+		bindContainerEvent: function(event,handler,method,data)
+		{
+			return this.bindDOMEvent(event,null,handler,method,data);
+		},
+		/**
+		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} selector A CSS selector, DOM element or jQuery object.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {strappy.mvc.View} this
+		 */
+		bindDOMEvent: function(event,selector,handler,method,data)
+		{
+			var handle=handler.split(':');
+			if (handle.length==2)
+			{
+				switch (handle[0])
+				{
+					case 'controller':		handle=this.getController(handle[1]);		break;
+					case 'view':			handle=this;								break;	
+				}
+			}
+			else
+			{
+				handle=this.getController(handler);
+			}
+			if (!Object.isArray(selector))
+			{
+				this.getContainer().on(event,selector,data,handle[method].bind(handle));
+			}
+			else
+			{
+				$(selector[0],this.getContainer()).on(event,selector[1],data,handle[method].bind(handle));
+			}
+			return this;
+		},
+		/**
+		 * 
+		 * @param {String} event The event to bind to.
+		 * @param {String} selector A CSS selector, DOM element or jQuery object.
+		 * @param {String} handler The handler which to attach the event to.
+		 * @param {String} method The method in the controller which to call.
+		 * @param {Object} data Any data that should be passed to the method.
+		 * @return {strappy.mvc.View} this
+		 */
+		bindBodyDOMEvent: function(event,selector,handler,method,data)
+		{
+			var handle=handler.split(':');
+			if (handle.length==2)
+			{
+				switch (handle[0])
+				{
+					case 'controller':		handle=this.getController(handle[1]);		break;
+					case 'view':			handle=this;								break;	
+				}
+			}
+			else
+			{
+				handle=this.getController(handler);
+			}
+			$('body').on(event,selector,data,handle[method].bind(handle));
+			return this;
+		},
+		find: function(selector)
+		{
+			return this.getContainer().find(selector);
+		}
+//		bindStoreChange: function(store,bindings)
+//		{
+//			for (var item in bindings)
+//			{
+//				if (Object.isFunction(this[bindings[item]]))
+//				{
+//					this._storeBindings[item]=this[bindings[item]].bind(this);
+//				}
+//				else
+//				{
+//					throw new Error('Unable to bind store change event for property "'+item+'" because the method "'+bindings[item]+'" '
+//									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
+//				}
+//			}
+//			return this;
+//		},
+		
+		
+		
+		
+		
+		
+
+        // TODO: COMPOSITE PATTERN?
+        // TODO: Consider Composite Design pattern to distinguish between DOM related events passed down the tree from MVC signals
+        // update: function(msg){
+        //  $each(var child in this.children){
+        //          child.update(msg);
+        //      }
+        // }
+        // TODO: IF COMPOSITE PATTERN then -> Bring in convenience methods
+        //  getChild(x), addChild(x), removeChild(x)
+    }
+);
