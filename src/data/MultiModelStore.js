@@ -568,6 +568,26 @@ $JSKK.Class.create
 			return records;
 		},
 		/**
+		 * Returns an object in groups of arrays which match the groupBy filter provided.
+		 * 
+		 * @param groupBy {String} The field in which to group records by.
+		 */
+		getGrouped: function(groupBy)
+		{
+			var groups	={},
+				groupKey=null;
+			for (var i=0,j=this.records.length; i<j; i++)
+			{
+				groupKey=this.records[i].get(groupBy);
+				if (Object.isUndefined(groups[groupKey]))
+				{
+					groups[groupKey]=[];
+				}
+				groups[groupKey].push(this.records[i]);
+			}
+			return groups;
+		},
+		/**
 		 * Sets all the associated models
 		 */
 		setAll: function()
