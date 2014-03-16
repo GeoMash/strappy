@@ -138,6 +138,12 @@ $JSKK.Class.create
 				record
 			);
 		},
+		/**
+		 * Binds (enables) change events to store.
+		 * 
+		 * @param record {strappy.mvc.Model}
+		 * @returns {strappy.data.AbstractStore}
+		 */
 		bindChangeEvent: function(record)
 		{
 			var fullStoreName=this.$reflect('namespace')+'.'+this.$reflect('name');
@@ -150,7 +156,14 @@ $JSKK.Class.create
 				record.unobserve('onChange',record._storeChangeEvent[fullStoreName]);
 			}
 			record.observe('onChange',record._storeChangeEvent[fullStoreName]);
+			return this;
 		},
+		/**
+		 * Unbinds (disables) change events to store.
+		 * 
+		 * @param record {strappy.mvc.Model}
+		 * @returns {strappy.data.AbstractStore}
+		 */
 		bindRemoveEvent: function(record)
 		{
 			var fullStoreName=this.$reflect('namespace')+'.'+this.$reflect('name');
@@ -163,7 +176,15 @@ $JSKK.Class.create
 				record.unobserve('onRemove',record._storeRemoveEvent[fullStoreName]);
 			}
 			record.observe('onRemove',record._storeRemoveEvent[fullStoreName]);
+			return this;
 		},
+		/**
+		 * Private callback to handle model change events.
+		 * 
+		 * @private
+		 * @param model {strappy.data.AbstractStore}
+		 * @return {void}
+		 */
 		onModelChange: function(model)
 		{
 			/*
@@ -223,6 +244,13 @@ $JSKK.Class.create
 				// this.fireEvent('onChange',this,model);
 			}
 		},
+		/**
+		 * Private callback to handle model remove events.
+		 * 
+		 * @private
+		 * @param model {strappy.data.AbstractStore}
+		 * @return {void}
+		 */
 		onModelRemove: function(model)
 		{
 			/*
@@ -285,6 +313,7 @@ $JSKK.Class.create
 		/**
 		 * Returns the attached model (not an instance of it).
 		 * 
+		 * @public
 		 * @return {strappy.mvc.Model}
 		 */
 		getModel: function()
@@ -294,12 +323,14 @@ $JSKK.Class.create
 		/**
 		 * Generic getter.
 		 * 
+		 * @public
 		 * @return {Mixed}
 		 */
 		get: $JSKK.Class.ABSTRACT_METHOD,
 		/**
 		 * Generic setter.
 		 * 
+		 * @public
 		 * @return  {strappy.data.AbstractStore} this
 		 */
 		set: $JSKK.Class.ABSTRACT_METHOD,
@@ -314,6 +345,7 @@ $JSKK.Class.create
 		/**
 		 * Sets a new proxy on the store.
 		 * 
+		 * @public
 		 * @return {strappy.data.AbstractStore} this
 		 */
 		setProxy: function(proxy)
@@ -324,6 +356,7 @@ $JSKK.Class.create
 		/**
 		 * Returns the attached proxy.
 		 * 
+		 * @public
 		 * @return {strappy.data.proxy.AbstractProxy} The attached proxy.
 		 */
 		getProxy: function()
@@ -333,6 +366,7 @@ $JSKK.Class.create
 		/**
 		 * Checks the state of the store to determine weather or not this
 		 * 
+		 * @public
 		 * @return {Boolean} true if the store is dirty.
 		 */
 		isDirty: $JSKK.Class.ABSTRACT_METHOD,
