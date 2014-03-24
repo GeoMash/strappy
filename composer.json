@@ -1,5 +1,5 @@
 {
-	"name": "geomash/strappy-ccl",
+	"name": "geomash/strappy",
 	"description": "Common Component Library for Strappy",
 	"keywords": ["javascript", "framework", "component","strappy","library"],
 	"type": "strappy",
