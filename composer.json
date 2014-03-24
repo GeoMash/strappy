@@ -2,7 +2,7 @@
 	"name": "geomash/strappy-ccl",
 	"description": "Common Component Library for Strappy",
 	"keywords": ["javascript", "framework", "component","strappy","library"],
-	"type": "javascript-library",
+	"type": "strappy",
 	"homepage": "https://github.com/melechi/strappy-CCL",
 	"license": "private",
 	"authors":
@@ -10,13 +10,6 @@
 		{
 			"name": "GeoMash",
 			"homepage": "http://www.geomash.com/"
-		}
-	],
-	"repositories":
-	[
-		{
-			"type": "git",
-			"url":  "http://git.geomash.com/open-source/composer-installers.git"
 		}
 	]
 }
