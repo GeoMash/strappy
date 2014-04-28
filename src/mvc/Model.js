@@ -76,7 +76,7 @@ $JSKK.Class.create
 		 */
 		lockState:	'none',
 		/**
-		 * @property {Boolean] eventsEnabled True to allow events and false to block them from being fired.
+		 * @property {Boolean} eventsEnabled True to allow events and false to block them from being fired.
 		 * @private
 		 */
 		eventsEnabled: true,
@@ -466,7 +466,7 @@ $JSKK.Class.create
 		 * @param {Boolean} supressEvent Blocks the onLockChange event
 		 * from being fired.
 		 * 
-		 * @retrun {strappy.data.stateful.Store}
+		 * @return {strappy.data.stateful.Store}
 		 */
 		lock: function(lockType,supressEvent)
 		{

@@ -30,7 +30,7 @@ $JSKK.Trait.create
 		},
 		/**
 		 * Returns the parent component associated with the class using this trait.
-		 * @depricated - see cmp()
+		 * @deprecated - see {@link strappy.trait.ComponentConnector#cmp cmp()}
 		 * @return {strappy.Component} the parent component.
 		 */
 		getParentComponent: function()

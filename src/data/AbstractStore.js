@@ -325,7 +325,6 @@ $JSKK.Class.create
 		/**
 		 * Generic setter.
 		 * 
-		 * @public
 		 * @return  {strappy.data.AbstractStore} this
 		 */
 		set: $JSKK.Class.ABSTRACT_METHOD,

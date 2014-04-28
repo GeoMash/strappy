@@ -105,7 +105,7 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} key The property to set.
 		 * @param {Mixed} value The new value.
-		 * @return {strappy.data.stateful.Store}
+		 * @chainable
 		 */
 		set: function()
 		{
@@ -156,7 +156,7 @@ $JSKK.Class.create
 		 * This method will set the ready state of the component.
 		 * 
 		 * @param {Boolean} ready The ready state.
-		 * @return {strappy.data.stateful.Store}
+		 * @chainable
 		 */
 		setReady: function(ready)
 		{
@@ -219,7 +219,7 @@ $JSKK.Class.create
 		}
 	);
 		 * @param {String} view The name of the view.
-		 * @return {strappy.data.stateful.Store}
+		 * @chainable
 		 */
 		setViewReady: function(view)
 		{
@@ -267,7 +267,7 @@ $JSKK.Class.create
 		 * * {@link strappy.data.stateful.Store#LOCK_READONLY}
 		 * * {@link strappy.data.stateful.Store#LOCK_FULL}
 		 * 
-		 * @return {strappy.data.stateful.Store}
+		 * @chainable
 		 */
 		lock: function(lockType)
 		{
@@ -281,7 +281,11 @@ $JSKK.Class.create
 			}
 			return this;
 		},
-		
+		/**
+		 * Resets the state properties to their original values.
+		 * 
+		 * @chainable
+		 */
 		reset: function()
 		{
 			this.set(this.data['private']);

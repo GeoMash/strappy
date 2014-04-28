@@ -12,14 +12,11 @@
  * * {@link strappy.Signal.VIEW_DONE_GOTBASEHTML}: {@link strappy.mvc.Controller#onGotBaseHTML}
  * * {@link strappy.Signal.STATEFULMODEL_IS_READY}: {@link strappy.mvc.Controller#onReadyState}
  * 
- * @traits strappy.trait.ComponentConnector
- * @traits strappy.trait.signal.Receive
- * @traits strappy.trait.signal.Send
- * @abstract
  * 
  * @uses strappy.trait.ComponentConnector
  * @uses strappy.trait.signal.Receive
- * @uses strappy.trait.signal.Send
+ * @uses $JSKK.trait.Observable
+ * @abstract
  */
 $JSKK.Class.create
 (
