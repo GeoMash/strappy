@@ -383,7 +383,7 @@ $JSKK.Class.create
 		 * Returns the specified keys of the attached model instances (records).
 		 * 
 		 * @param  {Array} keys An array of keys to return.
-		 * @flatten {Boolean} flatten If only one key is passed, the returned array can be flattened.
+		 * @param {Boolean} flatten If only one key is passed, the returned array can be flattened.
 		 * @return {Array} An array of {@link strappy.mvc.Model Model} instances.
 		 */
 		getAllFiltered: function(keys,flatten)
@@ -792,7 +792,7 @@ $JSKK.Class.create
 		/**
 		 * 
 		 * 
-		 * @see strappy.data.BTL
+		 * @inheritdoc
 		 */
 		configureBTL: function(config)
 		{

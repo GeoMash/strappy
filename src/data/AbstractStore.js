@@ -6,9 +6,6 @@
  * 
  * You should never use this store directly.
  * 
- * @traits strappy.trait.ComponentConnector
- * @traits $JSKK.trait.Observable
- * 
  * @uses strappy.trait.ComponentConnector
  * @uses $JSKK.trait.Observable
  */
@@ -29,11 +26,11 @@ $JSKK.Class.create
 	{},
 	{
 		/**
-		 * @property events A list of observable events.
-		 * @property events.onChange Fired whenever anything in the store is changed.
-		 * @property events.onSync Fired whenever the store is synced.
-		 * @property events.onSyncFailed Fired whenever the store is synced and the sync fails.
-		 * @property events.onModelLockChange Fired whenever the lock state of the containing models changes.
+		 * @property [events] A list of observable events.
+		 * @property [events.onChange] Fired whenever anything in the store is changed.
+		 * @property [events.onSync] Fired whenever the store is synced.
+		 * @property [events.onSyncFailed] Fired whenever the store is synced and the sync fails.
+		 * @property [events.onModelLockChange] Fired whenever the lock state of the containing models changes.
 		 * @private
 		 */
 		events:
@@ -313,7 +310,6 @@ $JSKK.Class.create
 		/**
 		 * Returns the attached model (not an instance of it).
 		 * 
-		 * @public
 		 * @return {strappy.mvc.Model}
 		 */
 		getModel: function()
@@ -323,7 +319,6 @@ $JSKK.Class.create
 		/**
 		 * Generic getter.
 		 * 
-		 * @public
 		 * @return {Mixed}
 		 */
 		get: $JSKK.Class.ABSTRACT_METHOD,
@@ -345,7 +340,6 @@ $JSKK.Class.create
 		/**
 		 * Sets a new proxy on the store.
 		 * 
-		 * @public
 		 * @return {strappy.data.AbstractStore} this
 		 */
 		setProxy: function(proxy)
@@ -356,7 +350,6 @@ $JSKK.Class.create
 		/**
 		 * Returns the attached proxy.
 		 * 
-		 * @public
 		 * @return {strappy.data.proxy.AbstractProxy} The attached proxy.
 		 */
 		getProxy: function()
@@ -366,7 +359,6 @@ $JSKK.Class.create
 		/**
 		 * Checks the state of the store to determine weather or not this
 		 * 
-		 * @public
 		 * @return {Boolean} true if the store is dirty.
 		 */
 		isDirty: $JSKK.Class.ABSTRACT_METHOD,

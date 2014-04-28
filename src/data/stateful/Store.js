@@ -267,7 +267,7 @@ $JSKK.Class.create
 		 * * {@link strappy.data.stateful.Store#LOCK_READONLY}
 		 * * {@link strappy.data.stateful.Store#LOCK_FULL}
 		 * 
-		 * @retrun {strappy.data.stateful.Store}
+		 * @return {strappy.data.stateful.Store}
 		 */
 		lock: function(lockType)
 		{
