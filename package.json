@@ -1,17 +1,26 @@
 {
-	"name":			"strappy",
-	"title":		"Strappy",
-	"description":	"JavaScript framework for disconnected component development.",
-	"version":		"1.2.0-dev",
-	"author": {
-	    "name": "Timothy Chandler",
-	    "email": "tim@s3.net.au",
-	    "url": "https://github.com/SpinifexGroup/strappy"
-	  },
-	"homepage":		"https://github.com/SpinifexGroup/strappy",
+  "name": "strappy",
+  "title": "Strappy",
+  "description": "JavaScript framework for disconnected component development.",
+  "version": "1.2.0-dev",
+  "author": {
+    "name": "Timothy Chandler",
+    "email": "tim@s3.net.au",
+    "url": "https://github.com/SpinifexGroup/strappy"
+  },
+  "homepage": "https://github.com/SpinifexGroup/strappy",
   "repository": {
     "type": "git",
     "url": "git@github.com:melechi/JS-Klass-Kit.git"
   },
-  "main": "./src/Strappy"
+  "main": "./src/Strappy",
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-jshint": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-requirejs": "~0.4.4",
+    "grunt-recurse": "~0.2.1",
+    "load-grunt-tasks": "~0.4.0",
+    "grunt-contrib-concat": "~0.4.0"
+  }
 }

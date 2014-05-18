@@ -36,17 +36,26 @@ Key Features
 
 Use Cases
 ---------
+
 * Enforcing clean architecture for frontend applications.
 * Working with large datasets, local or remote.
 * Create components that can be reused across multiple projects.
 
 Browser Compatibility
 ---------------------
+
 * IE 8+
 * Chrome 8+
 * Firefox 10+
 * Safari 3+
 * Opera 10.6+
+
+Installation
+------------
+
+```
+git clone https://github.com/GeoMash/strappy.git .
+```
 
 How to Build Strappy
 --------------------
@@ -62,7 +71,7 @@ npm install -g grunt-cli
 With grunt installed, you can not only build strappy from source, but you can also run
 scaffolding, unit testing and CCL installation commands.
 
-### Build Strappy
+### Building Strappy
 
 Perform a full build with:
 
@@ -77,4 +86,9 @@ If you would like to build without CCL, run the following command:
 ```
 grunt build noccl
 ```
+
+Roadmap
+-------
+
+
 
