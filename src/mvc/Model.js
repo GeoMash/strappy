@@ -56,9 +56,9 @@ $JSKK.Class.create
 		 */
 		idField:	'id',
 		/**
-		 * @property {Array} field A list of fields and their default values.
+		 * @property {Object} field A list of fields and their default values.
 		 */
-		fields:		[],
+		fields:		{},
 		/**
 		 * @property {Object} record The raw record for the model instance.
 		 * @private
