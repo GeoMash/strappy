@@ -151,7 +151,7 @@ $JSKK.Class.create
 					query,
 					function(response)
 					{
-						this.fireEvent('onSync',this,record);
+//						this.fireEvent('onSync',this,record);
 						if (Object.isFunction(callback))
 						{
 							callback(this);
@@ -433,7 +433,7 @@ $JSKK.Class.create
 			{
 				if (this.eventsEnabled)
 				{
-					this.fireEvent('onChange',this);
+					this.fireEvent('onChange',this,keyVals);
 				}
 			}
 		},
