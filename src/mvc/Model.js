@@ -151,25 +151,30 @@ $JSKK.Class.create
 					query,
 					function(response)
 					{
-						var record=response.data;
-						this.lock(strappy.mvc.Model.LOCK_NONE,true);
-						if (!Object.isEqual(record,this.record))
-						{
-							this.set(record);
-							if (this.eventsEnabled)
-							{
-								this.fireEvent('onSync',this,record);
-								this.fireEvent('onChange',this,record);
-							}
-						}
-						else if (this.eventsEnabled)
-						{
-							this.fireEvent('onSync',this,record);
-						}
+						this.fireEvent('onSync',this,record);
 						if (Object.isFunction(callback))
 						{
 							callback(this);
 						}
+//						var record=response.data;
+//						this.lock(strappy.mvc.Model.LOCK_NONE,true);
+//						if (!Object.isEqual(record,this.record))
+//						{
+//							this.set(record);
+//							if (this.eventsEnabled)
+//							{
+//								this.fireEvent('onSync',this,record);
+//								this.fireEvent('onChange',this,record);
+//							}
+//						}
+//						else if (this.eventsEnabled)
+//						{
+//							this.fireEvent('onSync',this,record);
+//						}
+//						if (Object.isFunction(callback))
+//						{
+//							callback(this);
+//						}
 					}.bind(this)
 				);
 			}
