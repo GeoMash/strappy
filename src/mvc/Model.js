@@ -143,19 +143,28 @@ $JSKK.Class.create
 			if (this.isDirty())
 			{
 				this.flagClean();
+				var query=target.BTL_SET_QUERY;
+				query[this.idField]=Object.clone(this.getId());
 				target.BTL_SET
 				(
 					this.getRecord(),
-					null,
+					query,
 					function(response)
 					{
 						var record=response.data;
 						this.lock(strappy.mvc.Model.LOCK_NONE,true);
-						this.set(record);
-						if (this.eventsEnabled)
+						if (!Object.isEqual(record,this.record))
+						{
+							this.set(record);
+							if (this.eventsEnabled)
+							{
+								this.fireEvent('onSync',this,record);
+								this.fireEvent('onChange',this,record);
+							}
+						}
+						else if (this.eventsEnabled)
 						{
 							this.fireEvent('onSync',this,record);
-							this.fireEvent('onChange',this,record);
 						}
 						if (Object.isFunction(callback))
 						{
@@ -166,8 +175,8 @@ $JSKK.Class.create
 			}
 			else
 			{
-				var query={};
-				query[this.idField]=this.getId();
+				var query=target.BTL_SET_QUERY;
+				query[this.idField]=Object.clone(this.getId());
 				this.flagClean();
 				target.BTL_GET
 				(
