@@ -22,6 +22,7 @@ $JSKK.Class.create
 		BTL_GET:		null,
 		BTL_GET_QUERY:	null,
 		BTL_SET:		null,
+		BTL_SET_QUERY:	null,
 		BTL_REMOVE:		null,
 		BTL_CHECK:		null,
 		model:			null,
@@ -659,15 +660,19 @@ $JSKK.Class.create
 				(
 					function(model)
 					{
-						var index=changeset.push(model.getRecord())-1;
-						// changeset[index]=target.BTL.bindType(changeset[index],model.$reflect('name').toLowerCase());
+						changeset.push(model.getRecord())-1;
 					}.bind(target)
 				);
 				target.BTL.startQueue();
 				
+				var setQuery=null;
+				if (Object.isUndefined(query) || Object.isNull(query))
+				{
+					setQuery=target.BTL_SET_QUERY;
+				}
 				if (changeset.length && Object.isFunction(target.BTL_SET))
 				{
-					target.BTL_SET(changeset);
+					target.BTL_SET(changeset,setQuery);
 				}
 				if (Object.isUndefined(query) || Object.isNull(query))
 				{
