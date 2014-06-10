@@ -327,16 +327,18 @@ $JSKK.Class.create
 		 */
 		getRecord: function()
 		{
-			if (this.lockState==strappy.mvc.Model.LOCK_NONE
-			|| this.lockState==strappy.mvc.Model.LOCK_READONLY
-			|| this.isClone())
-			{
-				return this.record;
-			}
-			else
-			{
-				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents reading.');
-			}
+//			console.debug(this.lockState);
+//			if (this.lockState==strappy.mvc.Model.LOCK_NONE
+//			|| this.lockState==strappy.mvc.Model.LOCK_READONLY
+//			|| this.isClone())
+//			{
+//				return this.record;
+//			}
+//			else
+//			{
+//				throw new Error('The model "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" is in a lock state that prevents reading.');
+//			}
+			return this.record;
 		},
 		/**
 		 * Gets the ID of the model instance.
