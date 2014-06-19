@@ -18,14 +18,15 @@ $JSKK.Class.create
 (
 	{},
 	{
-		BTL:			null,
-		BTL_GET:		null,
-		BTL_GET_QUERY:	null,
-		BTL_SET:		null,
-		BTL_SET_QUERY:	null,
-		BTL_REMOVE:		null,
-		BTL_CHECK:		null,
-		model:			null,
+		BTL:				null,
+		BTL_GET:			null,
+		BTL_GET_QUERY:		null,
+		BTL_SET:			null,
+		BTL_SET_QUERY:		null,
+		BTL_REMOVE:			null,
+		BTL_REMOVE_QUERY:	null,
+		BTL_CHECK:			null,
+		model:				null,
 		/**
 		 * @property {Array} data initial records to start the store with.
 		 * @private
@@ -253,7 +254,19 @@ $JSKK.Class.create
 				newRecords	=[];
 			if (Object.isFunction(target.BTL_REMOVE))
 			{
-				target.BTL_REMOVE({_type:record.get('_type'),id:record.getId()},null);
+				var query=target.BTL_REMOVE_QUERY;
+				query[record.idField]=Object.clone(record.getId());
+				
+				target.BTL_REMOVE(query,null);
+				
+//				target.BTL_REMOVE
+//				(
+//					{
+//						_type:record.get('_type'),
+//						id:record.getId()
+//					},
+//					null
+//				);
 			}
 			for (var i=0,j=this.records.length; i<j; i++)
 			{
