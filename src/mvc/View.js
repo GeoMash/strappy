@@ -77,52 +77,62 @@ $JSKK.Class.create
 			
 			for (var template in this.templates)
 			{
-				var requestPath	=(this.$reflect('namespace').replace(/\./g,'/'))+'/html/'+this.templates[template];
-				if (!this.getViewCache().exists(requestPath)
-				|| this.getViewCache().isFetching(requestPath))
+				var	initialPath=this.$reflect('namespace').replace(/\./g,'/'),
+					scriptTag=$('script[src*="'+initialPath+'"]');
+				if (scriptTag.length)
 				{
-					if (this.getViewCache().isFetching(requestPath))
+					var requestPath=scriptTag.attr('src').replace(/\w*\.js/,'')+'html/'+this.templates[template];
+					if (!this.getViewCache().exists(requestPath)
+					|| this.getViewCache().isFetching(requestPath))
 					{
-						$JSKK.when
-						(
-							function()
-							{
-								return this.getViewCache().isFetching(requestPath);
-							}.bind(this)
-						).isFalse
-						(
-							function(requestPath,template)
-							{
-								this.templates[template]=this.getViewCache().get(requestPath);
-								doneTemplates++;
-							}.bind(this,requestPath,template)
-						);
+						if (this.getViewCache().isFetching(requestPath))
+						{
+							$JSKK.when
+							(
+								function()
+								{
+									return this.getViewCache().isFetching(requestPath);
+								}.bind(this)
+							).isFalse
+							(
+								function(requestPath,template)
+								{
+									this.templates[template]=this.getViewCache().get(requestPath);
+									doneTemplates++;
+								}.bind(this,requestPath,template)
+							);
+						}
+						else
+						{
+							this.getViewCache().setFetching(requestPath);
+							$.get
+							(
+								requestPath,
+								function(requestPath,template,response)
+								{
+									this.templates[template]=response;
+									this.getViewCache().set(requestPath,response);
+									doneTemplates++;
+								}.bind(this,requestPath,template)
+							).fail
+							(
+								function()
+								{
+									console.warn('Missing template! "'+requestPath+'" could not be loaded. Module will not initialize!');
+								}.bind(this)
+							);
+						}
 					}
 					else
 					{
-						this.getViewCache().setFetching(requestPath);
-						$.get
-						(
-							requestPath,
-							function(requestPath,template,response)
-							{
-								this.templates[template]=response;
-								this.getViewCache().set(requestPath,response);
-								doneTemplates++;
-							}.bind(this,requestPath,template)
-						).fail
-						(
-							function()
-							{
-								console.warn('Missing template! "'+requestPath+'" could not be loaded. Module will not initialize!');
-							}.bind(this)
-						);
+						this.templates[template]=this.getViewCache().get(requestPath);
+						doneTemplates++;
 					}
 				}
 				else
 				{
-					this.templates[template]=this.getViewCache().get(requestPath);
-					doneTemplates++;
+					console.trace();
+					throw new Error('Unable to determine template path. Best guess was "'+initialPath+'".');
 				}
 			}
 			
