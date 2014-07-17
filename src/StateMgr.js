@@ -253,10 +253,15 @@ $JSKK.Class.create
 		 * separated by ampersands (&amp;).
 		 * @return {void}
 		 */
-		registerStateChanger: function(el,state)
+		registerStateChanger: function(selector,state)
 		{
 			state=this.parseStateString(state);
-			el.click(this.updateState.bind(this,state,false));
+			$('body').on
+			(
+				'click',
+				selector,
+				this.updateState.bind(this,state,false)
+			);
 		},
 		/**
 		 * This is a private method which wraps state change events bound with
