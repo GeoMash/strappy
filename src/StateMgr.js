@@ -230,9 +230,9 @@ $JSKK.Class.create
 			{
 				this.bindStatefulLinks
 				(
-					['[href="#container-home"]',	'section=home'],
-					['[href="#container-news"]',	'section=news'],
-					['[href="#container-about"]',	'section=about']
+				this.getStateMgr().registerStateChanger('[href="#container-home"]',	'section=home');
+				this.getStateMgr().registerStateChanger('[href="#container-news"]',	'section=news');
+				this.getStateMgr().registerStateChanger('[href="#container-about"]',	'section=about');
 				);
 			}
 		}
@@ -248,7 +248,7 @@ $JSKK.Class.create
 		 * method which could switch the visible section within the outerContainer div
 		 * and update which li was "active".
 		 * 
-		 * @param {jQuery}
+		 * @param {String}
 		 * @param {String} A string representing the state as key-value properties,
 		 * separated by ampersands (&amp;).
 		 * @return {void}
