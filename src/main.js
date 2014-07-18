@@ -10,6 +10,7 @@ define
 		'./data/proxy/AbstractProxy',
 		'./data/proxy/Ajax',
 		'./data/proxy/BTL',
+		'./data/proxy/REST',
 		'./data/proxy/MemoryProxy',
 		'./data/BTL',
 		'./data/AbstractStore',
