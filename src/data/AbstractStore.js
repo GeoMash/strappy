@@ -77,20 +77,49 @@ $JSKK.Class.create
 		 */
 		init: function()
 		{
-			if (Object.isNull(this.proxy))
-			{
-				this.proxy=new strappy.data.proxy.MemoryProxy();
-			}
+			var ready		=0,
+				readyLimit	=0;
 			if (Object.isString(this.sharedFrom))
 			{
 				this.sharedFrom=$JSKK.namespace(this.sharedFrom);
 			}
+			if (Object.isNull(this.proxy))
+			{
+				this.proxy=new strappy.data.proxy.MemoryProxy();
+			}
+			else if (Object.isString(this.proxy))
+			{
+				readyLimit++;
+				try
+				{
+					this.proxy=new $JSKK.strToObject(this.proxy);
+					ready++;
+				}
+				catch(e)
+				{
+					$JSKK.require
+					(
+						this.proxy,
+						function()
+						{
+							this.proxy=new ($JSKK.namespace(this.proxy))();
+							ready++;
+						}.bind(this)
+					);
+				}
+			}
+			else
+			{
+				console.trace();
+				throw new Error('Store didn\'t have a bindable proxy!');
+			}
 			if (Object.isString(this.model))
 			{
+				readyLimit++;
 				try
 				{
 					this.model=$JSKK.strToObject(this.model);
-					this.ready=true;
+					ready++;
 				}
 				catch(e)
 				{
@@ -100,12 +129,24 @@ $JSKK.Class.create
 						function()
 						{
 							this.model=$JSKK.namespace(this.model);
-							this.ready=true;
+							ready++;
 						}.bind(this)
 					);
 				}
-				
 			}
+			$JSKK.when
+			(
+				function()
+				{
+					return (ready==readyLimit);
+				}
+			).isTrue
+			(
+				function()
+				{
+					this.ready=true;
+				}.bind(this)
+			);
 		},
 		/**
 		 * Creates a new model instance based on the attached model
