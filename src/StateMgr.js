@@ -228,12 +228,9 @@ $JSKK.Class.create
 		{
 			onReady: function()
 			{
-				this.bindStatefulLinks
-				(
 				this.getStateMgr().registerStateChanger('[href="#container-home"]',	'section=home');
 				this.getStateMgr().registerStateChanger('[href="#container-news"]',	'section=news');
 				this.getStateMgr().registerStateChanger('[href="#container-about"]',	'section=about');
-				);
 			}
 		}
 	);
