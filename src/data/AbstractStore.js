@@ -44,10 +44,19 @@ $JSKK.Class.create
 		},
 		/**
 		 * @property {strappy.data.proxy.AbstractProxy} proxy
-		 * @private
+		 * @public
 		 */
 		proxy:			null,
 		
+		/**
+		 * @property {Object} Config which is passed to the proxy when it is initialised.
+		 * @public
+		 */
+		proxyConfig:	{},
+		/**
+		 * @property {strappy.data.AbstractStore} Which store was is this store sharing data with.
+		 * @private
+		 */
 		sharedFrom:		null,
 		/**
 		 * @property {strappy.mvc.Model} model A model object which new models will be created from
@@ -92,7 +101,7 @@ $JSKK.Class.create
 				readyLimit++;
 				try
 				{
-					this.proxy=new $JSKK.strToObject(this.proxy);
+					this.proxy=new ($JSKK.strToObject(this.proxy))(this.proxyConfig);
 					ready++;
 				}
 				catch(e)
@@ -102,7 +111,7 @@ $JSKK.Class.create
 						this.proxy,
 						function()
 						{
-							this.proxy=new ($JSKK.namespace(this.proxy))();
+							this.proxy=new ($JSKK.namespace(this.proxy))(this.proxyConfig);
 							ready++;
 						}.bind(this)
 					);
