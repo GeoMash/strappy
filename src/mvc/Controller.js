@@ -50,13 +50,13 @@ $JSKK.Class.create
 			this.registerSignals
 			( 
 				{
-					_onSignalShow:
+					onSignalShow:
 					{
 						signal:		strappy.Signal.SHOW,
 						type:		'strappy',
 						filter:		{iid:this.getIID()}
 					},
-					_onSignalHide:
+					onSignalHide:
 					{
 						signal:		strappy.Signal.HIDE,
 						type:		'strappy',
@@ -65,6 +65,11 @@ $JSKK.Class.create
 				}
 			);
 		},
+		/**
+		 * This method will be called when a component fires the onAfterCmpInit event.
+		 * signal.
+		 * @abstract
+		 */
 		onAfterCmpInit:	$JSKK.emptyFunction,
 		/**
 		 * This method will be called when a component fires a {@link strappy.Signal.CMP_DO_RECONFIGURE Do Reconfigure}
@@ -81,6 +86,7 @@ $JSKK.Class.create
 		 */
 		onViewReady:	$JSKK.emptyFunction,
 		/**
+		 * @deprecated
 		 * This method will be called when a view fires a {@link strappy.Signal.VIEW_DONE_GOTBASEHTML Got Base HTML}
 		 * signal.
 		 * @abstract
@@ -88,25 +94,26 @@ $JSKK.Class.create
 		 */
 		onGotBaseHTML: 	$JSKK.emptyFunction,
 		/**
+		 * @deprecated
 		 * This method will be called when a state model fires a {@link strappy.Signal.STATEFULMODEL_IS_READY Stateful Model is Ready}
 		 * signal.
 		 * @abstract
 		 * @param {strappy.Signal} The signal object.
 		 */
 		onReadyState:	$JSKK.emptyFunction,
-		
-		_onSignalShow:	function()
-		{
-			var controller=this.getController('State');
-			$JSKK.when(controller.isReady.bind(controller)).isTrue(this.onSignalShow.bind(this));
-		},
-		_onSignalHide:	function()
-		{
-			var controller=this.getController('State');
-			$JSKK.when(controller.isReady.bind(controller)).isTrue(this.onSignalHide.bind(this));
-		},
-		
+		/**
+		 * This method will be called when something fires a {@link strappy.Signal.SHOW Show component signal}.
+		 * signal.
+		 * @abstract
+		 * @param {strappy.Signal} The signal object.
+		 */
 		onSignalShow:	$JSKK.emptyFunction,
+		/**
+		 * This method will be called when something fires a {@link strappy.Signal.HIDE Hide component signal}.
+		 * signal.
+		 * @abstract
+		 * @param {strappy.Signal} The signal object.
+		 */
 		onSignalHide:	$JSKK.emptyFunction
 	}
 );
