@@ -61,7 +61,7 @@ $JSKK.Class.create
 				(
 					function(response)
 					{
-						console.warn('BTL Proxies raw() method hasn\'t been confiugred to deal with failures.');
+						console.warn('BTL Proxies raw() method hasn\'t been configured to deal with failures.');
 //						config.onComplete();
 					}
 				);
