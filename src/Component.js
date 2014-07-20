@@ -592,7 +592,6 @@ $JSKK.Class.create
 		 * 
 		 * @param {String} cmpName The reference name of the component to get as
 		 * defined by this component.
-		 * @throws Error If the component is not registered.
 		 * @return {strappy.Component} the requested component.
 		 */
 		getCmp: function(cmpName)
@@ -601,11 +600,7 @@ $JSKK.Class.create
 			{
 				return this.components[cmpName];
 			}
-			else
-			{
-				console.trace();
-				throw new Error('Unable to get component "'+cmpName+'". This component has not been registered.');
-			}
+			return null;
 		},
 		/**
 		 * Initializes all the controllers associated with this component.
