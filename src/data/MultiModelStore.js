@@ -740,6 +740,10 @@ $JSKK.Class.create
 							}
 							target.fireEvent('onChange',target,response);
 							target.fireEvent('onSync',target,response);
+							if (Object.isFunction(callback))
+							{
+								callback(this);
+							}
 						}.bind(target),
 						onFailure: function(response)
 						{
