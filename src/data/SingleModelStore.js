@@ -32,70 +32,76 @@ $JSKK.Class.create
 		init: function()
 		{
 			this.init.$parent();
-			if (!this.isShared())
-			{
-				if (!Object.isNull(this.model) && Object.isDefined(this.model))
+			$JSKK.when(this,'ready').isTrue
+			(
+				function()
 				{
-					this.record=this.newRecord(this.data);
-					this.bindChangeEvent(this.record);
-					this.bindRemoveEvent(this.record);
-					delete this.data;
-				}
-				else
-				{
-					throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
-				}
-				if (Object.isString(this.BTL))
-				{
-					this.BTL=$JSKK.namespace(this.BTL);
-					if (Object.isString(this.BTL_GET))
+					if (!this.isShared())
 					{
-						this.BTL_GET=$JSKK.namespace(this.BTL_GET);
+						if (!Object.isNull(this.model) && Object.isDefined(this.model))
+						{
+							this.record=this.newRecord(this.data);
+							this.bindChangeEvent(this.record);
+							this.bindRemoveEvent(this.record);
+							delete this.data;
+						}
+						else
+						{
+							throw new Error('Store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" must be configured with a valid model.');
+						}
+						if (Object.isString(this.BTL))
+						{
+							this.BTL=$JSKK.namespace(this.BTL);
+							if (Object.isString(this.BTL_GET))
+							{
+								this.BTL_GET=$JSKK.namespace(this.BTL_GET);
+							}
+							if (Object.isString(this.BTL_SET))
+							{
+								this.BTL_SET=$JSKK.namespace(this.BTL_REMOVE);
+							}
+							if (Object.isString(this.BTL_REMOVE))
+							{
+								this.BTL_REMOVE=$JSKK.namespace(this.BTL_REMOVE);
+							}
+							if (Object.isString(this.BTL_CHECK))
+							{
+								this.BTL_CHECK=$JSKK.namespace(this.BTL_CHECK);
+							}
+						}
 					}
-					if (Object.isString(this.BTL_SET))
+					else
 					{
-						this.BTL_SET=$JSKK.namespace(this.BTL_REMOVE);
+						var	shared=this.getShared(),
+							record=shared.newRecord(this.data);
+						this.getShared().add(records);
+						this.bindChangeEvent(record);
+						this.bindRemoveEvent(record);
+						//Make a reference.
+						this.record=shared.record;
+						if (Object.isString(shared.BTL))
+						{
+							shared.BTL=$JSKK.namespace(shared.BTL);
+							if (Object.isString(shared.BTL_GET))
+							{
+								shared.BTL_GET=$JSKK.namespace(shared.BTL_GET);
+							}
+							if (Object.isString(shared.BTL_SET))
+							{
+								shared.BTL_SET=$JSKK.namespace(shared.BTL_SET);
+							}
+							if (Object.isString(shared.BTL_REMOVE))
+							{
+								shared.BTL_REMOVE=$JSKK.namespace(shared.BTL_REMOVE);
+							}
+							if (Object.isString(shared.BTL_CHECK))
+							{
+								shared.BTL_CHECK=$JSKK.namespace(shared.BTL_CHECK);
+							}
+						}
 					}
-					if (Object.isString(this.BTL_REMOVE))
-					{
-						this.BTL_REMOVE=$JSKK.namespace(this.BTL_REMOVE);
-					}
-					if (Object.isString(this.BTL_CHECK))
-					{
-						this.BTL_CHECK=$JSKK.namespace(this.BTL_CHECK);
-					}
-				}
-			}
-			else
-			{
-				var	shared=this.getShared(),
-					record=shared.newRecord(this.data);
-				this.getShared().add(records);
-				this.bindChangeEvent(record);
-				this.bindRemoveEvent(record);
-				//Make a reference.
-				this.record=shared.record;
-				if (Object.isString(shared.BTL))
-				{
-					shared.BTL=$JSKK.namespace(shared.BTL);
-					if (Object.isString(shared.BTL_GET))
-					{
-						shared.BTL_GET=$JSKK.namespace(shared.BTL_GET);
-					}
-					if (Object.isString(shared.BTL_SET))
-					{
-						shared.BTL_SET=$JSKK.namespace(shared.BTL_SET);
-					}
-					if (Object.isString(shared.BTL_REMOVE))
-					{
-						shared.BTL_REMOVE=$JSKK.namespace(shared.BTL_REMOVE);
-					}
-					if (Object.isString(shared.BTL_CHECK))
-					{
-						shared.BTL_CHECK=$JSKK.namespace(shared.BTL_CHECK);
-					}
-				}
-			}
+				}.bind(this)
+			);
 		},
 		/**
 		 * Gets the value of a given field from the attached model.

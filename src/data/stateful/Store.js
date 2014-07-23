@@ -60,15 +60,19 @@ $JSKK.Class.create
 		 * @private
 		 */
 		lockState:	'none',
-		
+		model:		'strappy.mvc.stateful.Model',
 		keys:		[],
 		init: function()
 		{
-			//Set the model.
-			this.model=strappy.mvc.stateful.Model;
-			
 			this.init.$parent();
-			this.mapStateProperties();
+			//Set the model.
+			$JSKK.when(this,'ready').isTrue
+			(
+				function()
+				{
+					this.mapStateProperties();
+				}.bind(this)
+			);
 		},
 		mapStateProperties: function()
 		{
