@@ -148,7 +148,7 @@ $JSKK.Class.create
 		 * 
 		 * @return {strappy.data.SingleModelStore}
 		 */
-		sync: function(data,query)
+		sync: function(data,query,callback)
 		{
 			var target=(this.isShared()?this.getShared():this);
 			
@@ -169,6 +169,10 @@ $JSKK.Class.create
 						target.record=target.newRecord(records[0]);
 						target.fireEvent('onChange',target,records[0]);
 						target.fireEvent('onSync',target,records[0]);
+						if (Object.isFunction(callback))
+						{
+							callback(this);
+						}
 					}.bind(target)
 				);
 				target.BTL.executeQueue();
@@ -189,6 +193,10 @@ $JSKK.Class.create
 							target.record=target.newRecord(response.data[0]);
 							target.fireEvent('onChange',target,response);
 							target.fireEvent('onSync',target,response);
+							if (Object.isFunction(callback))
+							{
+								callback(this);
+							}
 						}.bind(target),
 						onFailure: function(response)
 						{
