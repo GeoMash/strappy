@@ -165,10 +165,18 @@ $JSKK.Class.create
 					query,
 					function(response)
 					{
-						var records=response.data;
-						target.record=target.newRecord(records[0]);
-						target.fireEvent('onChange',target,records[0]);
-						target.fireEvent('onSync',target,records[0]);
+						var record=null;
+						if (Object.isArray(response.data))
+						{
+							record=response.data[0];
+						}
+						else
+						{
+							record=response.data;
+						}
+						target.record=this.newRecord(record);
+						target.fireEvent('onChange',target,record);
+						target.fireEvent('onSync',target,record);
 						if (Object.isFunction(callback))
 						{
 							callback(this);
@@ -182,7 +190,7 @@ $JSKK.Class.create
 				var changeset=[]; 
 				if (target.isDirty())
 				{
-					changeset=[target.record];
+					changeset=Object.clone(target.record.getRecord());
 				}
 				target.proxy.sync
 				(
@@ -190,9 +198,18 @@ $JSKK.Class.create
 						data:		changeset,
 						onSuccess:	function(response)
 						{
-							target.record=target.newRecord(response.data[0]);
-							target.fireEvent('onChange',target,response);
-							target.fireEvent('onSync',target,response);
+							var record=null;
+							if (Object.isArray(response.data))
+							{
+								record=response.data[0];
+							}
+							else
+							{
+								record=response.data;
+							}
+							target.record=this.newRecord(record);
+							target.fireEvent('onChange',target,record);
+							target.fireEvent('onSync',target,record);
 							if (Object.isFunction(callback))
 							{
 								callback(this);
@@ -225,7 +242,14 @@ $JSKK.Class.create
 						filter: filter,
 						onSuccess:	function(response)
 						{
-							this.record=this.newRecord(response.data[0]);
+							if (Object.isArray(response.data))
+							{
+								this.record=this.newRecord(response.data[0]);
+							}
+							else
+							{
+								this.record=this.newRecord(response.data);
+							}
 							this.fireEvent('onChange',this,response);
 							this.fireEvent('onLoad',this,response);
 						}.bind(this),
@@ -238,7 +262,7 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Exception('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
+				throw new Error('The store "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
 			}
 			return this;
 		},
