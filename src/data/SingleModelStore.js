@@ -236,7 +236,7 @@ $JSKK.Class.create
 							data:		changeset,
 							onSuccess:	function(response)
 							{
-								target.proxy.read
+								target.read
 								(
 									{
 										onSuccess:	onSuccess,
@@ -256,7 +256,7 @@ $JSKK.Class.create
 							data:		changeset,
 							onSuccess:	function(response)
 							{
-								target.proxy.get
+								target.get
 								(
 									{
 										onSuccess: onSuccess,
@@ -327,7 +327,6 @@ $JSKK.Class.create
 			);
 			return this;
 		},
-
 		isDirty: function()
 		{
 			return this.record.isDirty();
