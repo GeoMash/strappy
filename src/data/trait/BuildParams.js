@@ -1,0 +1,26 @@
+/**
+ * @class strappy.data.trait.BuildParams
+ * 
+ * @abstract
+ */
+ $JSKK.Trait.create
+(
+	{
+		$namespace:	'strappy.data.trait',
+		$name:		'BuildParams'
+	}
+)
+(
+	{
+		_buildParams: function(request)
+		{
+			var params={};
+			if (Object.isDefined(this.config.params))
+			{
+				params=Object.clone(this.config.params);
+			}
+			params=Object.extend(params,request.data);
+			return params;
+		}
+	}
+);
