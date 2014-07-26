@@ -534,6 +534,30 @@ $JSKK.Class.create
 				}
 			}
 			return this;
+		},
+		getTransmissionType: function()
+		{
+			var	uses	=this.proxy.$reflect('uses'),
+				types	=[];
+			for (var i=0,j=uses.length; i<j; i++)
+			{
+				if (uses.indexOf('strappy.data.trait.Syncable')!==-1)
+				{
+					types.push('sync');
+					break;
+				}
+				else if (uses.indexOf('strappy.data.trait.CRUD')!==-1)
+				{
+					types.push('crud');
+					break;
+				}
+				else if (uses.indexOf('strappy.data.trait.GSRC')!==-1)
+				{
+					types.push('gsrc');
+					break;
+				}
+			}
+			return types;
 		}
 	}
 );
