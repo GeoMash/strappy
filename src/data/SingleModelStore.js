@@ -188,7 +188,7 @@ $JSKK.Class.create
 //			else if (target.proxy && Object.isFunction(target.proxy.sync))
 			else if (target.proxy)
 			{
-				var	onSuccess=function()
+				var	onSuccess=function(response)
 					{
 						var record=null;
 						if (Object.isArray(response.data))
@@ -308,7 +308,7 @@ $JSKK.Class.create
 			(
 				{
 					data:		data,
-					onSuccess:	function()
+					onSuccess:	function(response)
 					{
 						var record=null;
 						if (Object.isArray(response.data))
