@@ -33,7 +33,7 @@
 			(
 				{
 					url:		this.config.set,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}
@@ -45,7 +45,7 @@
 			(
 				{
 					url:		this.config.get,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}
@@ -57,7 +57,7 @@
 			(
 				{
 					url:		this.config.remove,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}
@@ -69,7 +69,7 @@
 			(
 				{
 					url:		this.config.check,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}

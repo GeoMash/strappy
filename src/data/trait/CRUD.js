@@ -27,23 +27,13 @@
 			params:		{}
 		},
 		*/
-		_buildParams: function(request)
-		{
-			var params={};
-			if (Object.isDefined(this.config.params))
-			{
-				params=Object.clone(this.config.params);
-			}
-			params=Object.extend(params,request.data);
-			return params;
-		},
 		create: function(request)
 		{
 			this.xhr
 			(
 				{
 					url:		this.config.create,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}
@@ -55,7 +45,7 @@
 			(
 				{
 					url:		this.config.read,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}
@@ -67,7 +57,7 @@
 			(
 				{
 					url:		this.config.update,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}
@@ -79,7 +69,7 @@
 			(
 				{
 					url:		this.config.destroy,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}

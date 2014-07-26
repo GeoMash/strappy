@@ -12,7 +12,7 @@
 )
 (
 	{
-		_buildParams: function(request)
+		buildParams: function(request)
 		{
 			var params={};
 			if (Object.isDefined(this.config.params))

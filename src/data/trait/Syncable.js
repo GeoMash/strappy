@@ -23,7 +23,7 @@
 			(
 				{
 					url:		this.config.sync,
-					data:		this._buildParams(request),
+					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
 				}
