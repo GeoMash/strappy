@@ -715,9 +715,31 @@ $JSKK.Class.create
 				);
 				target.BTL.executeQueue();
 			}
-			else if (target.proxy && Object.isFunction(target.proxy.sync))
+			else
 			{
-				var changeset=[];
+				var	onSuccess=function(response)
+					{
+						target.records=target.newRecord(response.data);
+						this.records	=target.records;
+						for (var i=0,j=target.records.length; i<j; i++)
+						{
+							target.bindChangeEvent(target.records[i]);
+							target.bindRemoveEvent(target.records[i]);
+						}
+						target.fireEvent('onChange',target,response);
+						target.fireEvent('onSync',target,response);
+						if (Object.isFunction(callback))
+						{
+							callback(this);
+						}
+					}.bind(target),
+					onFailure	=function(response)
+					{
+						target.fireEvent('onSyncFailed',target,response);
+					}.bind(target),
+					changeset	=[],
+					types		=this.getTransmissionType();
+				
 				target.getDirty().each
 				(
 					function(model)
@@ -725,36 +747,62 @@ $JSKK.Class.create
 						changeset.push(model.getRecord());
 					}
 				);
-				target.proxy.sync
-				(
-					{
-						data:		changeset,
-						onSuccess:	function(response)
+				
+				if (types.inArray('sync'))
+				{
+					target.sync
+					(
 						{
-							target.records=target.newRecord(response.data);
-							this.records	=target.records;
-							for (var i=0,j=target.records.length; i<j; i++)
-							{
-								target.bindChangeEvent(target.records[i]);
-								target.bindRemoveEvent(target.records[i]);
-							}
-							target.fireEvent('onChange',target,response);
-							target.fireEvent('onSync',target,response);
-							if (Object.isFunction(callback))
-							{
-								callback(this);
-							}
-						}.bind(target),
-						onFailure: function(response)
+							data:		changeset,
+							onSuccess:	onSuccess,
+							onFailure:	onFailure
+						}
+					);
+				}
+				else if (types.inArray('crud'))
+				{
+					target.upsert
+					(
 						{
-							target.fireEvent('onSyncFailed',target,response);
-						}.bind(this)
-					}
-				);
-			}
-			else
-			{
-				throw new Error('The store "'+target.$reflect('namespace')+'.'+target.$reflect('name')+'" cannot be synced as it does not have a syncable proxy attached.');
+							data:		changeset,
+							onSuccess:	function(response)
+							{
+								target.read
+								(
+									{
+										onSuccess: onSuccess,
+										onFailure: onFailure
+									}
+								);
+							}.bind(target),
+							onFailure: onFailure
+						}
+					);
+				}
+				else if (types.inArray('gsrc'))
+				{
+					target.set
+					(
+						{
+							data:		changeset,
+							onSuccess:	function(response)
+							{
+								target.get
+								(
+									{
+										onSuccess: onSuccess,
+										onFailure: onFailure
+									}
+								);
+							}.bind(target),
+							onFailure: onFailure
+						}
+					);
+				}
+				else
+				{
+					throw new Error('The store "'+target.$reflect('fullname')+'" cannot be synced as it does not have any methods to sync with.');
+				}
 			}
 		},
 		/**

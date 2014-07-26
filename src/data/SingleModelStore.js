@@ -186,7 +186,7 @@ $JSKK.Class.create
 				target.BTL.executeQueue();
 			}
 //			else if (target.proxy && Object.isFunction(target.proxy.sync))
-			else if (target.proxy)
+			else
 			{
 				var	onSuccess=function(response)
 					{
@@ -219,7 +219,7 @@ $JSKK.Class.create
 				}
 				if (types.inArray('sync'))
 				{
-					target.proxy.sync
+					target.sync
 					(
 						{
 							data:		changeset,
@@ -230,7 +230,7 @@ $JSKK.Class.create
 				}
 				else if (types.inArray('crud'))
 				{
-					target.proxy.upsert
+					target.upsert
 					(
 						{
 							data:		changeset,
@@ -250,7 +250,7 @@ $JSKK.Class.create
 				}
 				else if (types.inArray('gsrc'))
 				{
-					target.proxy.set
+					target.set
 					(
 						{
 							data:		changeset,
@@ -273,10 +273,6 @@ $JSKK.Class.create
 					throw new Error('The store "'+target.$reflect('fullname')+'" cannot be synced as it\'s proxy does not have any methods to sync with.');
 				}
 			}
-			else
-			{
-				throw new Error('The store "'+target.$reflect('fullname')+'" cannot be synced as does not have a proxy.');
-			}
 		},
 		/**
 		 * This method simply request a new model through the proxy.
@@ -286,10 +282,6 @@ $JSKK.Class.create
 		load: function(data,callback)
 		{
 			var target=(this.isShared()?this.getShared():this);
-			if (!this.proxy)
-			{
-				throw new Error('The store "'+target.$reflect('fullname')+'" cannot be synced as does not have a proxy.');
-			}
 			var	types		=this.getTransmissionType()
 				verb		=null;
 			if (types.inArray('crud'))
@@ -302,9 +294,9 @@ $JSKK.Class.create
 			}
 			else
 			{
-				throw new Error('The store "'+target.$reflect('fullname')+'" cannot be loaded as it\'s proxy does not have any methods to load with.');
+				throw new Error('The store "'+target.$reflect('fullname')+'" cannot load a model as it does not have any methods to load with.');
 			}
-			target.proxy[verb]
+			target[verb]
 			(
 				{
 					data:		data,
