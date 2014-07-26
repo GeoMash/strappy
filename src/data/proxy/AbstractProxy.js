@@ -44,12 +44,14 @@ $JSKK.Class.create
 		 * Typically used by other utility classes to perform abstract
 		 * requests.
 		 * @return {Mixed}
+		 * @deprecated
 		 */
-		raw: $JSKK.Class.ABSTRACT_METHOD,
+		raw: $JSKK.emptyFunction,
 		/**
 		 * @private
 		 * @return {void}
+		 * @deprecated
 		 */
-		_onDone: $JSKK.Class.ABSTRACT_METHOD
+		_onDone: $JSKK.emptyFunction
 	}
 )
