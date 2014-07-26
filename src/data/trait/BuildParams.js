@@ -19,7 +19,7 @@
 			{
 				params=Object.clone(this.config.params);
 			}
-			params=Object.extend(params,request.data);
+			Object.extend(params,request.data);
 			return params;
 		}
 	}
