@@ -211,7 +211,7 @@ $JSKK.Class.create
 					{
 						target.fireEvent('onSyncFailed',target,response);
 					}.bind(target),
-					changeset	=[],
+					changeset	=null,
 					types		=this.getTransmissionType();
 				if (target.isDirty())
 				{
@@ -228,45 +228,50 @@ $JSKK.Class.create
 						}
 					);
 				}
-				else if (types.inArray('crud'))
+				else if (types.inArray('crud') || types.inArray('gsrc'))
 				{
-					target.upsert
-					(
-						{
-							data:		changeset,
-							onSuccess:	function(response)
+					var	write	=null,
+						read	=null;
+					if (types.inArray('crud'))
+					{
+						write	='upsert';
+						read	='read';
+					}
+					else if (types.inArray('gsrc'))
+					{
+						write	='set';
+						read	='get';
+					}
+					if (changeset)
+					{
+						target[write]
+						(
 							{
-								target.read
-								(
-									{
-										onSuccess:	onSuccess,
-										onFailure: onFailure
-									}
-								);
-							}.bind(target),
-							onFailure: onFailure
-						}
-					);
-				}
-				else if (types.inArray('gsrc'))
-				{
-					target.set
-					(
-						{
-							data:		changeset,
-							onSuccess:	function(response)
+								data:		changeset,
+								onSuccess:	function(response)
+								{
+									target[read]
+									(
+										{
+											onSuccess:	onSuccess,
+											onFailure: onFailure
+										}
+									);
+								}.bind(target),
+								onFailure: onFailure
+							}
+						);
+					}
+					else
+					{
+						target[read]
+						(
 							{
-								target.get
-								(
-									{
-										onSuccess: onSuccess,
-										onFailure: onFailure
-									}
-								);
-							}.bind(target),
-							onFailure: onFailure
-						}
-					);
+								onSuccess:	onSuccess,
+								onFailure: onFailure
+							}
+						);
+					}
 				}
 				else
 				{
