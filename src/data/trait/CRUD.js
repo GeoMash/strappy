@@ -56,7 +56,7 @@
 			this.xhr
 			(
 				{
-					url:		this.config.update,
+					url:		this.config.upsert,
 					data:		this.buildParams(request),
 					onSuccess:	request.onSuccess,
 					onFailure:	request.onFailure
