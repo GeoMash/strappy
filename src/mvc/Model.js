@@ -294,6 +294,10 @@ $JSKK.Class.create
 				value=this.record;
 				for (var i=0,j=keyParts.length;  i<j; i++)
 				{
+					if (!(Object.isArray(value) || Object.isAssocArray(value)))
+					{
+						break;
+					}
 					value=value[keyParts[i]];
 					if (Object.isUndefined(value))
 					{
