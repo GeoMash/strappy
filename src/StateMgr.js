@@ -74,26 +74,32 @@ $JSKK.Class.create
 			this.radioTower		=strappy.$radioTower;
 			this.sharedState	=new strappy.SharedState();
 			
-			$(window).bind('hashchange',this.onHashChangeTest.bind(this));
+			//Deprecated test. Assume always supported.
+//			$(window).bind('hashchange',this.onHashChangeTest.bind(this));
 			
-			this.onHashChange(null,true);
+//			this.onHashChange(null,true);
+//			
+//			var OLD_HASH=window.location.hash;
+//			window.location.hash='welcome';
+//			
+//			(function()
+//			{
+//				//Restore hash.
+//				window.location.hash=OLD_HASH;
+//				//Bind the hash change event.
+//				this.bindHashEvent.defer(200,this);
+//			}.bind(this)).defer(100);
 			
-			var OLD_HASH=window.location.hash;
-			window.location.hash='welcome';
-			
-			(function()
-			{
-				//Restore hash.
-				window.location.hash=OLD_HASH;
-				//Bind the hash change event.
-				this.bindHashEvent.defer(200,this);
-			}.bind(this)).defer(100);
+			this.eventSupported=true;
+			this.bindHashEvent();
+			this.onHashChange();
 		},
 		/**
 		 * This is an internal callback method for testing if the hash
 		 * event is supported in the current browser.
 		 * @private
 		 * @return {void}
+		 * @deprecated
 		 */
 		onHashChangeTest: function()
 		{
@@ -109,14 +115,15 @@ $JSKK.Class.create
 		 */
 		bindHashEvent: function()
 		{
-			if (this.eventSupported)
-			{
-				$(window).bind('hashchange',this.onHashChange.bind(this));
-			}
-			else
-			{
-				this.monitorHashChange();
-			}
+			$(window).bind('hashchange',this.onHashChange.bind(this));
+//			if (this.eventSupported)
+//			{
+//				$(window).bind('hashchange',this.onHashChange.bind(this));
+//			}
+//			else
+//			{
+//				this.monitorHashChange();
+//			}
 		},
 		/**
 		 * This method is invoked into a loop whenever the browser fails the
@@ -127,24 +134,25 @@ $JSKK.Class.create
 		 * 
 		 * @private
 		 * @return {void}
+		 * @deprecated
 		 */
-		monitorHashChange: function()
-		{
-			$JSKK.when
-			(
-				function()
-				{
-					return (window.location.hash.replace('#','')!=this.stateString);
-				}.bind(this)
-			).isTrue
-			(
-				function()
-				{
-					this.onHashChange();
-					this.monitorHashChange();
-				}.bind(this)
-			);
-		},
+//		monitorHashChange: function()
+//		{
+//			$JSKK.when
+//			(
+//				function()
+//				{
+//					return (window.location.hash.replace('#','')!=this.stateString);
+//				}.bind(this)
+//			).isTrue
+//			(
+//				function()
+//				{
+//					this.onHashChange();
+//					this.monitorHashChange();
+//				}.bind(this)
+//			);
+//		},
 		/**
 		 * This method will be invoked automatically whenever a change in the
 		 * hash address is detected. It will fire the {@link strappy.Signal#STATE_CHANGE State Change}
