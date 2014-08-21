@@ -66,7 +66,13 @@ $JSKK.Class.create
 		{
 			this.init.$parent();
 			//Set the model.
-			$JSKK.when(this,'ready').isTrue
+			$JSKK.when
+			(
+				function()
+				{
+					return !Object.isNull(this.record);
+				}.bind(this)
+			).isTrue
 			(
 				function()
 				{
