@@ -379,7 +379,7 @@ $JSKK.Class.create
 								this.fireEvent('onAfterInit',this);
 								this.onAfterInit();
 							}
-						}.bind(this)
+						}.bind(this);
 					
 					this.initStores(onComplete);
 					this.initViews(onComplete);
@@ -749,6 +749,11 @@ $JSKK.Class.create
 				throw new Error('Error - view "'+view+'" has not been initilized on component "'+this.my.name+'".');
 			}
 		},
+		/**
+		 * Sets a state value.
+		 * 
+		 * @returns {*}
+		 */
 		setState: function()
 		{
 			var	args		=$JSKK.toArray(arguments),
@@ -795,6 +800,13 @@ $JSKK.Class.create
 			}
 			return this;
 		},
+		/**
+		 * Gets a state value from this component.
+		 * 
+		 * Returns null if no state property is found.
+		 * 
+		 * @returns {mixed}
+		 */
 		getState: function(key)
 		{
 			if (Object.isDefined(this.stateMap[key]))
@@ -805,20 +817,31 @@ $JSKK.Class.create
 			{
 				return null;
 			}
-			// else
-			// {
-			// 	console.trace();
-			// 	throw new Error('Error - state property "'+key+'" has not been configured for component "'+this.my.name+'".');
-			// }
 		},
+		/**
+		 * Gets a public state value from this component.
+		 * 
+		 * @returns {mixed}
+		 */
 		getPublicState: function()
 		{
 			return this._state['public'];
 		},
+		/**
+		 * Gets a private state value from this component.
+		 * 
+		 * @returns {mixed}
+		 */
 		getPrivateState: function()
 		{
 			return this._state['private'];
 		},
+		/**
+		 * Resets the public and private states to what
+		 * they originally were when the component was first
+		 * initialised.
+		 * @selfable
+		 */
 		resetState: function()
 		{
 			this.setState(this.state['private']);
@@ -995,6 +1018,14 @@ $JSKK.Class.create
 				throw new Error('Error - store "'+store+'" has not been initilized for component "'+this.my.name+'".');
 			}
 		},
+		/**
+		 * Creates the base container element for the component.
+		 * 
+		 * This gets created as a DIV.
+		 * 
+		 * @private
+		 * @return {void}
+		 */
 		insertBaseContainer: function()
 		{
 			var container=
@@ -1007,8 +1038,12 @@ $JSKK.Class.create
 			].join(''));
 			container.data('component',this);
 			$(this.getState('attachTo') || 'body')[this.getState('attachHow') || 'append'](container);
-			
 		},
+		/**
+		 * Generates the instance ID for the component.
+		 * @private
+		 * @return {void}
+		 */
 		generateInstanceID: function()
 		{
 			var	chars	='0123456789abcdefghijklmnopqrstuvwxyz'.split(''),
@@ -1019,10 +1054,21 @@ $JSKK.Class.create
 			}
 			this._iid=this.getSafeID()+'-'+iid.join('');
 		},
+		/**
+		 * Returns the instance ID of the component.
+		 * 
+		 * @returns {Boolean} The instance iD.
+		 */
 		getIID: function()
 		{
 			return this._iid;
 		},
+		/**
+		 * Returns a version of the component instance ID which is safe to use
+		 * in CSS queries.
+		 * 
+		 * @returns {string} The safe instance id.
+		 */
 		getSafeID: function()
 		{
 			return (this.$reflect('namespace')+'.'+this.$reflect('name')).replace(/\./g,'-');
@@ -1036,25 +1082,6 @@ $JSKK.Class.create
 		getConfig:		function(key)
 		{
 			console.warn('Use of getConfig deprecated as of Strappy 1.2. Use getState instead.');
-			// if (Object.isDefined(key))
-			// {
-			// 	var	parts	=key.split('.'),
-			// 		object	=this.config;
-			// 	for (var i=0,j=parts.length; i<j; i++)
-			// 	{
-			// 		if (Object.isDefined(object[parts[i]]))
-			// 		{
-			// 			object=object[parts[i]];
-			// 		}
-			// 		else
-			// 		{
-			// 			return null;
-			// 		}
-			// 	}
-			// 	return object;
-			// }
-			// return this.config;
-			
 			return this.getState(key);
 		},
 		/**
@@ -1072,39 +1099,10 @@ $JSKK.Class.create
 			return id.join('.');
 		},
 		/**
-		 * See {@link strappy.trait.signal.Send#sendSignal}
-		 * @private
+		 * Returns the global radio tower object.
+		 * 
+		 * @returns {strappy.RadioTower} - The Radio Tower.
 		 */
-// 		sendSignal: function(name,type,filter,body)
-// 		{
-// //			console.debug(this.$reflect('namespace')+'.'+this.$reflect('name'),':: sendSignal(core) :: ',name);
-// 			if (!Object.isEmpty(name))
-// 			{
-// 				$JSKK.when(this,'radioTower').isAssocArray
-// 				(
-// 					function()
-// 					{
-// 						this.radioTower.fireEvent
-// 						(
-// 							name,
-// 							new strappy.Signal
-// 							(
-// 								{
-// 									name:	name,
-// 									body:	body,
-// 									type:	type,
-// 									filter:	filter
-// 								}
-// 							)
-// 						);
-// 					}.bind(this)
-// 				);
-// 			}
-// 			else
-// 			{
-// 				throw new Error('Class '+this.className+' attempted to fire an empty signal.');
-// 			}
-// 		},
 		getRadioTower: function()
 		{
 			return this.radioTower;
@@ -1123,14 +1121,38 @@ $JSKK.Class.create
 		{
 			console.warn('The use of reconfigure() is deprecated as of Strappy 1.2. Use the new state management instead.');
 		},
+		/**
+		 * Gets the configured reference of this component.
+		 * 
+		 * Set this as a private state of the component.
+		 * 
+		 * @returns {string} The component reference.
+		 */
 		getRef: function()
 		{
 			return this.getState('ref');
 		},
+		/**
+		 * Gets the full reference of the component.
+		 * 
+		 * A component's full reference is the reference of 
+		 * each of it's preceding parent components separated
+		 * by a dot notation.
+		 * Example:
+		 * 	"container.formPanel.numberInput"
+		 * 
+		 * @returns {string} The component's full reference.
+		 */
 		getFullRef: function()
 		{
 			return this.getState('fullRef');
 		},
+		/**
+		 * A helper loop to loop over each child component of this component.
+		 * 
+		 * @param callback
+		 * @selfable
+		 */
 		eachChildCmp: function(callback)
 		{
 			for (var component in this.components)
