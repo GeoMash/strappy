@@ -40,14 +40,13 @@ $JSKK.Class.create
 			onShow:				true,
 			onHide:				true
 		},
-		_templatesReady:false,
-		_ready:			false,
-		_stateBindings:	{},
-		templates:		{},
-		element:		null,
-		stateStore:		null,
-        // TODO: COMPOSITE PATTERN -> See bottom off this Class
-        // children: [],
+		_templatesReady:		false,
+		_ready:					false,
+		_stateBindings:			{},
+		templateServiceURL:		null,
+		templates:				{},
+		element:				null,
+		stateStore:				null,
 
         /**
         * @constructor
@@ -81,7 +80,15 @@ $JSKK.Class.create
 					scriptTag=$('script[src*="'+initialPath+'"]');
 				if (scriptTag.length)
 				{
-					var requestPath=scriptTag.attr('src').replace(/\w*\.js/,'')+'html/'+this.templates[template];
+					var requestPath=null;
+					if (Object.isNull(this.templateServiceURL))
+					{
+						requestPath=scriptTag.attr('src').replace(/\w*\.js/,'')+'html/'+this.templates[template];
+					}
+					else
+					{
+						requestPath=this.templateServiceURL+this.templates[template];
+					}
 					if (!this.getViewCache().exists(requestPath)
 					|| this.getViewCache().isFetching(requestPath))
 					{
@@ -308,37 +315,5 @@ $JSKK.Class.create
 		{
 			return this.getContainer().find(selector);
 		}
-//		bindStoreChange: function(store,bindings)
-//		{
-//			for (var item in bindings)
-//			{
-//				if (Object.isFunction(this[bindings[item]]))
-//				{
-//					this._storeBindings[item]=this[bindings[item]].bind(this);
-//				}
-//				else
-//				{
-//					throw new Error('Unable to bind store change event for property "'+item+'" because the method "'+bindings[item]+'" '
-//									+'has not been defined on view class "'+this.$reflect('namespace')+'.'+this.$reflect('name')+'');
-//				}
-//			}
-//			return this;
-//		},
-		
-		
-		
-		
-		
-		
-
-        // TODO: COMPOSITE PATTERN?
-        // TODO: Consider Composite Design pattern to distinguish between DOM related events passed down the tree from MVC signals
-        // update: function(msg){
-        //  $each(var child in this.children){
-        //          child.update(msg);
-        //      }
-        // }
-        // TODO: IF COMPOSITE PATTERN then -> Bring in convenience methods
-        //  getChild(x), addChild(x), removeChild(x)
     }
 );
