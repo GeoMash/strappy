@@ -20,25 +20,51 @@ $JSKK.Class.create
 		cache:	{},
 		set: function(ref,value)
 		{
-			this[String(ref)]=String(value);
+			if (window.localStorage)
+			{
+				window.localStorage.setItem(String(ref),String(value));
+			}
+			else
+			{
+				this.cache[String(ref)]=String(value);
+			}
 			return this;
 		},
 		get: function(ref)
 		{
-			return this[String(ref)] || '';
+			if (window.localStorage)
+			{
+				return window.localStorage.getItem(String(ref));
+			}
+			else
+			{
+				return this.cache[String(ref)] || null;
+			}
 		},
 		exists: function(ref)
 		{
-			return Object.isDefined(this[String(ref)]);
+			return !Object.isNull(this.get(String(ref)));
 		},
 		setFetching: function(ref)
 		{
-			this[String(ref)]=strappy.mvc.ViewCache.FETCHING;
+			this.set(String(ref),strappy.mvc.ViewCache.FETCHING);
 			return this;
 		},
 		isFetching: function(ref)
 		{
-			return (this[String(ref)]===strappy.mvc.ViewCache.FETCHING)
+			return (this.get(String(ref))===strappy.mvc.ViewCache.FETCHING)
+		},
+		empty: function()
+		{
+			if (window.localStorage)
+			{
+				window.localStorage.clear()
+			}
+			else
+			{
+				delete this.cache;
+				this.cache={};
+			}
 		}
 	}
 );
