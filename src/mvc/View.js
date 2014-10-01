@@ -47,11 +47,10 @@ $JSKK.Class.create
 		templates:				{},
 		element:				null,
 		stateStore:				null,
-
         /**
-        * @constructor
-        * 
-        * 
+		 * Kicks off the template fetching process.
+         * @constructor
+		 * @public
         */
 		init: function()
 		{
@@ -64,6 +63,11 @@ $JSKK.Class.create
 			);
 			this.observe('onStateChange',this.onStateChange.bind(this));
 		},
+		/**
+		 * Fetches all templates associated with the view.
+		 * Can call a callback when completed.
+		 * @param {Function} onComplete Callback method.
+		 */
 		fetchTemplateContent: function(onComplete)
 		{
 			var	numTemplates	=0,
@@ -158,22 +162,24 @@ $JSKK.Class.create
 				}.bind(this)
 			);
 		},
+		/**
+		 * Gets a template based on the view's predefined list of templates.`
+		 * 
+		 * @param {string} template The reference of the template to return.
+		 * @returns {string} The template as a string.
+		 */
 		getTemplate: function(template)
 		{
 			return this.templates[template];
 		},
+		/**
+		 * Callback when is executed after the component has finished initialising.
+		 * 
+		 * @abstract
+		 */
 		onAfterCmpInit:	$JSKK.emptyFunction,
 		/**
-		 * 
-		 * @abstract
-		 */
-		onReady:		$JSKK.emptyFunction,
-		/**
-		 * 
-		 * @abstract
-		 */
-		onViewInit: 	$JSKK.emptyFunction,
-		/**
+		 * Callback for whenever a state changes.
 		 * 
 		 * @abstract
 		 */
@@ -184,7 +190,7 @@ $JSKK.Class.create
 		 * This method should be used to asure the view state is always in sync
 		 * with any stores associated with it.
 		 * 
-		 * @return
+		 * @abstract
 		 */
 		syncView:		$JSKK.Class.ABSTRACT_METHOD,
 		/**
@@ -193,29 +199,35 @@ $JSKK.Class.create
 		 * This method should be used to make calls to
 		 * {@link strappy.mvc.View.bindDOMEvent bindDOMEvent}.
 		 * 
-		 * @return
+		 * @abstract
 		 */
 		bindDOMEvents:		$JSKK.Class.ABSTRACT_METHOD,
-//		bindEventToSignal: function()
-//		{
-//			// empty function
-//		},
 		/**
+		 * Gets the container class which is the full ref of the
+		 * container but with a dot prepended to it so that it may
+		 * be used with a selector.
 		 * 
+		 * @return {string} The CSS class.
 		 */
 		getContainerClass: function()
 		{
 			return '.'+this.getSafeID();
 		},
 		/**
+		 * Returns the container element of the component.
 		 * 
+		 * @return {jQuery} The element as jQuery.
 		 */
 		getContainer: function()
 		{
 			return $('#'+this.getIID());
 		},
 		/**
+		 * Shows the container.
 		 * 
+		 * Also applies a class named "hidden".
+		 * 
+		 * @selfable
 		 */
 		show: function()
 		{
@@ -227,7 +239,11 @@ $JSKK.Class.create
 			return this;
 		},
 		/**
+		 * Hids the container.
 		 * 
+		 * Also removes a class named "hidden".
+		 * 
+		 * @selfable
 		 */
 		hide: function()
 		{
@@ -311,6 +327,12 @@ $JSKK.Class.create
 			$('body').on(event,selector,data,handle[method].bind(handle));
 			return this;
 		},
+		/**
+		 * Shorthand for this.getContainer().find();
+		 * 
+		 * @param selector
+		 * @returns {mixed}
+		 */
 		find: function(selector)
 		{
 			return this.getContainer().find(selector);
