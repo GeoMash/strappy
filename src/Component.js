@@ -77,7 +77,8 @@ $JSKK.Class.create
 		[
 			'$JSKK.trait.Configurable',
 			'$JSKK.trait.Observable',
-			'strappy.trait.signal.Send'
+			'strappy.trait.signal.Send',
+			'strappy.trait.signal.Receive'
 		]
 	}
 )
@@ -420,6 +421,24 @@ $JSKK.Class.create
 				window.strappy.$stateMgr=new strappy.StateMgr();
 			}
 			this.stateMgr=window.strappy.$stateMgr;
+			this.registerSignals
+			( 
+				{
+					onStateChangeFromStateMgr:	strappy.Signal.STATE_CHANGE
+				}
+			);
+			
+		},
+		onStateChangeFromStateMgr: function(signal)
+		{
+			var state=signal.getBody();
+			for (var item in state)
+			{
+				if (this.canManageStateItem(item))
+				{
+					this.setState(item,state[item]);
+				}
+			}
 		},
 		/**
 		 * Initalizes the component's connection to the View Cache.
