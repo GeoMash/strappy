@@ -81,10 +81,10 @@ grunt
 
 If Strappy CCL has also been checked out, it will also be built with the full build.
 
-If you would like to build without CCL, run the following command:
+If you would like to build without CCL, run the build command with the "noccl" flag:
 
 ```
-grunt build noccl
+grunt build --noccl
 ```
 
 Roadmap
