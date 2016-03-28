@@ -46,7 +46,6 @@
 			},
 			stores:
 			[
-				'State',
 				'User'
 			],
 			views:
@@ -55,7 +54,6 @@
 			],
 			controllers:
 			[
-				'State',
 				'Default'
 			]
 		}
@@ -106,7 +104,7 @@ $JSKK.Class.create
 		browser:
 		{
 			name:		null,
-			version:	null
+			version:		null
 		},
 		/**
 		 * @property components Specifiy a list of child components.
@@ -562,7 +560,7 @@ $JSKK.Class.create
 		newChildComponent: function(component,name,config,observers)
 		{
 			var object=component;
-			if (Object.isString(component))
+			if (Object.isString(component) || Object.isFunction(component.$reflect))
 			{
 				object=$JSKK.namespace(component);
 			}
