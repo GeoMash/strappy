@@ -2,16 +2,16 @@
   "name": "strappy",
   "title": "Strappy",
   "description": "JavaScript framework for disconnected component development.",
-  "version": "1.2.0-dev",
+  "version": "1.3.0-dev",
   "author": {
     "name": "Timothy Chandler",
     "email": "tim@s3.net.au",
-    "url": "https://github.com/SpinifexGroup/strappy"
+    "url": "https://github.com/GeoMash/strappy"
   },
-  "homepage": "https://github.com/SpinifexGroup/strappy",
+  "homepage": "https://github.com/GeoMash/strappy",
   "repository": {
     "type": "git",
-    "url": "git@github.com:melechi/JS-Klass-Kit.git"
+    "url": "git@github.com:GeoMash/strappy.git"
   },
   "main": "./src/Strappy",
   "devDependencies": {
