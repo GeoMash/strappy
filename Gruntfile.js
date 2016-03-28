@@ -1,9 +1,9 @@
 module.exports = function(grunt)
 {
 	var BANNER=	"/*\r\n"
-				+' JSKK v<%= pkg.version %>'
-				+' | (c) 2014 Timothy Chandler <tim@geomash.com>'
-				+' | <LICENSE> '
+				+' Strappy v<%= pkg.version %>'
+				+' | (c) 2014 Timothy Chandler <tim@pi-co.io>'
+				+' | See attached license file. '
 				+"\r\n"
 				+' Date Built: <%= grunt.template.today("yyyy-mm-dd") %>'
 				+"\r\n*/\r\n";
@@ -43,7 +43,13 @@ module.exports = function(grunt)
 	var shim=getShim();
 	
 	require('grunt-recurse')(grunt, __dirname);
-	grunt.grunt('./src/ccl');
+	
+	if (!grunt.option('noccl'))
+	{
+		grunt.grunt('./src/ccl');
+	}
+	
+	
 	
 	
 	
@@ -87,7 +93,7 @@ module.exports = function(grunt)
 					'bin/<%= pkg.name %>.<%= pkg.version %>.js',
 					'bin/<%= pkg.name %>.<%= pkg.version %>.ccl.js'
 				],
-				dest: 'bin/<%= pkg.name %>.<%= pkg.version %>.full.js'
+				dest: 'bin/<%= pkg.name %>.<%= pkg.version %>.ccl.js'
 			}
 		},
 		uglify:
@@ -101,8 +107,8 @@ module.exports = function(grunt)
 				files:
 				[
 					{
-						src:	'bin/<%= pkg.name %>.<%= pkg.version %>.full.js',
-						dest:	'bin/<%= pkg.name %>.<%= pkg.version %>.full.min.js'
+						src:	'bin/<%= pkg.name %>.<%= pkg.version %>.ccl.js',
+						dest:	'bin/<%= pkg.name %>.<%= pkg.version %>.ccl.min.js'
 					}
 				]
 			},
@@ -123,11 +129,26 @@ module.exports = function(grunt)
 		},
 	};
 	
-
+	var buildTasks=['requirejs:main'];
+	
+	if (!grunt.option('noccl'))
+	{
+		buildTasks=buildTasks.concat
+		(
+			[
+				'requirejs:ccl',
+				'concat',
+				'uglify:main'
+			]
+		);
+	}
+	else
+	{
+		buildTasks.push('uglify:noccl');
+	}
 	
 	grunt.registerTask('default',		['build']);
-	grunt.registerTask('build',			['requirejs:main','requirejs:ccl','concat','uglify:main']);
-	grunt.registerTask('build noccl',	['requirejs:main','uglify:noccl']);
+	grunt.registerTask('build',			buildTasks);
 	
 	grunt.finalize();
 };
