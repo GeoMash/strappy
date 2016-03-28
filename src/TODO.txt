@@ -4,3 +4,16 @@
 * Restrict signaling to component-to-component communication.
 * Gracefully fail async requests.
 * View Content Caching.
+
+
+
+
+===========================
+
+* [Bug] When assigning simple type to an object type in a model - fails, value doesn't change.
+* [Bug] When using set() on a model, and setting the value to undefined, the uses the key as the value - which is transformed into an array of characters for the value.
+
+* Eliminate the need to register Stores, Controllers & Views in the main component file.
+	* Autoload these via $require.
+* Change getController and getView to allow for no reference to be specified. If no reference is specified, return the default "Main" Controller/View.
+* MultiModelStore.add() should return
